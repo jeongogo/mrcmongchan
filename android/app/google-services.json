@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "951452673062",
+    "firebase_url": "https://mymrc-382104-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "mymrc-382104",
+    "storage_bucket": "mymrc-382104.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:951452673062:android:257c4d7b69b41703d672e7",
+        "android_client_info": {
+          "package_name": "com.mrcmongchan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "951452673062-5i4iapjhb49ngcg5ma7tr1mobf26nfi6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mrcmongchan",
+            "certificate_hash": "e3a8812041307a9c01980d0e60535db69ebee024"
+          }
+        },
+        {
+          "client_id": "951452673062-b8lb84n2ntvk7kqths7cakvrqpqonhij.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mrcmongchan",
+            "certificate_hash": "0f44496a7ccef75c735607d2caca6b29ade0fe1f"
+          }
+        },
+        {
+          "client_id": "951452673062-663uraalfcgcpl3at89a4t5dk3eet9dl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgFKJXcVa_LwwV3mPMxmPrEu1SDz9W9Y4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "951452673062-4ofk3m871kc0762ba9tphe2nai9adt69.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "951452673062-7095pff38m2k9n7sp2k3usvtibi0gnuh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mrc"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

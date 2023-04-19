@@ -178,6 +178,37 @@ function RecordScreen({ navigation }) {
     try {
       const uri = await captureRef.current.capture();
       setCaptureURL(uri);
+
+      const intensity = distance / (totalTime/60);
+
+      let met = '';
+      if (intensity < 134) {
+        met = 7;
+      } else if (intensity >= 134 && intensity < 139) {
+        met = 8;
+      } else if (intensity >= 139 && intensity < 161) {
+        met = 9;
+      } else if (intensity >= 161 && intensity < 178) {
+        met = 10;
+      } else if (intensity >= 178 && intensity < 189) {
+        met = 11;
+      } else if (intensity >= 189 && intensity < 201) {
+        met = 11.5;
+      } else if (intensity >= 201 && intensity < 214) {
+        met = 12.5;
+      } else if (intensity >= 214 && intensity < 229) {
+        met = 13.5;
+      } else if (intensity >= 229 && intensity < 247) {
+        met = 14;
+      } else if (intensity >= 247 && intensity < 268) {
+        met = 15;
+      } else if (intensity >= 268 && intensity < 292) {
+        met = 16;
+      } else if (intensity >= 292) {
+        met = 18;
+      }
+
+      const calorie = met * (3.5 * user.weight * (totalTime * 60)) * 5 /1000;
       
       const recordData = {
         uid: user.uid,
@@ -185,6 +216,7 @@ function RecordScreen({ navigation }) {
         totalTime: totalTime/1000,
         distance: (distance/1000).toFixed(2),
         pace,
+        calorie: calorie.toFixed(0),
         date: new Date(),
       };
       setRecord(recordData);

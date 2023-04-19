@@ -8,6 +8,7 @@ import Loader from "../../components/common/Loader";
 function HomeScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [distance, setDistance] = useState(0);
+  const [calorie, setCalorie] = useState(0);
   const user = useStore((state) => state.user);
 
   /** 브라우저 새창 열기 */
@@ -21,15 +22,14 @@ function HomeScreen() {
       const today = new Date();
       const startDay = new Date(today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + '1 09:00');
       const snapshot = await firestore().collection('Records').where('uid', '==', user.uid).where('date', '>', startDay).where('date', '<', today).get();
-      let d = 0;
+      let dis = 0;
+      let cal = 0;
       snapshot.forEach(doc => {
-        // const item = {
-        //   ...doc.data(),
-        //   id: doc.id
-        // }
-        d += parseFloat(doc.data().distance);
+        dis += parseFloat(doc.data().distance);
+        cal += parseFloat(doc.data().calorie);
       });
-      setDistance(d)
+      setDistance(dis);
+      setCalorie(cal);
     } catch (e) {
       console.log('에러', e)
       crashlytics().recordError(e);
@@ -55,7 +55,7 @@ function HomeScreen() {
             </View>
             <View style={styles.info}>
               <Text style={styles.title}>이번달 소비 칼로리</Text>
-              <Text style={styles.text}>...㎈</Text>
+              <Text style={styles.text}>{calorie}k㎈</Text>
             </View>
           </>
       }

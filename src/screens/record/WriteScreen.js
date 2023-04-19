@@ -41,7 +41,6 @@ function WriteScreen({ navigation }) {
 
       const recordData = {
         ...record,
-        // calorie: 칼로리 계산하자
         captureURL: url,
       }
       const data = await firestore().collection('Records').add(recordData);

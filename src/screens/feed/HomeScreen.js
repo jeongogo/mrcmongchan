@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useIsFocused } from "@react-navigation/native";
 import firestore from '@react-native-firebase/firestore';
 import useStore from "../../store/store";
-import {View, StyleSheet, SafeAreaView, ScrollView, StatusBar, Alert} from 'react-native';
+import {StyleSheet, SafeAreaView, ScrollView, StatusBar, Alert} from 'react-native';
 import Feed from "../../components/feed/Feed";
 import Loader from "../../components/common/Loader";
 
-function FeedScreen({navigation}) {
+function HomeScreen({navigation}) {
   const user = useStore((state) => state.user);
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState();
@@ -41,6 +41,7 @@ function FeedScreen({navigation}) {
   useEffect(() => {
     getFeeds();
   }, [isFocused]);
+
   return (
     <SafeAreaView style={styles.container}>
       {isLoading
@@ -66,4 +67,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FeedScreen;
+export default HomeScreen;

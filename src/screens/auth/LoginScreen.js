@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import {View, StyleSheet} from 'react-native';
 import { GoogleSignin, GoogleSigninButton } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
 import crashlytics from '@react-native-firebase/crashlytics';
 import useStore from "../../store/store";
 import { getUser } from '../../lib/user';
@@ -12,7 +11,6 @@ import Loader from "../../components/common/Loader";
 function LoginScreen({navigation}) {
   const [isLoading, setIsLoading] = useState(false);
   const setUser = useStore((state) => state.setUser);
-  const userCollection = firestore().collection('Users');
 
   /** 구글 로그인 Config */
   const googleSigninConfigure = () => {
@@ -30,6 +28,8 @@ function LoginScreen({navigation}) {
       const { user } = await auth().signInWithCredential(googleCredential);
       
       const profile = await getUser(user.uid);
+
+      console.log(profile);
 
       if (!profile) {
         navigation.navigate('Welcome', {uid: user.uid});

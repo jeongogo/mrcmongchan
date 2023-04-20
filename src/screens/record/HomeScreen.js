@@ -8,7 +8,7 @@ import useStore from "../../store/store";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Loader from "../../components/common/Loader";
 
-function RecordScreen({ navigation }) {
+function HomeScreen({ navigation }) {
   const user = useStore((state) => state.user);
   const setRecord = useStore((state) => state.setRecord);
   const setCaptureURL = useStore((state) => state.setCaptureURL);
@@ -221,7 +221,7 @@ function RecordScreen({ navigation }) {
       };
       setRecord(recordData);
       onClear();
-      navigation.navigate('Write');
+      navigation.navigate('RecordWrite');
     } catch (e) {
       Alert.alert("", e.message, [
         {
@@ -427,4 +427,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default RecordScreen;
+export default HomeScreen;

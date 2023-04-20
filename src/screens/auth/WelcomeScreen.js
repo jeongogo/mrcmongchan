@@ -1,15 +1,14 @@
 import React, {useState} from 'react';
 import {View, Text, Button, TextInput, Alert, StyleSheet} from 'react-native';
-import firestore from '@react-native-firebase/firestore';
 import Loader from "../../components/common/Loader";
 import useStore from "../../store/store";
+import { createUser } from "../../lib/user";
 
 function WelcomeScreen({route}) {
   const {uid} = route.params ?? {};
   const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState('');
   const [weight, setWeight] = useState('');
-  const userCollection = firestore().collection('Users');
   const setUser = useStore((state) => state.setUser);
 
   const onSubmit = async () => {
@@ -33,7 +32,7 @@ function WelcomeScreen({route}) {
           full: 0,
         },
       }
-      await userCollection.doc(uid).set(newUser);
+      createUser(newUser)
       setUser(newUser);
       navigation.navigate('Home');
     } catch (e) {

@@ -47,7 +47,27 @@ function WriteScreen({ navigation }) {
       setIsLoading(false);
       setRecord('');
       setCaptureURL('');
-      navigation.navigate('Feed');
+
+      // get user info
+      // let ex = 0;
+      // if (has미션 && 성공) {
+      //   ex += 미션 경험치;
+      // }
+      // ex += 거리 경험치;
+      
+      // if (ing챌린지) {
+      //   save for challenge
+      // }
+
+      // Level Up Check
+      // if (user.experience > experience[user.level]) {
+      //   alert 레벨업 축하
+      //   save for user (level up + 남은 경험치)
+      // }
+      
+      // save for user
+
+      navigation.navigate('HomeStack');
     } catch (e) {
       Alert.alert("", e.message, [
         {

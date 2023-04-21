@@ -40,6 +40,8 @@ function HomeScreen() {
 
   useEffect(() => {
     getMyRecord();
+    // const lv = user.level + 1;
+    // const nextLevelEx = (lv-1 * lv-1) * ((lv * lv) - (13 * lv) + 82);
   }, []);
 
   return (

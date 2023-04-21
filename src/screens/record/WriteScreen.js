@@ -49,20 +49,42 @@ function WriteScreen({ navigation }) {
       setCaptureURL('');
 
       // get user info
+      // Quest Check
       // let ex = 0;
-      // if (has미션 && 성공) {
+      // if (ingQuest && 성공) {
+      //   미션 성공 Alert
       //   ex += 미션 경험치;
       // }
       // ex += 거리 경험치;
       
-      // if (ing챌린지) {
-      //   save for challenge
+      // 
+      // if (user.challenge !== '') {
+      //   const snapshot = await firestore().collection('Challenges').get();
+          // let data = [];
+          // snapshot.forEach(doc => {
+          //   const item = {
+          //     ...doc.data(),
+          //     id: doc.id
+          //   }
+          //   data.push(item);
+          // });
+          // await firestore().collection('Challenges').doc(route.params.id).update({
+          //   entry: [...challenge.entry, newEntry]
+          // });
       // }
 
       // Level Up Check
-      // if (user.experience > experience[user.level]) {
+      // const lv = user.level + 1;
+      // const nextLevelEx = (lv-1 * lv-1) * ((lv * lv) - (13 * lv) + 82);
+      // if (user.experience > nextLevelEx) {
       //   alert 레벨업 축하
       //   save for user (level up + 남은 경험치)
+      // }
+
+      // New Record
+      // if (새로운 기록 달성하면) {
+      // 축하 Alert
+      //   ex += 보너스 경험치 (레벨*10)
       // }
       
       // save for user

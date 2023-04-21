@@ -20,7 +20,17 @@ function DetailScreen({route}) {
     }
   }
 
-  /** 참가하기 */
+  /** 참가 신청하기 */
+  const onApplicant = () => {
+    
+  }
+
+  /** 참가 신청 취소하기 */
+  const onApplicantCancel = () => {
+
+  }
+
+  /** 신청 수락하기 */
   const onAttend = async () => {
     try {
       const newEntry = {
@@ -55,11 +65,13 @@ function DetailScreen({route}) {
         <Text style={styles.goal}>목표 거리 : {challenge.goal}km</Text>
         {user.challenge === ''
           ?
-            <Pressable style={styles.attendBtn} onPress={onAttend}>
-              <Text style={styles.attendText}>참가하기</Text>
+            <Pressable style={styles.attendBtn} onPress={onApplicant}>
+              <Text style={styles.attendText}>참가 신청하기</Text>
             </Pressable>
           :
-            <Text style={styles.attendText}>참가중</Text>
+            <Pressable style={styles.attendBtn} onPress={ononApplicantCancel}>
+              <Text style={styles.attendText}>참가 신청 취소</Text>
+            </Pressable>
         }
       </View>
       <View style={styles.entry}>

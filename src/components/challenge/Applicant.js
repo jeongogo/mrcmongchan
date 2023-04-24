@@ -1,15 +1,19 @@
 import React, {useEffect} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Button} from 'react-native';
 
-function Challenge({ entry }) {
+function Challenge({ applicant, handleAttend }) {
+  const onAccept = () => {
+    handleAttend(applicant.uid, applicant.name);
+  }
+
   useEffect(() => {
     // 거리 정렬 후 렌더링
   }, []);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>{entry.name}</Text>
-      <Text style={styles.text}>{entry.distance}km</Text>
+      <Text style={styles.text}>{applicant.name}</Text>
+      <Button onPress={onAccept} title='수락' />
     </View>
   )
 };
@@ -20,7 +24,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 10,
+    marginVertical: 10,
+    paddingVertical: 15,
   },
   text: {
     fontSize: 16,

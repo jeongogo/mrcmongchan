@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import { useIsFocused } from "@react-navigation/native";
+import useStore from "../../store/store";
 import {Pressable, SafeAreaView, ScrollView, Text, StyleSheet} from 'react-native';
 import Challenge from '../../components/challenge/Challenge';
 import Loader from "../../components/common/Loader";
@@ -9,6 +10,7 @@ function HomeScreen({navigation}) {
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState();
   const [challenges, setChallenges] = useState([]);
+  const user = useStore((state) => state.user);
 
   const getChanllenges = async () => {
     setIsLoading(true);
@@ -42,9 +44,11 @@ function HomeScreen({navigation}) {
   return (
     <SafeAreaView style={styles.container}>
       {isLoading && <Loader />}
-      <Pressable style={styles.create} onPress={() => navigation.navigate('ChallengeWrite')}>
-        <Text style={styles.createText}>챌린지 만들기</Text>
-      </Pressable>
+      {user.isAdmin &&
+        <Pressable style={styles.create} onPress={() => navigation.navigate('ChallengeWrite')}>
+          <Text style={styles.createText}>챌린지 만들기</Text>
+        </Pressable>
+      }
       <ScrollView style={styles.full}>
         {(challenges.length > 0) && 
           challenges.map((challenge) => (

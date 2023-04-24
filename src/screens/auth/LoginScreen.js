@@ -1,16 +1,56 @@
 import React, { useEffect, useState } from 'react';
-import {View, StyleSheet} from 'react-native';
 import { GoogleSignin, GoogleSigninButton } from '@react-native-google-signin/google-signin';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import auth from '@react-native-firebase/auth';
 import crashlytics from '@react-native-firebase/crashlytics';
 import useStore from "../../store/store";
 import { getUser } from '../../lib/user';
+import { signIn, signUp } from '../../lib/auth';
 //import { GOOGLE_API_KEY } from "@env";
+import Login from "../../components/auth/Login";
 import Loader from "../../components/common/Loader";
+import { Alert, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 
-function LoginScreen({navigation}) {
+function LoginScreen({route, navigation}) {
+  const {isSignUp} = route.params ?? {};
   const [isLoading, setIsLoading] = useState(false);
   const setUser = useStore((state) => state.setUser);
+
+  /** 로그인 */
+  const handleLogin = async (form) => {
+    Keyboard.dismiss();
+    const {email, password, confirmPassword} = form;
+
+    if (isSignUp && password !== confirmPassword) {
+      Alert.alert('실패', '비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
+    setIsLoading(true);
+    const info = {email, password};
+
+    try {
+      const {user} = isSignUp ? await signUp(info) : await signIn(info);
+      const profile = await getUser(user.uid);
+      if (!profile) {
+        navigation.navigate('Welcome', {uid: user.uid});
+      } else {
+        setUser(profile);
+      }
+    } catch (e) {
+      const messages = {
+        'auth/email-already-in-use': '이미 가입된 이메일입니다.',
+        'auth/wrong-password': '잘못된 비밀번호입니다.',
+        'auth/user-not-found': '존재하지 않는 계정입니다.',
+        'auth/invalid-email': '유효하지 않은 이메일 주소입니다.',
+      };
+      const msg = messages[e.code] || `${isSignUp ? '가입' : '로그인'} 실패`;
+      Alert.alert('실패', msg);
+      console.log(e);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   /** 구글 로그인 Config */
   const googleSigninConfigure = () => {
@@ -28,8 +68,6 @@ function LoginScreen({navigation}) {
       const { user } = await auth().signInWithCredential(googleCredential);
       
       const profile = await getUser(user.uid);
-
-      console.log(profile);
 
       if (!profile) {
         navigation.navigate('Welcome', {uid: user.uid});
@@ -49,12 +87,19 @@ function LoginScreen({navigation}) {
   }, []);
 
   return (
-    <View style={styles.container}>
-      {isLoading && <Loader />}
-      <View style={styles.login}>
-        <GoogleSigninButton onPress={() => onGoogleButtonPress()} style={styles.googleBtn} />
-      </View>
-    </View>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.select({ios: 'padding'})}>
+      <SafeAreaView style={styles.fullscreen}>
+        {isLoading && <Loader />}
+        <View style={styles.form}>
+          <Login isSignUp={isSignUp} handleLogin={handleLogin} />
+        </View>
+        <View style={styles.google}>
+          <GoogleSigninButton onPress={() => onGoogleButtonPress()} style={styles.googleBtn} />
+        </View>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -65,7 +110,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     padding: 60,
   },
-  login: {
+  google: {
     
   },
   googleBtn: {

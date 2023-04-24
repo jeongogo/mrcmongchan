@@ -8,8 +8,20 @@ const Stack = createNativeStackNavigator();
 function RecordStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name='FeedHome' component={HomeScreen} />
-      <Stack.Screen name='FeedDetail' component={DetailScreen} />
+      <Stack.Screen
+        name='FeedHome'
+        component={HomeScreen}
+        options={() => ({
+          title: '활동 기록'
+        })}
+      />
+      <Stack.Screen
+        name='FeedDetail'
+        component={DetailScreen}
+        options={() => ({
+          title: '활동 상세'
+        })}
+      />
     </Stack.Navigator>
   );
 }

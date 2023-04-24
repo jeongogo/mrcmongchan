@@ -1,0 +1,143 @@
+import React, {useState, useRef} from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { StyleSheet, View, Text, TextInput, Pressable } from 'react-native';
+
+function Login({isSignUp, handleLogin}) {
+  const navigation = useNavigation();
+  const [form, setForm] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+  const passwordRef = useRef();
+  const confirmPasswordRef = useRef();
+
+  const createChangeTextHandler = (name) => (value) => {
+    setForm({...form, [name]: value});
+  };
+
+  const onSecondaryButtonPress = () => {
+    if (isSignUp) {
+      navigation.goBack();
+    } else {
+      navigation.push('Login', {isSignUp: true});
+    }
+  }
+
+  const onSubmit = () => {
+    handleLogin(form);
+  }
+
+  return (
+    <View style={styles.container}>
+      <TextInput
+        style={styles.input}
+        placeholder='이메일'
+        value={form.email}
+        onChangeText={createChangeTextHandler('email')}
+        autoCapitalize="none"
+        autoCorrect={false}
+        autoCompleteType="email"
+        keyboardType="email-address"
+        returnKeyType='next'
+        onSubmitEditing={() => passwordRef.current.focus()}
+      />
+      <TextInput
+        style={[styles.input, styles.margin]}
+        placeholder='비밀번호'
+        value={form.password}
+        onChangeText={createChangeTextHandler('password')}
+        secureTextEntry
+        ref={passwordRef}
+        returnKeyType={isSignUp ? 'next' : 'done'}
+        onSubmitEditing={() => {
+          if (isSignUp) {
+            confirmPasswordRef.current.focus();
+          } else {
+            onSubmit();
+          }
+        }}
+      />
+      {isSignUp && (
+        <TextInput
+          style={[styles.input, styles.margin]}
+          placeholder='비밀번호 확인'
+          value={form.confirmPassword}
+          onChangeText={createChangeTextHandler('confirmPassword')}
+          secureTextEntry
+          ref={confirmPasswordRef}
+          returnKeyType='done'
+          onSubmitEditing={onSubmit}
+        />
+      )}
+      <Pressable
+        onPress={onSubmit}
+        style={({pressed}) => [
+          styles.wrapper,
+          styles.primaryWrapper,
+          Platform.OS === 'ios' && pressed && {opacity: 0.5},
+        ]}
+        android_ripple={{
+          color: '#ffffff',
+        }}
+      >
+        <Text style={[styles.text, styles.primaryText]}>{isSignUp ? '회원가입' : '로그인'}</Text>
+      </Pressable>
+      <Pressable
+        onPress={onSecondaryButtonPress}
+        style={({pressed}) => [
+          styles.wrapper,
+          Platform.OS === 'ios' && pressed && {opacity: 0.5},
+        ]}
+        android_ripple={{
+          color: '#ffffff',
+        }}
+      >
+        <Text style={[styles.text]}>{isSignUp ? '로그인' : '회원가입'}</Text>
+      </Pressable>
+      <View style={styles.hr}></View>
+    </View>
+  )
+};
+
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: 'space-between',
+    paddingVertical: 10,
+  },
+  input: {
+    borderColor: '#bdbdbd',
+    borderWidth: 1,
+    paddingHorizontal: 16,
+    borderRadius: 4,
+    height: 48,
+    backgroundColor: 'white'
+  },
+  wrapper: {
+    marginTop: 10,
+    borderRadius: 4,
+    height: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderColor: '#000',
+    borderWidth: 1,
+    backgroundColor: '#fff',
+  },
+  primaryWrapper: {
+    backgroundColor: '#000',
+  },
+  primaryText: {
+    color: 'white',
+  },
+  margin: {
+    marginTop: 10,
+  },
+  hr: {
+    marginTop: 30,
+    marginBottom: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
+  }
+});
+
+export default Login

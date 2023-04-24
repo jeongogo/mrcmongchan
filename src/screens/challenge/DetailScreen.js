@@ -1,19 +1,29 @@
 import React, {useState, useEffect} from 'react';
 import firestore from '@react-native-firebase/firestore';
+import { useIsFocused } from "@react-navigation/native";
 import useStore from "../../store/store";
-import { updateUser } from "../../lib/user";
-import {View, Pressable, Text, StyleSheet} from 'react-native';
+import { getUser, updateUser } from "../../lib/user";
+import {View, Pressable, Text, StyleSheet, Alert} from 'react-native';
 import Entry from '../../components/challenge/Entry';
+import Applicant from '../../components/challenge/Applicant';
 
-function DetailScreen({route}) {
+function DetailScreen({route, navigation}) {
+  const isFocused = useIsFocused();
   const [challenge, setChallenge] = useState('');
   const user = useStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
+  const docRef = firestore().collection('Challenges').doc(route.params.id);
+
+  /** Update User */
+  const onUpdateUser = async () => {
+    const profile = await getUser(user.uid);
+    setUser(profile);
+  }
 
   /** 챌린지 가져오기 */
   const getChallenge = async () => {
     try {
-      const res = await firestore().collection('Challenges').doc(route.params.id).get();
+      const res = await docRef.get();
       setChallenge(res.data());
     } catch (e) {
       console.log(e);
@@ -21,65 +31,178 @@ function DetailScreen({route}) {
   }
 
   /** 참가 신청하기 */
-  const onApplicant = () => {
-    
+  const onApplicant = async () => {
+    try {
+      const newApplicant = {
+        uid: user.uid,
+        name: user.name
+      };
+
+      await docRef.update({
+        applicants: [...challenge.applicants, newApplicant]
+      });
+
+      await updateUser(user.uid, {challengeApplicant: route.params.id});
+
+      Alert.alert("", "챌린지 신청이 완료되었습니다.", [
+        {
+          text: "확인",
+          onPress: () => null
+        }
+      ]);
+
+      setChallenge({...challenge, applicants: [...challenge.applicants, newApplicant]});
+
+      setUser({...user, challengeApplicant: route.params.id});
+
+    } catch (e) {
+      console.log('여기', e);
+    }
   }
 
-  /** 참가 신청 취소하기 */
-  const onApplicantCancel = () => {
+  /** 참가 취소 Alert */
+  const onLeave = () => {
+    Alert.alert("", "챌린지 참가를 취소하시겠습니까?", [
+      {
+        text: "취소",
+        onPress: () => null,
+      },
+      {
+        text: "확인",
+        onPress: () => {
+          handleLeave();
+        }
+      }
+    ]);
+  }
 
+  /** 참가 취소하기 */
+  const handleLeave = async () => {
+    try {
+      let filterEntry = [];
+      let filterApplicants = [];
+
+      if (challenge.entry?.length > 0) {
+        filterEntry = challenge.entry.filter((i) => i.uid !== user.uid);
+      }
+      if (challenge.applicants?.length > 0) {
+        filterApplicants = challenge.applicants.filter((i) => i.uid !== user.uid);
+      }
+      if (user.challenges?.length > 0) {
+        filterApplicants = challenge.applicants.filter((i) => i.uid !== user.uid);
+      }
+
+      await docRef.update({
+        entry: filterEntry,
+        applicants: filterApplicants,
+      });
+
+      await updateUser(user.uid, { challenge: '', challengeApplicant: '' });
+
+      setUser({...user, challenge: '', challengeApplicant: '' });
+
+      navigation.navigate('ChallengeHome');
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   /** 신청 수락하기 */
-  const onAttend = async () => {
+  const handleAttend = async (uid, name) => {
     try {
       const newEntry = {
-        uid: user.uid,
-        name: user.name,
+        uid,
+        name,
         distance: 0,
       }
 
+      const filterApplicants = challenge.applicants.filter((i) => i.uid !== uid);
+
       // 챌린지에 참가자 추가
-      await firestore().collection('Challenges').doc(route.params.id).update({
-        entry: [...challenge.entry, newEntry]
+      await docRef.update({
+        entry: [...challenge.entry, newEntry],
+        applicants: filterApplicants,
       });
-      setChallenge({...challenge, entry: [...challenge.entry, newEntry]});
       
       // 유저에 챌린지 추가
-      await updateUser(user.uid, {challenge: route.params.id});
-      setUser({...user, challenge: route.params.id});
+      await updateUser(uid, {challenge: route.params.id, challengeApplicant: ''});
+
+      setUser({...user, challenge: route.parms.id});
+
+      // 챌린지 업데이트
+      setChallenge({...challenge, entry: [...challenge.entry, newEntry], applicants: filterApplicants});
 
     } catch (e) {
       console.log(e);
     }
   }
 
+  /** 챌린지 삭제 Aleert */
+  const onDelete = () => {
+    Alert.alert("", "챌린지를 삭제하시겠습니까?", [
+      {
+        text: "취소",
+        onPress: () => null,
+      },
+      {
+        text: "확인",
+        onPress: () => {
+          handleDelete();
+        }
+      }
+    ]);
+  }
+
+  /** 챌린지 삭제하기 */
+  const handleDelete = () => {
+    docRef.delete();
+    navigation.navigate('ChallengeHome');
+  }
+
   useEffect(() => {
     getChallenge();
-  }, []);
+    onUpdateUser();
+  }, [isFocused]);
 
   return (
     <View style={styles.container}>
       <View style={styles.info}>
         <Text style={styles.title}>{challenge.title}</Text>
         <Text style={styles.goal}>목표 거리 : {challenge.goal}km</Text>
-        {user.challenge === ''
-          ?
-            <Pressable style={styles.attendBtn} onPress={onApplicant}>
-              <Text style={styles.attendText}>참가 신청하기</Text>
-            </Pressable>
-          :
-            <Pressable style={styles.attendBtn} onPress={ononApplicantCancel}>
-              <Text style={styles.attendText}>참가 신청 취소</Text>
-            </Pressable>
+          {user.challenge === ''
+            ?
+              <Pressable style={styles.attendBtn} onPress={onApplicant}>
+                <Text style={styles.attendText}>참가 신청하기</Text>
+              </Pressable>
+            :
+              <Pressable style={styles.attendBtn} onPress={onLeave}>
+                <Text style={styles.attendText}>참가 취소하기</Text>
+              </Pressable>
+        }
+        {user.isAdmin &&
+          <Pressable style={styles.attendBtn} onPress={onDelete}>
+            <Text style={styles.attendText}>챌린지 삭제하기</Text>
+          </Pressable>
         }
       </View>
       <View style={styles.entry}>
+        <Text style={styles.subTitle}>참가자 목록</Text>
         {(challenge.entry?.length > 0) && 
-          challenge.entry.map((entry) => (
-            <Entry key={entry.id} entry={entry} />
+          challenge.entry.map((i) => (
+            <Entry key={i.uid} entry={i} />
         ))}
       </View>
+      {(user.isAdmin && challenge.applicants?.length > 0)
+        ?
+          <View style={styles.applicant}>
+            <Text style={styles.subTitle}>신청자 목록</Text>
+            {challenge.applicants.map((i) => (
+              <Applicant key={i.uid} applicant={i} handleAttend={handleAttend} />
+            ))}
+          </View>
+        :
+          <></>
+      }
     </View>
   )
 };
@@ -116,8 +239,15 @@ const styles = StyleSheet.create({
     color: '#AEEA00',
     textAlign: 'center',
   },
+  subTitle: {
+    fontSize: 18,
+    color: '#fff',
+  },
   entry: {
-    marginTop: 10,
+    marginTop: 50,
+  },
+  applicant: {
+    marginTop: 30,
   }
 });
 

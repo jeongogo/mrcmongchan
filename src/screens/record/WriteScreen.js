@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import useStore from "../../store/store";
+import { updateUser } from "../../lib/user";
 import {View, Text, Button, Image, StyleSheet, Alert} from 'react-native';
 import Loader from "../../components/common/Loader";
 
@@ -11,6 +12,8 @@ function WriteScreen({ navigation }) {
   const setCaptureURL = useStore((state) => state.setCaptureURL);
   const record = useStore((state) => state.record);
   const setRecord = useStore((state) => state.setRecord);
+  const user = useStore((state) => state.user);
+  const setUser = useStore((state) => state.setUser);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
 
@@ -57,21 +60,36 @@ function WriteScreen({ navigation }) {
       // }
       // ex += 거리 경험치;
       
-      // 
-      // if (user.challenge !== '') {
-      //   const snapshot = await firestore().collection('Challenges').get();
-          // let data = [];
-          // snapshot.forEach(doc => {
-          //   const item = {
-          //     ...doc.data(),
-          //     id: doc.id
-          //   }
-          //   data.push(item);
-          // });
-          // await firestore().collection('Challenges').doc(route.params.id).update({
-          //   entry: [...challenge.entry, newEntry]
-          // });
-      // }
+      // 챌린지 중일 경우
+      if (user.challenge !== '') {
+        const curr = new Date().getTime();
+        const res = await firestore().collection('Challenges').doc(user.challenge).get();
+        const data = res.data();
+        const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+        const kr_curr = new Date(curr + KR_TIME_DIFF);
+  
+        const start = new Date(data.startDate.replaceAll(". ", "-"));
+        const end = new Date(data.endDate.replaceAll(". ", "-"));
+  
+        if (kr_curr > start && kr_curr < end) {
+          const entry = data.entry.map((i) => {
+            if (i.uid === user.uid) {
+              const n = {
+                ...i,
+                distance: i.distance + record.distance,
+              }
+              return n;
+            }
+            return i;
+          });
+          await firestore().collection('Challenges').doc(res.id).update({entry});
+        }
+  
+        if (today > res.endDate) {
+          await updateUser(user.uid, {challenge: ''});
+          setUser({...user, challenge: ''})
+        }
+      }
 
       // Level Up Check
       // const lv = user.level + 1;

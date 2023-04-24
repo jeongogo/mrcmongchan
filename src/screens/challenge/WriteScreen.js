@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {View, Text, Pressable, Button, TextInput, StyleSheet, Keyboard} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
+import { updateUser } from "../../lib/user";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import useStore from "../../store/store";
 
@@ -47,16 +48,23 @@ function WriteScreen({navigation}) {
     if (title === '' || startDate === '' || endDate === '') {
       return;
     }
-    const challenge = {
-      title,
-      creator: user.name,
-      goal,
-      startDate,
-      endDate,
-      entry: []
-    };
     try {
+      const challenge = {
+        title,
+        creator: user.uid,
+        goal,
+        startDate,
+        endDate,
+        entry: [{
+          uid: user.uid,
+          name: user.name,
+          distance: 0,
+        }],
+        applicants: [],
+      };
+      
       const data = await firestore().collection('Challenges').add(challenge);
+
       navigation.navigate('ChallengeHome', {id: data.id})
     } catch (e) {
       console.log(e);

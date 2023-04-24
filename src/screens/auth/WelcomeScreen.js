@@ -31,6 +31,8 @@ function WelcomeScreen({route}) {
           thirty: 0,
           full: 0,
         },
+        challenge: '',
+        challengeApplicant: '',
       }
       createUser(newUser)
       setUser(newUser);

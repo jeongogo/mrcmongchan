@@ -8,8 +8,14 @@ const Stack = createNativeStackNavigator();
 function RecordStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name='RecordHome' component={HomeScreen} />
-      <Stack.Screen name='RecordWrite' component={WriteScreen} />
+      <Stack.Screen
+        name='RecordHome'
+        component={HomeScreen}
+      />
+      <Stack.Screen
+        name='RecordWrite'
+        component={WriteScreen}
+      />
     </Stack.Navigator>
   );
 }

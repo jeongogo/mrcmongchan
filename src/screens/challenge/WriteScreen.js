@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {View, Text, Pressable, Button, TextInput, StyleSheet, Keyboard} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import { updateUser } from "../../lib/user";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import useStore from "../../store/store";
 

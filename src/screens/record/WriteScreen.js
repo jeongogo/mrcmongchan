@@ -54,9 +54,9 @@ function WriteScreen({ navigation }) {
       // get user info
       // Quest Check
       // let ex = 0;
-      // if (ingQuest && 성공) {
-      //   미션 성공 Alert
+      // if (미션중이면) {
       //   ex += 미션 경험치;
+      //   미션 state 완료
       // }
       // ex += 거리 경험치;
       
@@ -86,6 +86,7 @@ function WriteScreen({ navigation }) {
         }
   
         if (today > res.endDate) {
+          // ex += 거리 경험치;
           await updateUser(user.uid, {challenge: ''});
           setUser({...user, challenge: ''})
         }

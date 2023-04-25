@@ -25,7 +25,6 @@ function Challenge({ challenge, navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 20,
     paddingVertical: 20,
     paddingHorizontal: 15,
     borderBottomWidth: 1,

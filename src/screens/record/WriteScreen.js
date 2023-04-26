@@ -103,7 +103,7 @@ function WriteScreen({ navigation }) {
       //   ex += 보너스 경험치 (레벨*10)
       // }
       
-      // save for user
+      // save for user 누적 거리 더하기
 
       navigation.navigate('FeedStack');
     } catch (e) {

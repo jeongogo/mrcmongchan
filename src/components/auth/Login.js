@@ -126,6 +126,9 @@ const styles = StyleSheet.create({
   primaryWrapper: {
     backgroundColor: '#000',
   },
+  text: {
+    color: '#000',
+  },
   primaryText: {
     color: 'white',
   },

@@ -1,6 +1,7 @@
 import React from 'react';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import HomeStack from './home/HomeStack';
+import TrainingStack from "./training/TrainingStack";
 import RecordStack from './record/RecordStack';
 import ChallengeStack from "./challenge/ChallengeStack";
 import FeedStack from "./feed/FeedStack";
@@ -29,6 +30,14 @@ const MainTab = ({navigation}) => {
           tabBarLabel: '홈',
           tabBarIcon: ({color}) => MIcon('home', color),
         }} 
+      />
+      <Tab.Screen
+        name="TrainingStack"
+        component={TrainingStack}
+        options={{
+          tabBarLabel: '훈련',
+          tabBarIcon: ({color}) => MIcon('calendar-today', color),
+        }}
       />
       <Tab.Screen
         name="RecordStack"

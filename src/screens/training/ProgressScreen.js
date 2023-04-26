@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
-function TrainningScreen() {
+function ProgressScreen() {
   return (
     <View style={styles.container}>
       <Text>페이지 준비중입니다.</Text>
@@ -18,4 +18,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TrainningScreen;
+export default ProgressScreen;

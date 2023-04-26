@@ -9,9 +9,7 @@ import Loader from "../../components/common/Loader";
 function WriteScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState('');
   const captureURL = useStore((state) => state.captureURL);
-  const setCaptureURL = useStore((state) => state.setCaptureURL);
   const record = useStore((state) => state.record);
-  const setRecord = useStore((state) => state.setRecord);
   const user = useStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
   const [minutes, setMinutes] = useState(0);
@@ -27,6 +25,7 @@ function WriteScreen({ navigation }) {
       {
         text: "확인",
         onPress: () => {
+          // 진행중인 미션 삭제
           navigation.navigate('RecordHome');
         }
       }
@@ -54,6 +53,9 @@ function WriteScreen({ navigation }) {
       // if (미션중이면) {
       //   ex += 미션 경험치;
       //   미션 state 완료
+      // if (현재 스텝 == 마지막 스텝) {
+      //   setTraining('');
+      // }
       // }
       // ex += 거리 경험치;
       
@@ -83,7 +85,7 @@ function WriteScreen({ navigation }) {
         }
   
         if (kr_curr > res.endDate) {
-          // ex += 거리 경험치;
+          // ex += 챌린지 토탈 거리 경험치;
           await updateUser(user.uid, {challenge: ''});
           setUser({...user, challenge: ''})
         }

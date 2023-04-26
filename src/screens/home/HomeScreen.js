@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useIsFocused } from "@react-navigation/native";
 import firestore from '@react-native-firebase/firestore';
 import {View, Text, StyleSheet, Linking} from 'react-native';
 import crashlytics from '@react-native-firebase/crashlytics';
@@ -6,6 +7,7 @@ import useStore from "../../store/store";
 import Loader from "../../components/common/Loader";
 
 function HomeScreen() {
+  const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [distance, setDistance] = useState(0);
   const [calorie, setCalorie] = useState(0);
@@ -42,7 +44,7 @@ function HomeScreen() {
     getMyRecord();
     // const lv = user.level + 1;
     // const nextLevelEx = (lv-1 * lv-1) * ((lv * lv) - (13 * lv) + 82);
-  }, []);
+  }, [isFocused]);
 
   return (
     <View style={styles.container}>

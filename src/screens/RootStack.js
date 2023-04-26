@@ -4,6 +4,8 @@ import useStore from "../store/store";
 import MainTab from './MainTab';
 import LoginScreen from './auth/LoginScreen';
 import WelcomeScreen from './auth/WelcomeScreen';
+import RecordHomeScreen from "./record/HomeScreen";
+import RecordWriteScreen from "./record/WriteScreen";
 import { subscribeAuth } from '../lib/auth';
 import { getUser } from '../lib/user';
 
@@ -46,6 +48,20 @@ function RootStack() {
             <Stack.Screen
               name="MainTab"
               component={MainTab}
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name='RecordHome'
+              component={RecordHomeScreen}
+              options={{
+                title: '달리기'
+              }}
+            />
+            <Stack.Screen
+              name='RecordWrite'
+              component={RecordWriteScreen}
               options={{
                 headerShown: false,
               }}

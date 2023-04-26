@@ -127,7 +127,14 @@ function DetailScreen({route, navigation}) {
       // 유저에 챌린지 추가
       await updateUser(uid, {challenge: route.params.id, challengeApplicant: ''});
 
-      setUser({...user, challenge: route.parms.id});
+      Alert.alert("", "수락 완료되었습니다.", [
+        {
+          text: "확인",
+          onPress: () => null
+        }
+      ]);
+
+      setUser({...user, challenge: route.params.id});
 
       // 챌린지 업데이트
       setChallenge({...challenge, entry: [...challenge.entry, newEntry], applicants: filterApplicants});

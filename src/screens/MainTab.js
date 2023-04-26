@@ -12,7 +12,7 @@ const MIcon = (name, color) => {
   return <Icon name={name} color={color} size={24} />;
 };
 
-const MainTab = () => {
+const MainTab = ({navigation}) => {
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -37,6 +37,12 @@ const MainTab = () => {
           tabBarLabel: '달리기',
           tabBarIcon: ({color}) => MIcon('run', color),
         }}
+        listeners={() => ({
+          tabPress: e => {
+            e.preventDefault();
+            navigation.navigate('RecordHome');
+          },
+        })}
       />
       <Tab.Screen
         name="ChallengeStack"

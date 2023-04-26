@@ -27,7 +27,7 @@ function WriteScreen({ navigation }) {
       {
         text: "확인",
         onPress: () => {
-          navigation.navigate('Record');
+          navigation.navigate('RecordHome');
         }
       }
     ]);
@@ -47,9 +47,6 @@ function WriteScreen({ navigation }) {
         captureURL: url,
       }
       const data = await firestore().collection('Records').add(recordData);
-      setIsLoading(false);
-      setRecord('');
-      setCaptureURL('');
 
       // get user info
       // Quest Check
@@ -76,7 +73,7 @@ function WriteScreen({ navigation }) {
             if (i.uid === user.uid) {
               const n = {
                 ...i,
-                distance: i.distance + record.distance,
+                distance: +i.distance + +record.distance,
               }
               return n;
             }
@@ -85,7 +82,7 @@ function WriteScreen({ navigation }) {
           await firestore().collection('Challenges').doc(res.id).update({entry});
         }
   
-        if (today > res.endDate) {
+        if (kr_curr > res.endDate) {
           // ex += 거리 경험치;
           await updateUser(user.uid, {challenge: ''});
           setUser({...user, challenge: ''})
@@ -108,7 +105,7 @@ function WriteScreen({ navigation }) {
       
       // save for user
 
-      navigation.navigate('HomeStack');
+      navigation.navigate('FeedStack');
     } catch (e) {
       Alert.alert("", e.message, [
         {
@@ -116,13 +113,14 @@ function WriteScreen({ navigation }) {
           onPress: () => null,
         },
       ]);
+    } finally {
       setIsLoading(false);
     }
   }
 
   useEffect(() => {
-    setMinutes(Math.floor(record.totalTime/1000/60));
-    setSeconds((record.totalTime) - (minutes * 60));
+    setMinutes(Math.floor(record.totalTime/60));
+    setSeconds(record.totalTime - (minutes * 60));
   }, []);
 
   return (
@@ -144,6 +142,10 @@ function WriteScreen({ navigation }) {
       <View style={styles.wrap}>
         <Text style={styles.text}>페이스</Text>
         <Text style={styles.text}>{record.pace}</Text>
+      </View>
+      <View style={styles.wrap}>
+        <Text style={styles.text}>칼로리</Text>
+        <Text style={styles.text}>{record.calorie}k㎈</Text>
       </View>
       <View style={styles.btnWrap}>
         <View style={styles.btn}>
@@ -179,8 +181,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   image: {
-    width: 200,
-    height: 200,
+    width: 250,
+    height: 250,
   },
   text: {
     minWidth: 100,

@@ -118,9 +118,13 @@ function HomeScreen({ navigation }) {
   useEffect(() => {
     if (distance > 50) {
       const time = (1000/distance) * (totalTime/1000);
-      const minutes = (Math.floor(time / 60)).toFixed(0);
-      const seconds = (time - minutes * 60).toFixed(0);
+      const m = (Math.floor(time / 60)).toFixed(0);
+      const s = (time - m * 60).toFixed(0);
+      const minutes = m < 10 ? '0' + m : m;
+      const seconds = s < 10 ? '0' + s : s;
       setPace(minutes + ':' + seconds);
+    } else {
+      setPace('00:00');
     }
   }, [distance]);
 
@@ -144,17 +148,19 @@ function HomeScreen({ navigation }) {
     clearInterval(timeRef.current);
     timeRef.current = null;
     Geolocation.clearWatch(watchId.current);
+    watchId.current = null;
   }
 
   /** 측정 초기화 */
   const onClear = () => {
     setTotalTime(0);
     setDistance(0);
-    setPace('');
+    setPace('00:00');
     setIsStarted(false);
     setIsRecoding(false);
     clearInterval(timeRef.current);
     timeRef.current = null;
+    watchId.current = null;
   }
 
   /** 완료 Alert */
@@ -179,7 +185,7 @@ function HomeScreen({ navigation }) {
       const uri = await captureRef.current.capture();
       setCaptureURL(uri);
 
-      const intensity = distance / (totalTime/60);
+      const intensity = distance / (totalTime/1000/60);
 
       let met = '';
       if (intensity < 134) {
@@ -208,7 +214,7 @@ function HomeScreen({ navigation }) {
         met = 18;
       }
 
-      const calorie = met * (3.5 * user.weight * (totalTime * 60)) * 5 /1000;
+      const calorie = met * (3.5 * user.weight * ((totalTime/1000) / 60)) * 5 / 1000;
       
       const recordData = {
         uid: user.uid,
@@ -234,11 +240,12 @@ function HomeScreen({ navigation }) {
 
   /** 뒤로가기 이벤트 */
   const onBackAction = () => {
+    onPause();
     if (isStarted) {
       Alert.alert("", "기록 측정을 중지하시겠습니까?", [
         {
           text: "취소",
-          onPress: () => null,
+          onPress: () => onStart(),
         },
         {
           text: "확인",
@@ -253,19 +260,27 @@ function HomeScreen({ navigation }) {
 
   /** init */
   useEffect(() => {
+    onClear();
     setRecord('');
+    setCaptureURL('');
     requestPermissions();
+    return () => {
+      if (watchId.current) {
+        Geolocation.clearWatch(watchId.current);
+      };
+    }
+  }, []);
+
+  /** Back Event */
+  useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
       onBackAction
     );
     return () => {
       backHandler.remove();
-      if (watchId.current) {
-        Geolocation.clearWatch(watchId.current);
-      };
     }
-  }, []);
+  }, [isStarted]);
 
   if (isLoading) {
     return (
@@ -288,8 +303,8 @@ function HomeScreen({ navigation }) {
             showsUserLocation={true}
             followsUserLocation={true}
             zoomEnabled={false}
-            minZoomLevel={14}
-            maxZoomLevel={14}
+            minZoomLevel={13}
+            maxZoomLevel={13}
             rotateEnabled={false}
             scrollEnabled={false}
           >

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useIsFocused } from "@react-navigation/native";
 import firestore from '@react-native-firebase/firestore';
 import useStore from "../../store/store";
-import {StyleSheet, SafeAreaView, ScrollView, StatusBar, Alert} from 'react-native';
+import {StyleSheet, SafeAreaView, ScrollView, StatusBar} from 'react-native';
 import Feed from "../../components/feed/Feed";
 import Loader from "../../components/common/Loader";
 
@@ -16,7 +16,7 @@ function HomeScreen({navigation}) {
   const getFeeds = async () => {
     setIsLoading(true);
     try {
-      const snapshot = await firestore().collection('Records').where('uid', '==', user.uid).get();
+      const snapshot = await firestore().collection('Records').where('uid', '==', user.uid).orderBy('date', 'desc').get();
       let data = [];
       snapshot.forEach(doc => {
         const item = {
@@ -27,12 +27,7 @@ function HomeScreen({navigation}) {
       });
       setFeeds(data);
     } catch (e) {
-      Alert.alert("실패", e.message, [
-        {
-          text: "확인",
-          onPress: () => null,
-        },
-      ]);
+      console.log(e);
     } finally {
       setIsLoading(false);
     }

@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 import useStore from "../../store/store";
 import {View, Text, Image, StyleSheet, useWindowDimensions} from 'react-native';
 
-function DetailScreen({route}) {
+function DetailScreen() {
   const width = useWindowDimensions().width;
   const feedDetail = useStore((state) => state.feedDetail);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
 
   useEffect(() => {
-    setMinutes(Math.floor(feedDetail.totalTime/1000/60));
-    setSeconds((feedDetail.totalTime) - (minutes * 60));
+    setMinutes(Math.floor(feedDetail.totalTime/60));
+    setSeconds(feedDetail.totalTime - (minutes * 60));
   }, []);
 
   return (

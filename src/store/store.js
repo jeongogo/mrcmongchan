@@ -19,6 +19,10 @@ let state = (set) => ({
   trainingDetail: '',
   setTrainingDetail: (data) => set(() => ({ trainingDetail: data })),
 
+  /** 미션 */
+  trainingMission: '',
+  setTrainingMission: (data) => set(() => ({ trainingMission: data })),
+
   /** 활동 상세 */
   feedDetail: '',
   setFeedDetail: (data) => set(() => ({ feedDetail: data })),

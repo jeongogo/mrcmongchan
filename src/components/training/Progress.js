@@ -8,6 +8,7 @@ function Progress() {
   const navigation = useNavigation();
   const user = useStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
+  const setTrainingMission = useStore((state) => state.setTrainingMission);
   const [mission, setMission] = useState({
     day: '',
     content: '',
@@ -16,21 +17,23 @@ function Progress() {
   });
 
   const onStart = () => {
-    setUser({...user, trainingMission: mission});
+    setTrainingMission(mission);
     navigation.navigate('RecordHome');
   }
 
-  useEffect(() => {
-    if (user?.training?.program?.length < 1) {
-      navigation.navigate('TrainingHome');
-    }
-    const today = new Date();
-    const startDay = new Date(user.trainingStartDate.toDate());
-    const todayStr = today.getFullYear() + '' + (today.getMonth() + 1) + '' + today.getDate();
+  if (user?.training?.program?.length < 1) {
+    return;
+  }
 
+  useEffect(() => {
+    const today = new Date();
+    const todayStr = today.getFullYear() + '' + (today.getMonth() + 1) + '' + today.getDate();
+    
     const currentProgram = user.training.program.filter((i) => {
-      const currentStr = startDay.getFullYear() + '' + (startDay.getMonth() + i.day) + '' + startDay.getDate();
-      if (todayStr === currentStr + 1) {
+      let startDay = new Date(user.trainingStartDate.toDate());
+      startDay.setDate(startDay.getDate() + i.day - 1);
+      const currentStr = startDay.getFullYear() + '' + (startDay.getMonth() + 1) + '' + startDay.getDate();
+      if (todayStr === currentStr) {
         return i;
       }
     });
@@ -45,6 +48,7 @@ function Progress() {
       time: currentProgram[0].time,
       distance: currentProgram[0].distance,
       exPoint: currentProgram[0].exPoint,
+      isComplete: currentProgram[0].isComplete,
     });
   }, []);
 
@@ -52,9 +56,16 @@ function Progress() {
     <View style={styles.container}>
       <Text style={styles.title}>{mission.day}일차 미션</Text>
       <Text style={styles.text}>{mission.content}</Text>
-      <Pressable onPress={onStart} style={styles.btn}>
-        <Text style={styles.btnText}>시작</Text>
-      </Pressable>
+        {mission.isComplete
+          ?
+            <View style={styles.btnComplete}>
+              <Text style={styles.btnText}>완료</Text>
+            </View>
+          :
+            <Pressable onPress={onStart} style={styles.btn}>
+              <Text style={styles.btnText}>도전</Text>
+            </Pressable>
+        }
     </View>
   )
 };
@@ -80,6 +91,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#fff',
   },
+  btnComplete: {
+    marginTop: 30,
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    backgroundColor: '#AEEA00',
+  },
   btn: {
     marginTop: 30,
     paddingVertical: 15,
@@ -88,7 +105,7 @@ const styles = StyleSheet.create({
   },
   btnText: {
     fontSize: 18,
-    fontWeight: 700,
+    fontWeight: 500,
     color: '#000',
   }
 });

@@ -35,7 +35,6 @@ function Detail() {
       ...user,
       training: trainingDetail,
       trainingStartDate: new Date(),
-      trainingMisson: '',
     });
     navigation.navigate('TrainingProgress');
   }

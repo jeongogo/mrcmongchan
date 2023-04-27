@@ -5,13 +5,13 @@ import {Pressable, SafeAreaView, ScrollView, Text, StyleSheet} from 'react-nativ
 
 function Home({trainings}) {
   const navigation = useNavigation();
+  const user = useStore((state) => state.user);
   const setTrainingDetail = useStore((state) => state.setTrainingDetail);
 
   const onDetail = (item) => {
     setTrainingDetail(item);
     navigation.navigate('TrainingDetail');
   }
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>

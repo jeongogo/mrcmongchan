@@ -12,9 +12,10 @@ function WriteScreen({ navigation }) {
   const record = useStore((state) => state.record);
   const user = useStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
+  const trainingMission = useStore((state) => state.trainingMission);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
-  let userState = '';
+  let missionExp = 0;
 
   /** 삭제하기 */
   const onDelete = () => {
@@ -35,8 +36,8 @@ function WriteScreen({ navigation }) {
 
   /** 도전 성공 */
   const onSuccessMission = () => {
-    const updateTraining = training.program.map((i) => {
-      if (user.trainingMission.day === i.day) {
+    const updateTraining = user.training.program.map((i) => {
+      if (trainingMission.day === i.day) {
         return {
           ...i,
           isComplete: true,
@@ -47,21 +48,9 @@ function WriteScreen({ navigation }) {
     Alert.alert("축하합니다.", "미션 도전에 성공했습니다.", [
       {
         text: "확인",
-        onPress: () => {
-          updateUser(user.uid, {
-            ...user,
-            challenge: userState === 'initChallenge' ? '' : user.challenge,
-            exPoint: user.exPoint + user.trainingMission.exPoint,
-            training: updateTraining
-          });
-          setUser({
-            ...user,
-            challenge: userState === 'initChallenge' ? '' : user.challenge,
-            exPoint: user.exPoint + user.trainingMission.exPoint,
-            training: updateTraining,
-            trainingMission: ''
-          });
-          navigation.navigate('FeedStack');
+        onPress: async () => {
+          missionExp = trainingMission.exPoint;
+          await updateUser(user.uid, {training: updateTraining});
         }
       }
     ]);
@@ -108,45 +97,40 @@ function WriteScreen({ navigation }) {
         }
   
         if (kr_curr > res.endDate) {
-          // ex += 챌린지 토탈 거리 경험치;
           await updateUser(user.uid, {challenge: ''});
-          userState = 'initChallenge';
         }
       }
 
       // 미션 도전중일 경우
-      if (user?.trainingMission?.content?.length > 0) {
-        if (user.trainingMission.time > 0) {
-          if (record.totalTime > user.trainingMission.time * 60) {
+      if (trainingMission?.content?.length > 0) {
+        if (trainingMission.time > 0) {
+          if (record.totalTime >= trainingMission.time/60) {
             onSuccessMission();
-          } else {
-            if (userState === 'initChallenge') {
-              setUser({...user, challenge: '', trainingMission: ''})
-            } else {
-              setUser({...user, trainingMission: ''})
-            }
           }
         }
-        if (user.trainingMission.distance > 0) {
-          if (record.distance > user.trainingMission.distance) {
+        if (trainingMission.distance > 0) {
+          if (record.distance >= trainingMission.distance) {
             onSuccessMission();
-          } else {
-            if (userState === 'initChallenge') {
-              setUser({...user, challenge: '', trainingMission: ''})
-            } else {
-              setUser({...user, trainingMission: ''})
-            }
           }
         }
       }
 
-      // Level Up Check
-      // const lv = user.level + 1;
-      // const nextLevelEx = (lv-1 * lv-1) * ((lv * lv) - (13 * lv) + 82);
-      // if (user.experience > nextLevelEx) {
-      //   alert 레벨업 축하
-      //   save for user (level up + 남은 경험치)
-      // }
+      // 레벨업 체크
+      const distanceExp = (record.distance/100) * 0.6;
+      const currentExp = +user.exPoint + missionExp + distanceExp;
+      const lv = user.level + 1;
+      const nextLvExp = (lv-1 * lv-1) * ((lv * lv) - (13 * lv) + 82);
+
+      if (currentExp > nextLvExp) {
+        await updateUser(user.uid, {
+          level: +user.level + 1,
+          exPoint: currentExp - nextLvExp
+        });
+      } else {
+        await updateUser(user.uid, {
+          exPoint: currentExp
+        });
+      }
 
       // New Record
       // if (새로운 기록 달성하면) {
@@ -156,7 +140,7 @@ function WriteScreen({ navigation }) {
       
       // save for user 누적 거리 더하기
 
-      navigation.navigate('FeedStack');
+      navigation.navigate('HomeStack');
     } catch (e) {
       Alert.alert("", e.message, [
         {

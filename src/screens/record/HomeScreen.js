@@ -12,6 +12,7 @@ function HomeScreen({ navigation }) {
   const user = useStore((state) => state.user);
   const setRecord = useStore((state) => state.setRecord);
   const setCaptureURL = useStore((state) => state.setCaptureURL);
+  const trainingMission = useStore((state) => state.trainingMission);
   const [isLoading, setIsLoading] = useState(true);                  // loading
   const captureRef = useRef(null);                                   // 지도 캡쳐용 Ref
   const watchId = useRef(null);                                      // 위치 추적용 Ref
@@ -318,10 +319,10 @@ function HomeScreen({ navigation }) {
           </MapView>
         }
       </ViewShot>
-      {user?.trainingMission?.content?.length > 0 &&
+      {trainingMission !== '' &&
         <View style={styles.mission}>
           <Text style={styles.missionTitle}>진행중인 미션</Text>
-          <Text style={styles.missionContent}>{user.trainingMission.content}</Text>
+          <Text style={styles.missionContent}>{trainingMission.content}</Text>
         </View>
       }
       {isStarted
@@ -436,22 +437,22 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
     width: 300,
     paddingHorizontal: 10,
-    paddingVertical: 15,
-    backgroundColor: 'rgba(255,255,255,0.8)',
+    paddingVertical: 20,
+    backgroundColor: 'rgba(255,255,255,0.9)',
     borderRadius: 10,
     transform: [{ translateX: -150 }],
     zIndex: 9,
   },
   missionTitle: {
-    fontSize: 14,
-    color: '#333',
+    fontSize: 16,
+    color: '#000',
     textDecorationLine: 'underline',
     textAlign: 'center',
   },
   missionContent: {
-    marginTop: 7,
-    fontSize: 14,
-    color: '#454545',
+    marginTop: 10,
+    fontSize: 16,
+    color: '#333',
     textAlign: 'center',
   },
   start: {

@@ -14,6 +14,7 @@ function WriteScreen({ navigation }) {
   const setUser = useStore((state) => state.setUser);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
+  let userState = '';
 
   /** 삭제하기 */
   const onDelete = () => {
@@ -25,8 +26,42 @@ function WriteScreen({ navigation }) {
       {
         text: "확인",
         onPress: () => {
-          // 진행중인 미션 삭제
+          setUser({...user, trainingMission: ''});
           navigation.navigate('RecordHome');
+        }
+      }
+    ]);
+  }
+
+  /** 도전 성공 */
+  const onSuccessMission = () => {
+    const updateTraining = training.program.map((i) => {
+      if (user.trainingMission.day === i.day) {
+        return {
+          ...i,
+          isComplete: true,
+        }
+      }
+      return i;
+    })
+    Alert.alert("축하합니다.", "미션 도전에 성공했습니다.", [
+      {
+        text: "확인",
+        onPress: () => {
+          updateUser(user.uid, {
+            ...user,
+            challenge: userState === 'initChallenge' ? '' : user.challenge,
+            exPoint: user.exPoint + user.trainingMission.exPoint,
+            training: updateTraining
+          });
+          setUser({
+            ...user,
+            challenge: userState === 'initChallenge' ? '' : user.challenge,
+            exPoint: user.exPoint + user.trainingMission.exPoint,
+            training: updateTraining,
+            trainingMission: ''
+          });
+          navigation.navigate('FeedStack');
         }
       }
     ]);
@@ -46,18 +81,6 @@ function WriteScreen({ navigation }) {
         captureURL: url,
       }
       const data = await firestore().collection('Records').add(recordData);
-
-      // get user info
-      // Quest Check
-      // let ex = 0;
-      // if (미션중이면) {
-      //   ex += 미션 경험치;
-      //   미션 state 완료
-      // if (현재 스텝 == 마지막 스텝) {
-      //   setTraining('');
-      // }
-      // }
-      // ex += 거리 경험치;
       
       // 챌린지 중일 경우
       if (user.challenge !== '') {
@@ -87,7 +110,33 @@ function WriteScreen({ navigation }) {
         if (kr_curr > res.endDate) {
           // ex += 챌린지 토탈 거리 경험치;
           await updateUser(user.uid, {challenge: ''});
-          setUser({...user, challenge: ''})
+          userState = 'initChallenge';
+        }
+      }
+
+      // 미션 도전중일 경우
+      if (user?.trainingMission?.content?.length > 0) {
+        if (user.trainingMission.time > 0) {
+          if (record.totalTime > user.trainingMission.time * 60) {
+            onSuccessMission();
+          } else {
+            if (userState === 'initChallenge') {
+              setUser({...user, challenge: '', trainingMission: ''})
+            } else {
+              setUser({...user, trainingMission: ''})
+            }
+          }
+        }
+        if (user.trainingMission.distance > 0) {
+          if (record.distance > user.trainingMission.distance) {
+            onSuccessMission();
+          } else {
+            if (userState === 'initChallenge') {
+              setUser({...user, challenge: '', trainingMission: ''})
+            } else {
+              setUser({...user, trainingMission: ''})
+            }
+          }
         }
       }
 
@@ -122,7 +171,7 @@ function WriteScreen({ navigation }) {
 
   useEffect(() => {
     setMinutes(Math.floor(record.totalTime/60));
-    setSeconds(record.totalTime - (minutes * 60));
+    setSeconds(record.totalTime - (Math.floor(record.totalTime/60) * 60));
   }, []);
 
   return (

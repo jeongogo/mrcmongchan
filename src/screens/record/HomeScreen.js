@@ -131,7 +131,7 @@ function HomeScreen({ navigation }) {
   /** 누적 분:초 */
   useEffect(() => {
     setMinutes(Math.floor(totalTime/1000/60));
-    setSeconds((totalTime/1000) - (minutes * 60));
+    setSeconds((totalTime/1000) - (Math.floor(totalTime/1000/60) * 60));
   }, [totalTime]);
 
   /** 시작하기 */
@@ -318,6 +318,12 @@ function HomeScreen({ navigation }) {
           </MapView>
         }
       </ViewShot>
+      {user?.trainingMission?.content?.length > 0 &&
+        <View style={styles.mission}>
+          <Text style={styles.missionTitle}>진행중인 미션</Text>
+          <Text style={styles.missionContent}>{user.trainingMission.content}</Text>
+        </View>
+      }
       {isStarted
         ?
           <View style={styles.record_wrap}>
@@ -420,9 +426,37 @@ const styles = StyleSheet.create({
     top: 10,
     right: 10,
   },
+  mission: {
+    position: 'absolute',
+    bottom: 170,
+    left: '50%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignContent: 'center',
+    backgroundColor: 'red',
+    width: 300,
+    paddingHorizontal: 10,
+    paddingVertical: 15,
+    backgroundColor: 'rgba(255,255,255,0.8)',
+    borderRadius: 10,
+    transform: [{ translateX: -150 }],
+    zIndex: 9,
+  },
+  missionTitle: {
+    fontSize: 14,
+    color: '#333',
+    textDecorationLine: 'underline',
+    textAlign: 'center',
+  },
+  missionContent: {
+    marginTop: 7,
+    fontSize: 14,
+    color: '#454545',
+    textAlign: 'center',
+  },
   start: {
     position: 'absolute',
-    bottom: 60,
+    bottom: 55,
     left: '50%',
     display: 'flex',
     justifyContent: 'center',

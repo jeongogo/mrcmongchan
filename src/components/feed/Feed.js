@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useStore from "../../store/store";
-import {View, Image, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Image, Text, StyleSheet, Pressable} from 'react-native';
 
 function Feed({ feed, navigation }) {
   const user = useStore((state) => state.user);
@@ -26,7 +26,7 @@ function Feed({ feed, navigation }) {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity activeOpacity={1} onPress={() => onDetail(feed.id)}>
+      <Pressable onPress={() => onDetail(feed.id)}>
         {/* <View style={styles.wrap}>
           <Image style={styles.avatar} source={{uri: feed.photoURL}} />
           <Text style={styles.text}>{feed.displayName}</Text>
@@ -41,7 +41,7 @@ function Feed({ feed, navigation }) {
           <Text style={styles.text}>페이스 </Text>
           <Text style={styles.text}>{feed.pace}</Text>
         </View>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   )
 };

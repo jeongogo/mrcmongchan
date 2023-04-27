@@ -176,7 +176,7 @@ function DetailScreen({route, navigation}) {
       <View style={styles.info}>
         <Text style={styles.title}>{challenge.title}</Text>
         <Text style={styles.goal}>목표 거리 : {challenge.goal}km</Text>
-          {user.challenge === ''
+          {(user.challenge === '' && user.challengeApplicant === '')
             ?
               <Pressable style={styles.attendBtn} onPress={onApplicant}>
                 <Text style={styles.attendText}>참가 신청하기</Text>
@@ -247,6 +247,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   subTitle: {
+    marginBottom: 5,
     fontSize: 18,
     color: '#fff',
   },

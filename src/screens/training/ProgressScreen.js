@@ -1,21 +1,10 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import Progress from "../../components/training/Progress";
 
 function ProgressScreen() {
   return (
-    <View style={styles.container}>
-      <Text>페이지 준비중입니다.</Text>
-    </View>
+    <Progress />
   )
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 export default ProgressScreen;

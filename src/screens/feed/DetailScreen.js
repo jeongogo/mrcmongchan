@@ -10,13 +10,13 @@ function DetailScreen() {
 
   useEffect(() => {
     setMinutes(Math.floor(feedDetail.totalTime/60));
-    setSeconds(feedDetail.totalTime - (minutes * 60));
+    setSeconds(feedDetail.totalTime - (Math.floor(feedDetail.totalTime/60) * 60));
   }, []);
 
   return (
     <View style={styles.container}>
-      <View style={styles.wrap}>
-        <Text style={styles.text}>{feedDetail.name}</Text>
+      <View style={styles.imageWrap}>
+        <Image style={styles.image} width={width-30} source={{uri: feedDetail.captureURL}} />
       </View>
       <View style={styles.wrap}>
         <Text style={styles.text}>거리</Text>
@@ -30,9 +30,6 @@ function DetailScreen() {
         <Text style={styles.text}>페이스</Text>
         <Text style={styles.text}>{feedDetail.pace}</Text>
       </View>
-      <View style={styles.wrap}>
-        <Image style={styles.image} width={width-30} source={{uri: feedDetail.captureURL}} />
-      </View>
     </View>
   );
 }
@@ -43,14 +40,20 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: '#000',
   },
+  imageWrap: {
+    paddingVertical: 5,
+  },
   wrap: {
     display: 'flex',
     flexDirection: 'row',
     alignContent: 'center',
-    marginBottom: 20,
+    paddingTop: 15,
+    paddingBottom: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#666',
   },
   text: {
-    minWidth: 100,
+    minWidth: 120,
     fontSize: 20,
     color: 'white',
   },

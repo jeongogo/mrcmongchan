@@ -138,8 +138,6 @@ function WriteScreen({ navigation }) {
       //   ex += 보너스 경험치 (레벨*10)
       // }
       
-      // save for user 누적 거리 더하기
-
       navigation.navigate('HomeStack');
     } catch (e) {
       Alert.alert("", e.message, [

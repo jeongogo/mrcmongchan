@@ -26,6 +26,7 @@ function Progress() {
   }
 
   useEffect(() => {
+    setTrainingMission('');
     const today = new Date();
     const todayStr = today.getFullYear() + '' + (today.getMonth() + 1) + '' + today.getDate();
     
@@ -84,7 +85,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   text: {
-    paddingVertical: 50,
+    paddingVertical: 30,
     paddingHorizontal: 30,
     fontSize: 16,
     color: 'white',

@@ -21,7 +21,7 @@ function Feed({ feed, navigation }) {
     let min = current.getMinutes();
     hours = hours < 10 ? '0' + hours : hours;
     min = min < 10 ? '0' + min : min;
-    setDate(year + '.' + month + '.' + date + ' ' + hours + ':' + min);
+    setDate(year + '년 ' + month + '월 ' + date + '일 ' + hours + ':' + min);
   }, []);
 
   return (

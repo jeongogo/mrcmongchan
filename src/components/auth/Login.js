@@ -32,7 +32,6 @@ function Login({isSignUp, handleLogin}) {
     <View style={styles.container}>
       <TextInput
         style={styles.input}
-        placeholder='이메일'
         value={form.email}
         onChangeText={createChangeTextHandler('email')}
         autoCapitalize="none"
@@ -41,10 +40,11 @@ function Login({isSignUp, handleLogin}) {
         keyboardType="email-address"
         returnKeyType='next'
         onSubmitEditing={() => passwordRef.current.focus()}
+        placeholder='이메일'
+        placeholderTextColor='black'
       />
       <TextInput
         style={[styles.input, styles.margin]}
-        placeholder='비밀번호'
         value={form.password}
         onChangeText={createChangeTextHandler('password')}
         secureTextEntry
@@ -57,17 +57,20 @@ function Login({isSignUp, handleLogin}) {
             onSubmit();
           }
         }}
+        placeholder='비밀번호'
+        placeholderTextColor='black'
       />
       {isSignUp && (
         <TextInput
           style={[styles.input, styles.margin]}
-          placeholder='비밀번호 확인'
           value={form.confirmPassword}
           onChangeText={createChangeTextHandler('confirmPassword')}
           secureTextEntry
           ref={confirmPasswordRef}
           returnKeyType='done'
           onSubmitEditing={onSubmit}
+          placeholder='비밀번호 확인'
+          placeholderTextColor='black'
         />
       )}
       <Pressable

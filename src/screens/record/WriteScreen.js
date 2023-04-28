@@ -114,12 +114,12 @@ function WriteScreen({ navigation }) {
           }
         }
       }
-
+      
       // 레벨업 체크
-      const distanceExp = (record.distance/100) * 0.6;
+      const distanceExp = (record.distance*10) * 0.6;
       const currentExp = +user.exPoint + missionExp + distanceExp;
       const lv = user.level + 1;
-      const nextLvExp = (lv-1 * lv-1) * ((lv * lv) - (13 * lv) + 82);
+      const nextLvExp = ((lv-1) * (lv-1)) * ((lv * lv) - (13 * lv) + 82);
 
       if (currentExp > nextLvExp) {
         await updateUser(user.uid, {

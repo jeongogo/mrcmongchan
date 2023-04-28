@@ -21,6 +21,8 @@ function WelcomeScreen({route}) {
         uid,
         name,
         weight,
+        level: 1,
+        exPoint: 0,
         distance: 0,
         record: {
           one: 0,
@@ -31,6 +33,9 @@ function WelcomeScreen({route}) {
           thirty: 0,
           full: 0,
         },
+        training: '',
+        trainingStartDate: '',
+        trainingMission: '',
         challenge: '',
         challengeApplicant: '',
       }
@@ -48,8 +53,20 @@ function WelcomeScreen({route}) {
     <View style={styles.container}>
       {isLoading && <Loader />}
       <Text style={styles.title}>환영합니다.</Text>
-      <TextInput style={styles.input} value={name} onChangeText={setName} placeholder="이름" />
-      <TextInput style={styles.input} value={weight} onChangeText={setWeight} placeholder="몸무게(kg)" />
+      <TextInput
+        style={styles.input}
+        value={name}
+        onChangeText={setName}
+        placeholder="이름"
+        placeholderTextColor='black'
+      />
+      <TextInput
+        style={styles.input}
+        value={weight}
+        onChangeText={setWeight}
+        placeholder="몸무게(kg)"
+        placeholderTextColor='black'
+      />
       <View style={styles.btnWrap}>
         <Button onPress={onSubmit} title="저장" />
       </View>

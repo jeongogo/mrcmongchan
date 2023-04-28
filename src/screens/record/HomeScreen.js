@@ -26,7 +26,9 @@ function HomeScreen({ navigation }) {
   const [seconds, setSeconds] = useState(0);                         // 렌더링용 초
   const [distance, setDistance] = useState(0);                       // 누적 거리
   const [pace, setPace] = useState('00:00');                         // 페이스
-  const [path, setPath] = useState([]);                              // 경로 그리기 Ref
+  const paceRef = useRef(1);                                         // 상세 페이스용 Ref
+  const [paceDetail, setPaceDetail] = useState([]);                  // 상세 페이스
+  const [path, setPath] = useState([]);                              // 경로 그리기
 
   /** 지도 초기값 세팅 */
   const initGeo = () => {
@@ -127,6 +129,10 @@ function HomeScreen({ navigation }) {
     } else {
       setPace('00:00');
     }
+    if (distance > paceRef.current * 1000) {
+      paceRef.current++;
+      setPaceDetail(prev => [...prev, totalTime/1000]);
+    }
   }, [distance]);
 
   /** 누적 분:초 */
@@ -157,9 +163,11 @@ function HomeScreen({ navigation }) {
     setTotalTime(0);
     setDistance(0);
     setPace('00:00');
+    setPaceDetail([]);
     setIsStarted(false);
     setIsRecoding(false);
     clearInterval(timeRef.current);
+    paceRef.current = 1;
     timeRef.current = null;
     watchId.current = null;
   }
@@ -183,6 +191,10 @@ function HomeScreen({ navigation }) {
   /** 완료 */
   const handleComplete = async () => {
     try {
+      if (distance - ((paceRef.current - 1) * 1000) > 490) {
+        setPaceDetail(prev => [...prev, totalTime/1000]);
+      }
+
       const uri = await captureRef.current.capture();
       setCaptureURL(uri);
 
@@ -223,6 +235,7 @@ function HomeScreen({ navigation }) {
         totalTime: totalTime/1000,
         distance: (distance/1000).toFixed(2),
         pace,
+        paceDetail,
         calorie: calorie.toFixed(0),
         date: new Date(),
       };

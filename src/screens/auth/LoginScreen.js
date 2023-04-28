@@ -76,7 +76,7 @@ function LoginScreen({route, navigation}) {
       }
     } catch (e) {
       console.log('에러', e)
-      crashlytics().recordError(e);
+      crashlytics().recordError('google login', e);
     } finally {
       setIsLoading(false);
     }

@@ -1,16 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import { useIsFocused } from "@react-navigation/native";
-import useStore from "../../store/store";
-import {Pressable, SafeAreaView, ScrollView, Text, StyleSheet} from 'react-native';
-import Challenge from '../../components/challenge/Challenge';
-import Loader from "../../components/common/Loader";
+import Home from "../../components/challenge/Home";
 
-function HomeScreen({navigation}) {
+function HomeScreen() {
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState();
   const [challenges, setChallenges] = useState([]);
-  const user = useStore((state) => state.user);
 
   const getChanllenges = async () => {
     setIsLoading(true);
@@ -42,45 +38,8 @@ function HomeScreen({navigation}) {
   }, [isFocused]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      {isLoading && <Loader />}
-      {user.isAdmin &&
-        <Pressable style={styles.create} onPress={() => navigation.navigate('ChallengeWrite')}>
-          <Text style={styles.createText}>챌린지 만들기</Text>
-        </Pressable>
-      }
-      <ScrollView style={styles.full}>
-        {(challenges.length > 0) && 
-          challenges.map((challenge) => (
-            <Challenge key={challenge.id} challenge={challenge} navigation={navigation} />
-        ))}
-      </ScrollView>
-    </SafeAreaView>
+    <Home isLoading={isLoading} challenges={challenges} />
   )
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingVertical: 20,
-    paddingHorizontal: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#000',
-  },
-  create: {
-    width: '100%',
-    padding: 15,
-    backgroundColor: '#222',
-  },
-  createText: {
-    fontSize: 16,
-    textAlign: 'center',
-    color: '#AEEA00',
-  },
-  full: {
-    width: '100%',
-  }
-});
 
 export default HomeScreen;

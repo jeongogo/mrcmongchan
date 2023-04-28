@@ -25,6 +25,9 @@ function Login({isSignUp, handleLogin}) {
   }
 
   const onSubmit = () => {
+    if (form.email === '' || form.password === '') {
+      return;
+    }
     handleLogin(form);
   }
 
@@ -114,6 +117,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 4,
     height: 48,
+    color: '#000',
     backgroundColor: 'white'
   },
   wrapper: {

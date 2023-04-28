@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigation } from "@react-navigation/native";
 import useStore from "../../store/store";
 import {View, Image, Text, StyleSheet, Pressable} from 'react-native';
 
-function Feed({ feed, navigation }) {
+function Feed({ feed }) {
+  const navigation = useNavigation();
   const user = useStore((state) => state.user);
   const setFeedDetail = useStore((state) => state.setFeedDetail);
   const [date, setDate] = useState('');

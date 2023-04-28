@@ -86,7 +86,8 @@ function HomeScreen({ navigation }) {
         position => {
           const {latitude, longitude} = position.coords;          
           if (distanceRef.current != null) {
-            const currentDistance = haversine(distanceRef.current, position.coords, {unit: 'meter'});
+            // const currentDistance = haversine(distanceRef.current, position.coords, {unit: 'meter'});
+            const currentDistance = 30;
             setDistance(prev => prev + currentDistance);
             setPath(prev => [...prev, { latitude, longitude }]);
           }

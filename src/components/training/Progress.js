@@ -59,12 +59,12 @@ function Progress() {
       <Text style={styles.text}>{mission.content}</Text>
         {mission.isComplete
           ?
-            <View style={styles.btnComplete}>
-              <Text style={styles.btnText}>완료</Text>
+            <View style={[styles.btn, styles.complete]}>
+              <Text style={styles.btnText}>미션 완료</Text>
             </View>
           :
             <Pressable onPress={onStart} style={styles.btn}>
-              <Text style={styles.btnText}>도전</Text>
+              <Text style={styles.btnText}>도전하기</Text>
             </Pressable>
         }
     </View>
@@ -74,7 +74,7 @@ function Progress() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 15,
+    padding: 30,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#000',
@@ -85,29 +85,28 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   text: {
-    paddingVertical: 30,
-    paddingHorizontal: 30,
+    width: '100%',
+    paddingVertical: 60,
     fontSize: 16,
-    color: 'white',
+    color: '#fff',
     borderWidth: 1,
     borderColor: '#fff',
-  },
-  btnComplete: {
-    marginTop: 30,
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    backgroundColor: '#AEEA00',
+    textAlign: 'center',
   },
   btn: {
-    marginTop: 30,
+    marginTop: 25,
+    width: '100%',
     paddingVertical: 15,
-    paddingHorizontal: 30,
     backgroundColor: '#AEEA00',
   },
   btnText: {
     fontSize: 18,
     fontWeight: 500,
     color: '#000',
+    textAlign: 'center',
+  },
+  complete: {
+    backgroundColor: '#fff',
   }
 });
 

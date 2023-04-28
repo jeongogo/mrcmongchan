@@ -8,11 +8,13 @@ import Entry from '../../components/challenge/Entry';
 import Applicant from '../../components/challenge/Applicant';
 
 function DetailScreen({route, navigation}) {
+  const docRef = firestore().collection('Challenges').doc(route.params.id);
   const isFocused = useIsFocused();
   const [challenge, setChallenge] = useState('');
+  const [totalDistance, setTotalDistance] = useState(0);
+  const [goalCurrent, setGoalCurrent] = useState(0);
   const user = useStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
-  const docRef = firestore().collection('Challenges').doc(route.params.id);
 
   /** Update User */
   const onUpdateUser = async () => {
@@ -25,6 +27,11 @@ function DetailScreen({route, navigation}) {
     try {
       const res = await docRef.get();
       setChallenge(res.data());
+      const total = res.data().entry.reduce((accumulator, current, index, array) => {
+        return accumulator + current.distance;
+      }, 0);
+      setTotalDistance(total);
+      setGoalCurrent((total/challenge.goal)*100);
     } catch (e) {
       console.log(e);
     }
@@ -175,7 +182,15 @@ function DetailScreen({route, navigation}) {
     <View style={styles.container}>
       <View style={styles.info}>
         <Text style={styles.title}>{challenge.title}</Text>
-        <Text style={styles.goal}>목표 거리 : {challenge.goal}km</Text>
+        <View style={styles.goalTitleWrap}>
+          <Text style={styles.goalCurrentText}>{totalDistance}km</Text>
+          <Text style={styles.goalText}>{challenge.goal}km</Text>
+        </View>
+        <View style={styles.goalBarWrap}>
+          <View style={[styles.goalCurrent, {width: goalCurrent + '%'}]}></View>
+          <View style={styles.goalTotal}></View>
+        </View>
+        <View style={styles.btnWrap}>
           {(user.challenge === '' && user.challengeApplicant === '')
             ?
               <Pressable style={styles.attendBtn} onPress={onApplicant}>
@@ -185,15 +200,15 @@ function DetailScreen({route, navigation}) {
               <Pressable style={styles.attendBtn} onPress={onLeave}>
                 <Text style={styles.attendText}>참가 취소하기</Text>
               </Pressable>
-        }
-        {user.isAdmin &&
-          <Pressable style={styles.attendBtn} onPress={onDelete}>
-            <Text style={styles.attendText}>챌린지 삭제하기</Text>
-          </Pressable>
-        }
+          }
+          {user.isAdmin &&
+            <Pressable style={styles.attendBtn} onPress={onDelete}>
+              <Text style={styles.attendText}>챌린지 삭제하기</Text>
+            </Pressable>
+          }
+        </View>
       </View>
       <View style={styles.entry}>
-        <Text style={styles.subTitle}>참가자 목록</Text>
         {(challenge.entry?.length > 0) && 
           challenge.entry.map((i) => (
             <Entry key={i.uid} entry={i} />
@@ -217,7 +232,8 @@ function DetailScreen({route, navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 15,
+    paddingHorizontal: 15,
+    paddingVertical: 30,
     backgroundColor: '#000',
   },
   info: {
@@ -229,14 +245,62 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
   },
-  goal: {
-    marginTop: 10,
-    fontSize: 16,
+  goalTitleWrap: {
+    marginTop: 20,
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
+  },
+  goalCurrentText: {
+    fontSize: 20,
+    color: '#AEEA00',
+    textAlign: 'center',
+  },
+  goalText: {
+    fontSize: 20,
     color: 'white',
     textAlign: 'center',
   },
+  goalBarWrap: {
+    marginTop: 10,
+    position: 'relative',
+    width: '100%',
+    height: 10,
+    borderRadius: 10,
+    overflow: 'hidden',
+  },
+  goalCurrent: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    height: '100%',
+    backgroundColor: '#AEEA00',
+    zIndex: 2,
+  },
+  goalTotal: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#333',
+    zIndex: 1,
+  },
+  subTitle: {
+    marginBottom: 5,
+    fontSize: 18,
+    color: '#fff',
+  },
+  btnWrap: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
   attendBtn: {
     marginTop: 15,
+    marginHorizontal: 5,
     paddingVertical: 15,
     paddingHorizontal: 30,
     backgroundColor: '#222',
@@ -246,13 +310,8 @@ const styles = StyleSheet.create({
     color: '#AEEA00',
     textAlign: 'center',
   },
-  subTitle: {
-    marginBottom: 5,
-    fontSize: 18,
-    color: '#fff',
-  },
   entry: {
-    marginTop: 50,
+    marginTop: 30,
   },
   applicant: {
     marginTop: 30,

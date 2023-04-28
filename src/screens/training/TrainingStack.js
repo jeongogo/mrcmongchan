@@ -16,9 +16,9 @@ function TrainingStack() {
   const setUser = useStore((state) => state.setUser);
 
   const refreshUser = async () => {
-    const u = await getUser(user.uid);
-    setIsProgress(u?.training?.program?.length > 0);
-    setUser(u);
+    // const u = await getUser(user.uid);
+    setIsProgress(user.training?.program?.length > 0);
+    // setUser(u);
   }
 
   useEffect(() => {
@@ -33,7 +33,7 @@ function TrainingStack() {
             name='TrainingProgress'
             component={ProgressScreen}
             options={() => ({
-              title: '훈련 미션 도전하기'
+              title: '미션 도전'
             })}
           />
         :
@@ -56,7 +56,7 @@ function TrainingStack() {
               name='TrainingProgress'
               component={ProgressScreen}
               options={() => ({
-                title: '훈련 미션 도전하기'
+                title: '미션 도전'
               })}
             />
           </>

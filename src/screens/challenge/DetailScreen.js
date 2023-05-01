@@ -31,7 +31,6 @@ function DetailScreen({route, navigation}) {
         return accumulator + current.distance;
       }, 0);
       setTotalDistance(total);
-      setGoalCurrent((total/challenge.goal)*100);
     } catch (e) {
       console.log(e);
     }
@@ -177,6 +176,10 @@ function DetailScreen({route, navigation}) {
     getChallenge();
     onUpdateUser();
   }, [isFocused]);
+
+  useEffect(() => {
+    setGoalCurrent((totalDistance/challenge.goal)*100);
+  }, [totalDistance]);
 
   return (
     <View style={styles.container}>

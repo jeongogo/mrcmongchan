@@ -31,17 +31,7 @@ function RootStack() {
   
   return (
     <Stack.Navigator initialRouteName="Main">
-      <Stack.Group screenOptions={{
-        headerStyle: {
-          backgroundColor: 'black'
-        },
-        headerTintColor: 'white',
-        headerTitleStyle: {
-          fontSize: 18,
-          fontWeight: 'bold',
-          color: '#fff'
-        },
-      }}>
+      <Stack.Group>
       {user
         ?
           <>

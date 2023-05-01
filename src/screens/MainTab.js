@@ -17,11 +17,8 @@ const MainTab = ({navigation}) => {
   return (
     <Tab.Navigator
       initialRouteName="Home"
-      inactiveColor="#aaaaaa"
-      activeColor="#AEEA00"
-      barStyle={{
-        backgroundColor: 'black',
-      }}
+      inactiveColor="#999"
+      activeColor="#000"
     >
       <Tab.Screen
         name="HomeStack"
@@ -30,7 +27,7 @@ const MainTab = ({navigation}) => {
           tabBarLabel: '홈',
           tabBarIcon: ({color}) => MIcon('home', color),
         }} 
-      />
+        />
       <Tab.Screen
         name="TrainingStack"
         component={TrainingStack}

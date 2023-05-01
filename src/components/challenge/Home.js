@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigation } from "@react-navigation/native";
 import useStore from "../../store/store";
-import {Pressable, SafeAreaView, ScrollView, Text, StyleSheet} from 'react-native';
+import {Pressable, SafeAreaView, ScrollView, Text, StyleSheet, View} from 'react-native';
 import Challenge from './Challenge';
 import Loader from "../../components/common/Loader";
 
@@ -34,16 +34,18 @@ function Home({isLoading, challenges}) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <ScrollView style={styles.full}>
       {isLoading && <Loader />}
       {/* <Pressable style={styles.create} onPress={() => onAdd()}>
         <Text style={styles.createText}>훈련 추가</Text>
       </Pressable> */}
-      {user.isAdmin &&
-        <Pressable style={styles.create} onPress={() => navigation.navigate('ChallengeWrite')}>
-          <Text style={styles.createText}>챌린지 만들기</Text>
-        </Pressable>
-      }
-      <ScrollView style={styles.full}>
+      <View style={styles.btnWrap}>
+        {user.isAdmin &&
+          <Pressable style={styles.create} onPress={() => navigation.navigate('ChallengeWrite')}>
+            <Text style={styles.createText}>챌린지 만들기</Text>
+          </Pressable>
+        }
+      </View>
         {(challenges.length > 0) && 
           challenges.map((challenge) => (
             <Challenge key={challenge.id} challenge={challenge} navigation={navigation} />
@@ -56,21 +58,30 @@ function Home({isLoading, challenges}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 20,
+    paddingVertical: 15,
     paddingHorizontal: 15,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#000',
+    backgroundColor: '#f6f6f6',
+  },
+  btnWrap: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    width: '100%',
+    marginBottom: 15,
   },
   create: {
-    width: '100%',
-    padding: 15,
-    backgroundColor: '#222',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    backgroundColor: '#34314c',
+    borderRadius: 5,
   },
   createText: {
-    fontSize: 16,
+    fontSize: 12,
+    fontWeight: 500,
     textAlign: 'center',
-    color: '#AEEA00',
+    color: '#fff',
   },
   full: {
     width: '100%',

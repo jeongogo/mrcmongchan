@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigation } from "@react-navigation/native";
 import useStore from "../../store/store";
 import {View, Image, Text, StyleSheet, Pressable} from 'react-native';
+import CustomWrap from '../common/CustomWrap';
 
 function Feed({ feed }) {
   const navigation = useNavigation();
@@ -23,11 +24,11 @@ function Feed({ feed }) {
     let min = current.getMinutes();
     hours = hours < 10 ? '0' + hours : hours;
     min = min < 10 ? '0' + min : min;
-    setDate(year + '년 ' + month + '월 ' + date + '일 ' + hours + ':' + min);
+    setDate(month + '월 ' + date + '일 ' + hours + ':' + min);
   }, []);
 
   return (
-    <View style={styles.container}>
+    <CustomWrap>
       <Pressable onPress={() => onDetail(feed.id)}>
         {/* <View style={styles.wrap}>
           <Image style={styles.avatar} source={{uri: feed.photoURL}} />
@@ -36,36 +37,34 @@ function Feed({ feed }) {
         <View style={styles.wrap}>
           <Text style={styles.text}>{date}</Text>
         </View>
-        <View style={styles.wrap}>
+        <View style={[styles.wrap, styles.marginTop]}>
           <Text style={styles.text}>거리 </Text>
           <Text style={styles.text}>{feed.distance}km</Text>
-          <Text style={styles.margin}></Text>
+          <Text style={styles.marginRight}></Text>
           <Text style={styles.text}>페이스 </Text>
           <Text style={styles.text}>{feed.pace}</Text>
         </View>
       </Pressable>
-    </View>
+    </CustomWrap>
   )
 };
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 15,
-    paddingBottom: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#333'
+    
   },
   wrap: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  marginTop: {
     marginTop: 5,
   },
   text: {
-    fontSize: 16,
-    color: 'white',
+    fontSize: 14,
   },
-  margin: {
+  marginRight: {
     marginRight: 20,
   }
 });

@@ -108,8 +108,10 @@ function WriteScreen({navigation}) {
           />
         </View>
       </View>
-      <View>
-        <Button onPress={onSubmit} title="만들기" />
+      <View style={styles.btnWrap}>
+        <Pressable style={styles.btn} onPress={onSubmit}>
+          <Text style={styles.btnText}>만들기</Text>
+        </Pressable>
       </View>
     </View>
   )
@@ -119,25 +121,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 15,
-    backgroundColor: '#000',
+    backgroundColor: '#fff',
   },
   wrap: {
     marginBottom: 20,
   },
   title: {
-    fontSize: 16,
-    color: 'white',
+    fontSize: 14,
+    color: '#222',
   },
   input: {
     display: 'flex',
     justifyContent: 'center',
     marginTop: 10,
     width: '100%',
-    height: 48,
-    paddingHorizontal: 16,
-    color: 'white',
+    height: 42,
+    paddingHorizontal: 10,
+    fontSize: 14,
+    color: '#222',
     borderWidth: 1,
-    borderColor: '#333',
+    borderColor: '#ddd',
+    borderRadius: 5,
   },
   dateWrap: {
     display: 'flex',
@@ -145,11 +149,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    color: 'white',
+    color: '#222',
   },
   grow: {
     flexGrow: 1,
     width: '40%',
+  },
+  btnWrap: {
+    
+  },
+  btn: {
+    paddingVertical: 15,
+    backgroundColor: '#34314c',
+    borderRadius: 5,
+  },
+  btnText: {
+    fontSize: 14,
+    fontWeight: 500,
+    color: 'white',
+    textAlign: 'center',
   }
 });
 

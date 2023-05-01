@@ -1,9 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, Linking} from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import useStore from "../../store/store";
+import {View, Text, StyleSheet, Linking} from 'react-native';
+import CustomWrap from '../common/CustomWrap';
 import Loader from "../../components/common/Loader";
 
-function Home({isLoading, distance, calorie}) {
+function Home({isLoading, distance, calorie, month}) {
   const [exCurrent, setExCurrent] = useState(0);
   const [exNext, setExNext] = useState(0);
   const user = useStore((state) => state.user);
@@ -21,42 +23,53 @@ function Home({isLoading, distance, calorie}) {
   // }
 
   return (
-    <View style={styles.container}>
-      {isLoading && <Loader /> }
-      <View style={styles.levelWrap}>
-        <View style={styles.levelTitleWrap}>
-          <Text style={styles.levelTitle}>Lv. {user.level}</Text>
-          <Text style={styles.levelExp}>{user.exPoint.toFixed(0)}/{exNext}</Text>
-        </View>
-        <View style={styles.exWrap}>
-          <View style={[styles.exCurrent, {width: exCurrent + '%'}]}></View>
-          <View style={styles.exTotal}></View>
-        </View>
-      </View>
-      <View style={styles.info}>
-        <Text style={styles.text}>{distance.toFixed(2)}km</Text>
-        <Text style={styles.title}>이번달 달린 거리</Text>
-      </View>
-      <View style={styles.info}>
-        <Text style={styles.text}>{calorie}k㎈</Text>
-        <Text style={styles.title}>이번달 소비 칼로리</Text>
-      </View>
-    </View>
+    <SafeAreaProvider style={styles.container}>
+      <SafeAreaView>
+        {isLoading && <Loader /> }
+        <CustomWrap>
+          <View style={styles.levelWrap}>
+            <View style={styles.levelTitleWrap}>
+              <Text style={styles.title}>나의 레벨 {user.level}</Text>
+              <Text style={styles.levelExp}>{user.exPoint}/{exNext}</Text>
+            </View>
+            <View style={styles.exWrap}>
+              <View style={[styles.exCurrent, {width: exCurrent + '%'}]}></View>
+              <View style={styles.exTotal}></View>
+            </View>
+          </View>
+        </CustomWrap>
+        <CustomWrap>
+          <View style={styles.wrap}>
+            <Text style={styles.title}>이번주</Text>
+            <Text style={styles.text}>준비중</Text>
+          </View>
+          <View style={styles.wrap}>
+            <Text style={styles.title}>{month}월</Text>
+            <Text style={styles.text}>{distance.toFixed(2)}km / {calorie}k㎈</Text>
+          </View>
+          <View style={styles.wrap}>
+            <Text style={styles.title}>누적</Text>
+            <Text style={styles.text}>준비중</Text>
+          </View>
+        </CustomWrap>
+        <CustomWrap>
+          <Text style={styles.title}>대회정보</Text>
+          <Text style={styles.text}>준비중</Text>
+        </CustomWrap>
+      </SafeAreaView>
+    </SafeAreaProvider>
   )
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignContent: 'center',
-    paddingHorizontal: 30,
-    backgroundColor: 'black',
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    backgroundColor: '#f6f6f6',
   },
   levelWrap: {
-    marginTop: 40,
-    marginBottom: 20,
-    paddingHorizontal: 30,
+    paddingVertical: 10,
   },
   levelTitleWrap: {
     display: 'flex',
@@ -64,17 +77,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-end',
   },
-  levelTitle: {
-    fontSize: 40,
-    fontWeight: 500,
-    color: '#AEEA00',
-  },
   levelExp: {
-    fontSize: 12,
-    color: '#ddd',
+    fontSize: 11,
+    color: '#666',
   },
   exWrap: {
-    marginTop: 10,
+    marginTop: 5,
     position: 'relative',
     width: '100%',
     height: 10,
@@ -86,7 +94,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     height: '100%',
-    backgroundColor: '#AEEA00',
+    backgroundColor: '#ff7473',
     zIndex: 2,
   },
   exTotal: {
@@ -95,28 +103,27 @@ const styles = StyleSheet.create({
     left: 0,
     width: '100%',
     height: '100%',
-    backgroundColor: '#333',
+    backgroundColor: '#ccc',
     zIndex: 1,
   },
-  info: {
-    marginTop: 50,
+  wrap: {
+    paddingVertical: 7,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   title: {
-    marginTop: 10,
-    fontSize: 18,
-    color: '#ddd',
-    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: 500,
+    color: '#222',
   },
   text: {
-    fontSize: 50,
-    fontWeight: 500,
-    color: '#AEEA00',
+    fontSize: 14,
+    fontWeight: 400,
+    color: '#454545',
     textAlign: 'center',
   },
-  feeds: {
-    borderTopWidth: 1,
-    borderTopColor: '#333'
-  }
 });
 
 export default Home

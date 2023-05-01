@@ -3,8 +3,10 @@ import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import useStore from "../../store/store";
 import { updateUser } from "../../lib/user";
-import {View, Text, Button, Image, StyleSheet, Alert} from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import {View, Text, Button, Image, StyleSheet, Alert, Pressable} from 'react-native';
 import Loader from "../../components/common/Loader";
+import CustomWrap from '../../components/common/CustomWrap';
 
 function WriteScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState('');
@@ -116,7 +118,7 @@ function WriteScreen({ navigation }) {
       }
       
       // 레벨업 체크
-      const distanceExp = (record.distance*10) * 0.6;
+      const distanceExp = ((record.distance*10) * 0.6).toFixed(0);
       const currentExp = +user.exPoint + missionExp + distanceExp;
       const lv = user.level + 1;
       const nextLvExp = ((lv-1) * (lv-1)) * ((lv * lv) - (13 * lv) + 82);
@@ -157,38 +159,42 @@ function WriteScreen({ navigation }) {
   }, []);
 
   return (
-    <View style={styles.container}>
-      {isLoading && <Loader />}
-      <View style={styles.imageWrap}>
-        {captureURL &&
-          <Image style={styles.image} source={{uri: captureURL}} />
-        }
-      </View>
-      <View style={styles.wrap}>
-        <Text style={styles.text}>거리</Text>
-        <Text style={styles.text}>{record.distance}km</Text>
-      </View>
-      <View style={styles.wrap}>
-        <Text style={styles.text}>이동 시간</Text>
-        <Text style={styles.text}>{minutes < 10 ? '0' + minutes : minutes}:{seconds < 10 ? '0' + seconds : seconds}</Text>
-      </View>
-      <View style={styles.wrap}>
-        <Text style={styles.text}>페이스</Text>
-        <Text style={styles.text}>{record.pace}</Text>
-      </View>
-      <View style={styles.wrap}>
-        <Text style={styles.text}>칼로리</Text>
-        <Text style={styles.text}>{record.calorie}k㎈</Text>
-      </View>
-      <View style={styles.btnWrap}>
-        <View style={styles.btn}>
-          <Button color='#E53935' title="삭제하기" onPress={onDelete} />
-        </View>
-        <View style={styles.btn}>
-          <Button color='#0288D1' title="저장하기" onPress={onSubmit} />
-        </View>
-      </View>
-    </View>
+    <SafeAreaProvider style={styles.container}>
+      <SafeAreaView>
+        <CustomWrap>
+          {isLoading && <Loader />}
+          <View style={styles.imageWrap}>
+            {captureURL &&
+              <Image style={styles.image} source={{uri: captureURL}} />
+            }
+          </View>
+          <View style={styles.wrap}>
+            <Text style={styles.text}>거리</Text>
+            <Text style={styles.text}>{record.distance}km</Text>
+          </View>
+          <View style={styles.wrap}>
+            <Text style={styles.text}>이동 시간</Text>
+            <Text style={styles.text}>{minutes < 10 ? '0' + minutes : minutes}:{seconds < 10 ? '0' + seconds : seconds}</Text>
+          </View>
+          <View style={styles.wrap}>
+            <Text style={styles.text}>페이스</Text>
+            <Text style={styles.text}>{record.pace}</Text>
+          </View>
+          <View style={styles.wrap}>
+            <Text style={styles.text}>칼로리</Text>
+            <Text style={styles.text}>{record.calorie}k㎈</Text>
+          </View>
+          <View style={styles.btnWrap}>
+            <Pressable style={[styles.btn, styles.red]} onPress={onDelete}>
+              <Text style={styles.btnText}>삭제하기</Text>
+            </Pressable>
+            <Pressable style={[styles.btn, styles.blue]} onPress={onSubmit}>
+              <Text style={styles.btnText}>저장하기</Text>
+            </Pressable>
+          </View>
+        </CustomWrap>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
@@ -196,7 +202,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 15,
-    backgroundColor: '#000',
+    backgroundColor: '#f6f6f6',
   },
   imageWrap: {
     display: 'flex',
@@ -214,13 +220,13 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   image: {
-    width: 250,
+    width: 300,
     height: 250,
   },
   text: {
-    minWidth: 100,
-    fontSize: 20,
-    color: 'white',
+    minWidth: 150,
+    fontSize: 16,
+    color: '#222',
   },
   btnWrap: {
     display: 'flex',
@@ -230,9 +236,24 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   btn: {
+    marginBottom: 15,
+    paddingVertical: 15,
     width: 120,
     marginLeft: 10,
     marginRight: 10,
+    borderRadius: 5,
+  },
+  red: {
+    backgroundColor: '#f94e3f',
+  },
+  blue: {
+    backgroundColor: '#2b90d9',
+  },
+  btnText: {
+    fontSize: 14,
+    fontWeight: 500,
+    color: 'white',
+    textAlign: 'center',
   }
 });
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useStore from "../../store/store";
 import {SafeAreaView, ScrollView, View, Text, Image, StyleSheet, useWindowDimensions} from 'react-native';
+import CustomWrap from '../common/CustomWrap';
 
 function Detail() {
   const width = useWindowDimensions().width;
@@ -42,28 +43,34 @@ function Detail() {
         <View style={styles.imageWrap}>
           <Image style={styles.image} width={width} source={{uri: feedDetail.captureURL}} />
         </View>
-        <View style={styles.info}>
-          <Text style={styles.text}>거리</Text>
-          <Text style={styles.text}>{feedDetail.distance}km</Text>
-          <Text style={styles.margin}></Text>
-          <Text style={styles.text}>시간</Text>
-          <Text style={styles.text}>{minutes < 10 ? '0' + minutes : minutes}:{seconds < 10 ? '0' + seconds : seconds}</Text>
-          <Text style={styles.margin}></Text>
-          <Text style={styles.text}>페이스</Text>
-          <Text style={styles.text}>{feedDetail.pace}</Text>
-        </View>
-        <View style={styles.pace}>
-          {paceDetail.length > 0 &&
-            paceDetail.map((item, index) => (
-              <View style={styles.paceWrap} key={index}>
-                <Text style={[styles.paceText, styles.center]}>{index+1}</Text>
-                <View style={styles.paceBar}>
-                  <View style={[styles.paceBarCurrent, {width: item.percent + '%'}]}></View>
+        <View style={styles.contentWrap}>
+          <CustomWrap>
+            <View style={styles.wrap}>
+              <Text style={styles.text}>거리</Text>
+              <Text style={styles.text}>{feedDetail.distance}km</Text>
+            </View>
+            <View style={styles.wrap}>
+              <Text style={styles.text}>시간</Text>
+              <Text style={styles.text}>{minutes < 10 ? '0' + minutes : minutes}:{seconds < 10 ? '0' + seconds : seconds}</Text>
+            </View>
+            <View style={styles.wrap}>
+              <Text style={styles.text}>페이스</Text>
+              <Text style={styles.text}>{feedDetail.pace}</Text>
+            </View>
+          </CustomWrap>
+          <CustomWrap>
+            {paceDetail.length > 0 &&
+              paceDetail.map((item, index) => (
+                <View style={styles.paceWrap} key={index}>
+                  <Text style={styles.paceLabel}>{index+1}</Text>
+                  <View style={styles.paceBar}>
+                    <View style={[styles.paceBarCurrent, {width: item.percent + '%'}]}></View>
+                  </View>
+                  <Text style={styles.paceText}>{item.pace}</Text>
                 </View>
-                <Text style={styles.paceText}>{item.pace}</Text>
-              </View>
-            ))
-          }
+              ))
+            }
+          </CustomWrap>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -73,50 +80,43 @@ function Detail() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#f6f6f6',
   },
   imageWrap: {
-    
-  },
-  info: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignContent: 'center',
-    justifyContent: 'center',
-    paddingVertical: 30,
-  },
-  margin: {
-    marginHorizontal: 5,
-  },
-  text: {
-    marginHorizontal: 5,
-    fontSize: 18,
-    color: 'white',
+    marginBottom: 20,
   },
   image: {
     height: 200,
   },
-  pace: {
-    paddingBottom: 20,
-    borderTopWidth: 1,
-    borderTopColor: '#666',
+  contentWrap: {
+    paddingHorizontal: 20,
+  },
+  wrap: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 7,
+  },
+  text: {
+    fontSize: 14,
+    color: '#222',
   },
   paceWrap: {
     display: 'flex',
     flexDirection: 'row',
-    alignContent: 'center',
-    paddingTop: 15,
-    paddingBottom: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#666',
+    alignItems: 'center',
+    paddingVertical: 10,
   },
-  center: {
-    textAlign: 'center',
+  paceLabel: {
+    marginRight: 10,
+    fontSize: 14,
+    color: '#222',
   },
   paceBar: {
     position: 'relative',
-    width: 200,
-    height: 20,
+    flexGrow: 1,
+    height: 10,
     marginRight: 20,
   },
   paceBarCurrent: {
@@ -124,13 +124,13 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     height: '100%',
-    backgroundColor: '#AEEA00',
+    backgroundColor: '#ff7473',
+    borderRadius: 5,
     zIndex: 2,
   },
   paceText: {
-    minWidth: 40,
     fontSize: 14,
-    color: 'white',
+    color: '#222',
   },
 });
 

@@ -11,6 +11,7 @@ function HomeScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [distance, setDistance] = useState(0);
   const [calorie, setCalorie] = useState(0);
+  const [month, setMonth] = useState(0);
   const user = useStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
 
@@ -28,6 +29,7 @@ function HomeScreen() {
       });
       setDistance(dis);
       setCalorie(cal);
+      setMonth(today.getMonth() + 1);
     } catch (e) {
       console.log('에러', e)
       crashlytics().recordError(e);
@@ -55,6 +57,7 @@ function HomeScreen() {
       isLoading={isLoading}
       distance={distance}
       calorie={calorie}
+      month={month}
     />
   );
 };

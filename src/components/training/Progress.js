@@ -3,6 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 import { updateUser } from "../../lib/user";
 import {View, Text, StyleSheet, Pressable} from 'react-native';
 import useStore from "../../store/store";
+import CustomWrap from '../common/CustomWrap';
 
 function Progress() {
   const navigation = useNavigation();
@@ -55,18 +56,22 @@ function Progress() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{mission.day}일차 미션</Text>
-      <Text style={styles.text}>{mission.content}</Text>
-        {mission.isComplete
-          ?
-            <View style={[styles.btn, styles.complete]}>
-              <Text style={styles.btnText}>미션 완료</Text>
-            </View>
-          :
-            <Pressable onPress={onStart} style={styles.btn}>
-              <Text style={styles.btnText}>도전하기</Text>
-            </Pressable>
-        }
+      <CustomWrap>
+        <Text style={styles.title}>{mission.day}일차 미션</Text>
+        <Text style={styles.text}>{mission.content}</Text>
+        <View style={styles.btnWrap}>
+          {mission.isComplete
+            ?
+              <View style={[styles.btn, styles.complete]}>
+                <Text style={styles.btnText}>미션 완료</Text>
+              </View>
+            :
+              <Pressable onPress={onStart} style={styles.btn}>
+                <Text style={styles.btnText}>도전하기</Text>
+              </Pressable>
+          }
+        </View>
+      </CustomWrap>
     </View>
   )
 };
@@ -74,39 +79,45 @@ function Progress() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 30,
+    paddingHorizontal: 15,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#000',
+    backgroundColor: '#f6f6f6',
   },
   title: {
-    marginBottom: 20,
-    fontSize: 24,
-    color: 'white',
-  },
-  text: {
-    width: '100%',
-    paddingVertical: 60,
+    marginTop: 10,
     fontSize: 16,
-    color: '#fff',
-    borderWidth: 1,
-    borderColor: '#fff',
+    color: '#222',
     textAlign: 'center',
   },
-  btn: {
-    marginTop: 25,
+  text: {
+    marginTop: 10,
     width: '100%',
+    fontSize: 14,
+    color: '#222',
+    textAlign: 'center',
+  },
+  btnWrap: {
+    marginTop: 20,
+    marginBottom: 10,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  btn: {
     paddingVertical: 15,
-    backgroundColor: '#AEEA00',
+    paddingHorizontal: 25,
+    backgroundColor: '#34314c',
+    borderRadius: 5,
   },
   btnText: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: 500,
-    color: '#000',
+    color: '#fff',
     textAlign: 'center',
   },
   complete: {
-    backgroundColor: '#fff',
+    backgroundColor: '#34314c',
   }
 });
 

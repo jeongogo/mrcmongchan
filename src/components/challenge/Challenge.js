@@ -1,6 +1,7 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {View, Text, StyleSheet, Pressable} from 'react-native';
+import CustomWrap from '../common/CustomWrap';
 
 function Challenge({ challenge, navigation }) {
   const onDetail = (id) => {
@@ -8,7 +9,7 @@ function Challenge({ challenge, navigation }) {
   }
 
   return (
-    <View style={styles.container}>
+    <CustomWrap>
       <Pressable onPress={() => onDetail(challenge.id)}>
         <View style={styles.wrap}>
           <Text style={styles.text}>{challenge.title}</Text>
@@ -22,12 +23,12 @@ function Challenge({ challenge, navigation }) {
           <Text style={styles.text}>{challenge.goal}km</Text>
           <Text style={styles.margin}></Text>
           <View>
-            <Icon name={'account-multiple'} color={'white'} size={16} />
+            <Icon name={'account-multiple'} color={'#222'} size={16} />
           </View>
           <Text style={styles.text}>{challenge.entry.length}</Text>
         </View>
       </Pressable>
-    </View>
+    </CustomWrap>
   )
 };
 
@@ -45,8 +46,8 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   text: {
-    fontSize: 16,
-    color: 'white',
+    fontSize: 14,
+    color: '#222',
   },
   margin: {
     marginHorizontal: 10,

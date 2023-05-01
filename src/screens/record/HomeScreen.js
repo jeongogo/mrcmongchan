@@ -86,8 +86,7 @@ function HomeScreen({ navigation }) {
         position => {
           const {latitude, longitude} = position.coords;          
           if (distanceRef.current != null) {
-            // const currentDistance = haversine(distanceRef.current, position.coords, {unit: 'meter'});
-            const currentDistance = 30;
+            const currentDistance = haversine(distanceRef.current, position.coords, {unit: 'meter'});
             setDistance(prev => prev + currentDistance);
             setPath(prev => [...prev, { latitude, longitude }]);
           }
@@ -376,7 +375,7 @@ function HomeScreen({ navigation }) {
           </View>
         :
           <TouchableOpacity style={styles.start} activeOpacity={0.5} onPress={onStart}>
-            <Text style={styles.start_text}>시작</Text>
+            <Text style={styles.startText}>시작</Text>
           </TouchableOpacity>
       }
     </View>
@@ -483,10 +482,10 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     zIndex: 10,
   },
-  start_text: {
+  startText: {
     fontSize: 28,
     fontWeight: '700',
-    color: '#AEEA00',
+    color: '#fff',
     textAlign: 'center',
   }
 });

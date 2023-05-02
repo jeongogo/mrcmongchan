@@ -19,6 +19,9 @@ const MainTab = ({navigation}) => {
       initialRouteName="Home"
       inactiveColor="#999"
       activeColor="#000"
+      barStyle={{
+        backgroundColor: '#fff',
+      }}
     >
       <Tab.Screen
         name="HomeStack"

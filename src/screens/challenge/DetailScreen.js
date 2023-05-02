@@ -193,29 +193,29 @@ function DetailScreen({route, navigation}) {
           <View style={[styles.goalCurrent, {width: goalCurrent + '%'}]}></View>
           <View style={styles.goalTotal}></View>
         </View>
-        <View style={styles.btnWrap}>
-          {(user.challenge === '' && user.challengeApplicant === '')
-            ?
-              <Pressable style={styles.attendBtn} onPress={onApplicant}>
-                <Text style={styles.attendText}>참가 신청하기</Text>
-              </Pressable>
-            :
-              <Pressable style={styles.attendBtn} onPress={onLeave}>
-                <Text style={styles.attendText}>참가 취소하기</Text>
-              </Pressable>
-          }
-          {user.isAdmin &&
-            <Pressable style={styles.attendBtn} onPress={onDelete}>
-              <Text style={styles.attendText}>챌린지 삭제하기</Text>
-            </Pressable>
-          }
-        </View>
       </View>
       <View style={styles.entry}>
         {(challenge.entry?.length > 0) && 
           challenge.entry.map((i) => (
             <Entry key={i.uid} entry={i} />
         ))}
+      </View>
+      <View style={styles.btnWrap}>
+        {(user.challenge === '' && user.challengeApplicant === '')
+          ?
+            <Pressable onPress={onApplicant}>
+              <Text style={[styles.btn, styles.submit]}>참가 신청하기</Text>
+            </Pressable>
+          :
+            <Pressable onPress={onLeave}>
+              <Text style={[styles.btn, styles.cancel]}>참가 취소하기</Text>
+            </Pressable>
+        }
+        {user.isAdmin &&
+          <Pressable onPress={onDelete}>
+            <Text style={[styles.btn, styles.submit]}>챌린지 삭제하기</Text>
+          </Pressable>
+        }
       </View>
       {(user.isAdmin && challenge.applicants?.length > 0)
         ?
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 15,
     paddingVertical: 30,
-    backgroundColor: '#000',
+    backgroundColor: '#fff',
   },
   info: {
     display: 'flex',
@@ -245,11 +245,12 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    color: 'white',
+    fontWeight: 500,
+    color: '#222',
     textAlign: 'center',
   },
   goalTitleWrap: {
-    marginTop: 20,
+    marginTop: 30,
     width: '100%',
     display: 'flex',
     flexDirection: 'row',
@@ -257,13 +258,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   goalCurrentText: {
-    fontSize: 20,
-    color: '#AEEA00',
+    fontSize: 18,
+    color: '#E53A40',
     textAlign: 'center',
   },
   goalText: {
-    fontSize: 20,
-    color: 'white',
+    fontSize: 18,
+    color: '#454545',
     textAlign: 'center',
   },
   goalBarWrap: {
@@ -279,7 +280,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     height: '100%',
-    backgroundColor: '#AEEA00',
+    backgroundColor: '#E53A40',
     zIndex: 2,
   },
   goalTotal: {
@@ -288,30 +289,34 @@ const styles = StyleSheet.create({
     left: 0,
     width: '100%',
     height: '100%',
-    backgroundColor: '#333',
+    backgroundColor: '#ddd',
     zIndex: 1,
   },
   subTitle: {
-    marginBottom: 5,
+    marginBottom: 10,
     fontSize: 18,
     color: '#fff',
   },
   btnWrap: {
+    marginTop: 30,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
   },
-  attendBtn: {
-    marginTop: 15,
-    marginHorizontal: 5,
+  btn: {
     paddingVertical: 15,
     paddingHorizontal: 30,
-    backgroundColor: '#222',
-  },
-  attendText: {
     fontSize: 16,
-    color: '#AEEA00',
     textAlign: 'center',
+    borderRadius: 5,
+  },
+  submit: {
+    color: '#fff',
+    backgroundColor: '#E53A40',
+  },
+  cancel: {
+    color: '#666',
+    textDecorationLine: 'underline',
   },
   entry: {
     marginTop: 30,

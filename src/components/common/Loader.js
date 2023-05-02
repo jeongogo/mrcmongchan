@@ -5,7 +5,7 @@ import { Bubbles } from 'react-native-loader';
 const Loader = () => {
   return (
     <View style={styles.container}>
-      <Bubbles size={6} color="#ff7473" />
+      <Bubbles size={6} color="#E53A40" />
     </View>
   )
 }

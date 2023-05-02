@@ -405,12 +405,12 @@ const styles = StyleSheet.create({
   record_current: {
     fontSize: 60,
     fontWeight: 700,
-    color: '#AEEA00',
+    color: '#fff',
     textAlign: 'center',
   },
   record_title: {
     fontSize: 20,
-    color: '#AEEA00',
+    color: '#fff',
     textAlign: 'center',
   },
   record_btn_wrap: {

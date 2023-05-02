@@ -90,7 +90,7 @@ function LoginScreen({route, navigation}) {
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.select({ios: 'padding'})}>
-      <SafeAreaView style={styles.fullscreen}>
+      <SafeAreaView style={styles.container}>
         {isLoading && <Loader />}
         <View style={styles.form}>
           <Login isSignUp={isSignUp} handleLogin={handleLogin} />
@@ -108,7 +108,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignContent: 'center',
-    padding: 60,
+    paddingHorizontal: 30,
+    backgroundColor: '#f6f6f6',
   },
   google: {
     

@@ -79,27 +79,27 @@ function Progress() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 15,
+    paddingHorizontal: 30,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f6f6f6',
   },
   title: {
-    marginTop: 10,
-    fontSize: 16,
+    marginTop: 15,
+    fontSize: 18,
     color: '#222',
     textAlign: 'center',
   },
   text: {
     marginTop: 10,
     width: '100%',
-    fontSize: 14,
-    color: '#222',
+    fontSize: 15,
+    color: '#454545',
     textAlign: 'center',
   },
   btnWrap: {
     marginTop: 20,
-    marginBottom: 10,
+    marginBottom: 15,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   btn: {
     paddingVertical: 15,
     paddingHorizontal: 25,
-    backgroundColor: '#34314c',
+    backgroundColor: '#E53A40',
     borderRadius: 5,
   },
   btnText: {

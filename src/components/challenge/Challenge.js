@@ -33,12 +33,6 @@ function Challenge({ challenge, navigation }) {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    paddingVertical: 20,
-    paddingHorizontal: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#333',
-  },
   wrap: {
     display: 'flex',
     flexDirection: 'row',
@@ -46,7 +40,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   text: {
-    fontSize: 14,
+    fontSize: 15,
     color: '#222',
   },
   margin: {

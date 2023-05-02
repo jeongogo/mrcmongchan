@@ -72,13 +72,13 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   create: {
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    backgroundColor: '#34314c',
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    backgroundColor: '#E53A40',
     borderRadius: 5,
   },
   createText: {
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: 500,
     textAlign: 'center',
     color: '#fff',

@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigation } from "@react-navigation/native";
 import useStore from "../../store/store";
 import {Pressable, SafeAreaView, ScrollView, Text, StyleSheet} from 'react-native';
+import CustomWrap from "../common/CustomWrap";
 
 function Home({trainings}) {
   const navigation = useNavigation();
@@ -17,9 +18,11 @@ function Home({trainings}) {
       <ScrollView>
         {(trainings.length > 0) && 
           trainings.map((item) => (
-            <Pressable onPress={() => onDetail(item)} style={styles.wrap} key={item.id}>
-              <Text style={styles.text}>{item.title}</Text>
-            </Pressable>
+            <CustomWrap key={item.id}>
+              <Pressable onPress={() => onDetail(item)}>
+                <Text style={styles.text}>{item.title}</Text>
+              </Pressable>
+            </CustomWrap>
         ))}
       </ScrollView>
     </SafeAreaView>
@@ -31,16 +34,11 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 20,
     paddingHorizontal: 15,
-    backgroundColor: '#000',
-  },
-  wrap: {
-    paddingVertical: 15,
-    borderWidth: 1,
-    borderColor: '#ddd',
+    backgroundColor: '#f6f6f6',
   },
   text: {
     fontSize: 16,
-    color: 'white',
+    color: '#222',
     textAlign: 'center',
   }
 });

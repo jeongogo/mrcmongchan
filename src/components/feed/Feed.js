@@ -62,7 +62,8 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   text: {
-    fontSize: 14,
+    fontSize: 15,
+    color: '#222',
   },
   marginRight: {
     marginRight: 20,

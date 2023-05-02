@@ -8,7 +8,7 @@ function Challenge({ entry }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>{entry.name}</Text>
+      <Text style={styles.label}>{entry.name}</Text>
       <Text style={styles.text}>{entry.distance}km</Text>
     </View>
   )
@@ -22,9 +22,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 7,
   },
+  label: {
+    fontSize: 16,
+    fontWeight: 500,
+    color: '#222',
+  },
   text: {
     fontSize: 16,
-    color: 'white',
+    color: '#454545',
   },
 });
 

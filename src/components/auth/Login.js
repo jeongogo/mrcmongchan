@@ -126,15 +126,15 @@ const styles = StyleSheet.create({
     height: 48,
     alignItems: 'center',
     justifyContent: 'center',
-    borderColor: '#000',
+    borderColor: '#E53A40',
     borderWidth: 1,
     backgroundColor: '#fff',
   },
   primaryWrapper: {
-    backgroundColor: '#000',
+    backgroundColor: '#E53A40',
   },
   text: {
-    color: '#000',
+    color: '#E53A40',
   },
   primaryText: {
     color: 'white',

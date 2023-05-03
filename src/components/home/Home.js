@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import useStore from "../../store/store";
 import {ScrollView, View, Text, StyleSheet, Linking, Image, useWindowDimensions, Pressable} from 'react-native';
@@ -6,20 +6,22 @@ import AutoHeightImage from "react-native-auto-height-image";
 import CustomWrap from '../common/CustomWrap';
 import Loader from "../../components/common/Loader";
 
-function Home({isLoading, distance, calorie, month}) {
-  const [exCurrent, setExCurrent] = useState(0);
+function Home({
+  isLoading,
+  exCurrent,
+  distanceWeek,
+  calorieWeek,
+  distanceMonth,
+  calorieMonth,
+  month
+}) {
+  
   const user = useStore((state) => state.user);
   const width = useWindowDimensions().width;
   
   const openURL = (url) => {
     Linking.openURL(url);
   }
-
-  useEffect(() => {
-    const lv = +user.level + 1;
-    const nextLevelEx = (( lv - 1 ) * ( lv - 1 )) * ( (lv*lv) - 13*lv + 82 );
-    setExCurrent((user.exPoint/nextLevelEx) * 100);
-  }, []);
 
   return (
     <SafeAreaProvider style={styles.container}>
@@ -34,7 +36,7 @@ function Home({isLoading, distance, calorie, month}) {
             <View style={styles.levelWrap}>
               <View style={styles.levelTitleWrap}>
                 <Text style={styles.label}>레벨 {user.level}</Text>
-                <Text style={styles.levelExp}>{exCurrent}%</Text>
+                <Text style={styles.levelExp}>{exCurrent.toFixed(2)}%</Text>
               </View>
               <View style={styles.exWrap}>
                 <View style={[styles.exCurrent, {width: exCurrent + '%'}]}></View>
@@ -43,31 +45,28 @@ function Home({isLoading, distance, calorie, month}) {
             </View>
             <View style={styles.wrap}>
               <Text style={styles.label}>이번주</Text>
-              <Text style={styles.text}>준비중</Text>
+              <Text style={styles.text}>{distanceWeek}km / {calorieWeek}k㎈</Text>
             </View>
             <View style={styles.wrap}>
               <Text style={styles.label}>{month}월</Text>
-              <Text style={styles.text}>{distance.toFixed(2)}km / {calorie}k㎈</Text>
+              <Text style={styles.text}>{distanceMonth}km / {calorieMonth}k㎈</Text>
             </View>
             <View style={styles.wrap}>
-              <Text style={styles.label}>누적</Text>
-              <Text style={styles.text}>준비중</Text>
+              <Text style={styles.label}>누적 거리</Text>
+              <Text style={styles.text}>{user.distance}km</Text>
             </View>
           </CustomWrap>
           <CustomWrap>
             <Text style={styles.title}>대회정보</Text>
             <Pressable style={styles.competitionWrap} onPress={() => openURL('http://bbangrun.com/')}>
-              <Image style={styles.image} width={50} height={50} source={{uri: 'https://cdn.imweb.me/thumbnail/20230216/52ac6f385319c.jpg'}} />
               <Text style={[styles.label, styles.competitionTitle]}>빵빵런</Text>
               <Text style={[styles.text, styles.date]}>2023.5.14</Text>
             </Pressable>
             <Pressable style={styles.competitionWrap} onPress={() => openURL('http://www.irunman.kr')}>
-              <Image style={styles.image} width={50} height={50} source={{uri: 'http://www.irunman.kr/admin/data/main/main_288'}} />
               <Text style={[styles.label, styles.competitionTitle]}>러너스 레이스</Text>
               <Text style={[styles.text, styles.date]}>2023.5.20</Text>
             </Pressable>
             <Pressable style={styles.competitionWrap} onPress={() => openURL('http://amarunsb.com/')}>
-              <Image style={styles.image} width={50} height={50} source={{uri: 'http://amarunsb.com/images/common/visual/main/001.jpg'}} />
               <Text style={[styles.label, styles.competitionTitle]}>새벽강변 국제마라톤대회</Text>
               <Text style={[styles.text, styles.date]}>2023.6.17</Text>
             </Pressable>
@@ -83,13 +82,13 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 15,
     paddingHorizontal: 15,
-    backgroundColor: '#f6f6f6',
+    backgroundColor: '#f3f3f3',
   },
   imageWrap: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 15,
+    marginBottom: 12,
     borderRadius: 10,
     overflow: "hidden",
   },
@@ -159,7 +158,6 @@ const styles = StyleSheet.create({
     color: '#999',
   },
   competitionWrap: {
-    marginTop: 5,
     marginBottom: 10,
     width: '100%',
     display: 'flex',
@@ -168,12 +166,20 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   competitionTitle: {
-    marginLeft: 10,
+    // marginLeft: 10,
     marginRight: 'auto',
   },
-  image: {
+  thumb: {
+    width: 50,
+    height: 50,
+    backgroundColor: '#eee',
     borderRadius: 5,
+    overflow: 'hidden',
   },
+  image: {
+    width: 50,
+    height: 50,
+  }
 });
 
 export default Home

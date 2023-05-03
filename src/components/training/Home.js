@@ -6,7 +6,6 @@ import CustomWrap from "../common/CustomWrap";
 
 function Home({trainings}) {
   const navigation = useNavigation();
-  const user = useStore((state) => state.user);
   const setTrainingDetail = useStore((state) => state.setTrainingDetail);
 
   const onDetail = (item) => {
@@ -34,7 +33,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 20,
     paddingHorizontal: 15,
-    backgroundColor: '#f6f6f6',
+    backgroundColor: '#f3f3f3',
   },
   text: {
     fontSize: 16,

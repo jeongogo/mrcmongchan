@@ -13,7 +13,7 @@ function Detail() {
   useEffect(() => {
     setMinutes(Math.floor(feedDetail.totalTime/60));
     setSeconds(feedDetail.totalTime - (Math.floor(feedDetail.totalTime/60) * 60));
-    if (feedDetail.paceDetail.length > 1) {
+    if (feedDetail.paceDetail.length > 0) {
       const filterData = feedDetail.paceDetail.map((item, index) => {
         if (index === 0) {
           return item;
@@ -43,34 +43,36 @@ function Detail() {
         <View style={styles.imageWrap}>
           <Image style={styles.image} width={width} source={{uri: feedDetail.captureURL}} />
         </View>
+        <View style={styles.infoWrap}>
+          <View style={styles.wrap}>
+            <Text style={styles.text}>{feedDetail.distance}km</Text>
+            <Text style={styles.label}>이동 거리</Text>
+          </View>
+          <View style={styles.wrap}>
+            <Text style={styles.text}>{minutes < 10 ? '0' + minutes : minutes}:{seconds < 10 ? '0' + seconds : seconds}</Text>
+            <Text style={styles.label}>이동 시간</Text>
+          </View>
+          <View style={styles.wrap}>
+            <Text style={styles.text}>{feedDetail.pace}</Text>
+            <Text style={styles.label}>평균 페이스</Text>
+          </View>
+        </View>
         <View style={styles.contentWrap}>
-          <CustomWrap>
-            <View style={styles.wrap}>
-              <Text style={styles.text}>거리</Text>
-              <Text style={styles.text}>{feedDetail.distance}km</Text>
-            </View>
-            <View style={styles.wrap}>
-              <Text style={styles.text}>시간</Text>
-              <Text style={styles.text}>{minutes < 10 ? '0' + minutes : minutes}:{seconds < 10 ? '0' + seconds : seconds}</Text>
-            </View>
-            <View style={styles.wrap}>
-              <Text style={styles.text}>페이스</Text>
-              <Text style={styles.text}>{feedDetail.pace}</Text>
-            </View>
-          </CustomWrap>
-          <CustomWrap>
-            {paceDetail.length > 0 &&
-              paceDetail.map((item, index) => (
-                <View style={styles.paceWrap} key={index}>
-                  <Text style={styles.paceLabel}>{index+1}</Text>
-                  <View style={styles.paceBar}>
-                    <View style={[styles.paceBarCurrent, {width: item.percent + '%'}]}></View>
-                  </View>
-                  <Text style={styles.paceText}>{item.pace}</Text>
+          <Text style={styles.title}>페이스</Text>
+          {paceDetail.length > 0 &&
+            paceDetail.map((item, index) => (
+              <View style={styles.paceWrap} key={index}>
+                <Text style={styles.paceLabel}>{index+1}</Text>
+                <View style={styles.paceBar}>
+                  <View style={[styles.paceBarCurrent, {width: item.percent + '%'}]}></View>
                 </View>
-              ))
-            }
-          </CustomWrap>
+                <Text style={styles.paceText}>{item.pace}</Text>
+              </View>
+            ))
+          }
+        </View>
+        <View style={styles.contentWrap}>
+          <Text style={styles.title}>고도</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -80,26 +82,48 @@ function Detail() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f6f6f6',
+    backgroundColor: '#fff',
   },
   imageWrap: {
-    marginBottom: 20,
+    
   },
   image: {
     height: 200,
   },
-  contentWrap: {
-    paddingHorizontal: 20,
-  },
-  wrap: {
+  infoWrap: {
+    paddingVertical: 10,
     display: 'flex',
     flexDirection: 'row',
     alignContent: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 7,
+    justifyContent: 'center',
+    backgroundColor: '#f6f6f6',
+    overflow: 'hidden',
+  },
+  wrap: {
+    display: 'flex',
+    alignItems: 'center',
+    paddingVertical: 20,
+    paddingHorizontal: 15,
+  },
+  contentWrap: {
+    marginBottom: 10,
+    paddingTop: 30,
+    paddingHorizontal: 15,
+    backgroundColor: '#fff',
+  },
+  title: {
+    marginBottom: 10,
+    fontSize: 20,
+    fontWeight: 700,
+    color: '#222',
   },
   text: {
-    fontSize: 14,
+    fontSize: 24,
+    color: '#454545',
+  },
+  label: {
+    marginTop: 5,
+    fontSize: 16,
     color: '#222',
   },
   paceWrap: {

@@ -23,12 +23,12 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
   },
   label: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: 500,
     color: '#222',
   },
   text: {
-    fontSize: 16,
+    fontSize: 15,
     color: '#454545',
   },
 });

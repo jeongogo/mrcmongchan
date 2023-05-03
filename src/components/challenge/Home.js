@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f6f6f6',
+    backgroundColor: '#f3f3f3',
   },
   btnWrap: {
     display: 'flex',

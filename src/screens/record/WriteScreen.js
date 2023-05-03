@@ -1,41 +1,18 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import useStore from "../../store/store";
 import { updateUser } from "../../lib/user";
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import {View, Text, Button, Image, StyleSheet, Alert, Pressable, useWindowDimensions} from 'react-native';
-import Loader from "../../components/common/Loader";
-import CustomWrap from '../../components/common/CustomWrap';
+import {Alert} from 'react-native';
+import Write from "../../components/record/Write";
 
-function WriteScreen({ navigation }) {
+function WriteScreen({navigation}) {
   const [isLoading, setIsLoading] = useState('');
-  const captureURL = useStore((state) => state.captureURL);
   const record = useStore((state) => state.record);
   const user = useStore((state) => state.user);
-  const setUser = useStore((state) => state.setUser);
   const trainingMission = useStore((state) => state.trainingMission);
-  const [minutes, setMinutes] = useState(0);
-  const [seconds, setSeconds] = useState(0);
-  const width = useWindowDimensions().width;
+  const captureURL = useStore((state) => state.captureURL);
   let missionExp = 0;
-
-  /** 삭제하기 */
-  const onDelete = () => {
-    Alert.alert("", "기록을 삭제히겠습니까?", [
-      {
-        text: "취소",
-        onPress: () => null,
-      },
-      {
-        text: "확인",
-        onPress: () => {
-          setUser({...user, trainingMission: ''});
-          navigation.navigate('RecordHome');
-        }
-      }
-    ]);
-  }
 
   /** 도전 성공 */
   const onSuccessMission = () => {
@@ -60,7 +37,7 @@ function WriteScreen({ navigation }) {
   }
 
   /** 저장하기 */
-  const onSubmit = async () => {
+  const handleSubmit = async (title) => {
     setIsLoading(true);
     try {
       const filename = 'record' + new Date().getTime() + (Math.random()*1000).toFixed(0);
@@ -70,6 +47,7 @@ function WriteScreen({ navigation }) {
 
       const recordData = {
         ...record,
+        title,
         captureURL: url,
       }
       const data = await firestore().collection('Records').add(recordData);
@@ -120,18 +98,20 @@ function WriteScreen({ navigation }) {
       
       // 레벨업 체크
       const distanceExp = ((record.distance*10) * 0.6).toFixed(0);
-      const currentExp = +user.exPoint + missionExp + distanceExp;
+      const currentExp = +user.exPoint + +missionExp + +distanceExp;
       const lv = user.level + 1;
       const nextLvExp = ((lv-1) * (lv-1)) * ((lv * lv) - (13 * lv) + 82);
 
       if (currentExp > nextLvExp) {
         await updateUser(user.uid, {
           level: +user.level + 1,
-          exPoint: currentExp - nextLvExp
+          exPoint: currentExp - nextLvExp,
+          distance: record.distance,
         });
       } else {
         await updateUser(user.uid, {
-          exPoint: currentExp
+          exPoint: currentExp,
+          distance: record.distance,
         });
       }
 
@@ -154,110 +134,13 @@ function WriteScreen({ navigation }) {
     }
   }
 
-  useEffect(() => {
-    setMinutes(Math.floor(record.totalTime/60));
-    setSeconds(record.totalTime - (Math.floor(record.totalTime/60) * 60));
-  }, []);
-
   return (
-    <SafeAreaProvider style={styles.container}>
-      <SafeAreaView>
-        {isLoading && <Loader />}
-        <View style={styles.imageWrap}>
-          {captureURL &&
-            <Image style={styles.image} width={width} source={{uri: captureURL}} />
-          }
-        </View>
-        <View style={styles.wrap}>
-          <Text style={styles.text}>이동 거리</Text>
-          <Text style={styles.text}>{record.distance}km</Text>
-        </View>
-        <View style={styles.wrap}>
-          <Text style={styles.text}>이동 시간</Text>
-          <Text style={styles.text}>{minutes < 10 ? '0' + minutes : minutes}:{seconds < 10 ? '0' + seconds : seconds}</Text>
-        </View>
-        <View style={styles.wrap}>
-          <Text style={styles.text}>페이스</Text>
-          <Text style={styles.text}>{record.pace}</Text>
-        </View>
-        <View style={styles.wrap}>
-          <Text style={styles.text}>소모 칼로리</Text>
-          <Text style={styles.text}>{record.calorie}k㎈</Text>
-        </View>
-        <View style={styles.btnWrap}>
-          <Pressable style={styles.btn} onPress={onDelete}>
-            <Text style={[styles.btnText, styles.cancel]}>삭제하기</Text>
-          </Pressable>
-          <Pressable style={styles.btn} onPress={onSubmit}>
-            <Text style={[styles.btnText, styles.submit]}>저장하기</Text>
-          </Pressable>
-        </View>
-      </SafeAreaView>
-    </SafeAreaProvider>
+    <Write
+      navigation={navigation}
+      isLoading={isLoading}
+      handleSubmit={handleSubmit}
+    />
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingVertical: 15,
-    paddingHorizontal: 15,
-    backgroundColor: '#fff',
-  },
-  imageWrap: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignContent: 'center',
-    justifyContent: 'center',
-    marginBottom: 20,
-    borderRadius: 10,
-    overflow: 'hidden',
-  },
-  image: {
-    height: 250,
-  },
-  wrap: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignContent: 'center',
-    paddingVertical: 10,
-  },
-  text: {
-    fontSize: 16,
-    color: '#222',
-  },
-  btnWrap: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignContent: 'center',
-    marginTop: 30,
-  },
-  btn: {
-    marginBottom: 15,
-    marginLeft: 10,
-    marginRight: 10,
-  },
-  btnText: {
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    fontSize: 14,
-    fontWeight: 500,
-    textAlign: 'center',
-    borderRadius: 5,
-    borderWidth: 1,
-  },
-  cancel: {
-    color: '#E53A40',
-    backgroundColor: '#fff',
-    borderColor: '#E53A40',
-  },
-  submit: {
-    color: 'white',
-    backgroundColor: '#E53A40',
-    borderColor: '#E53A40',
-  },
-});
 
 export default WriteScreen;

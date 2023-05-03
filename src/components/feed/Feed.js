@@ -34,6 +34,11 @@ function Feed({ feed }) {
           <Image style={styles.avatar} source={{uri: feed.photoURL}} />
           <Text style={styles.text}>{feed.displayName}</Text>
         </View> */}
+        {feed.title &&
+          <View style={styles.wrap}>
+            <Text style={styles.title}>{feed.title}</Text>
+          </View>
+        }
         <View style={styles.wrap}>
           <Text style={styles.text}>{date}</Text>
         </View>
@@ -57,13 +62,16 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    paddingVertical: 3,
   },
-  marginTop: {
-    marginTop: 5,
+  title: {
+    fontSize: 16,
+    fontWeight: 500,
+    color: '#222',
   },
   text: {
     fontSize: 15,
-    color: '#222',
+    color: '#454545',
   },
   marginRight: {
     marginRight: 20,

@@ -75,8 +75,7 @@ function LoginScreen({route, navigation}) {
         setUser(profile);
       }
     } catch (e) {
-      console.log('에러', e)
-      crashlytics().recordError('google login' + e.messages);
+      console.log('에러', e);
     } finally {
       setIsLoading(false);
     }
@@ -109,7 +108,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignContent: 'center',
     paddingHorizontal: 30,
-    backgroundColor: '#f6f6f6',
+    backgroundColor: '#f3f3f3',
   },
   google: {
     

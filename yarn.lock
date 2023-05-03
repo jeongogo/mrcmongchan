@@ -6096,6 +6096,11 @@ react-native-codegen@^0.71.5:
     jscodeshift "^0.13.1"
     nullthrows "^1.1.1"
 
+react-native-foreground-service-android@^1.0.18:
+  version "1.0.18"
+  resolved "https://registry.yarnpkg.com/react-native-foreground-service-android/-/react-native-foreground-service-android-1.0.18.tgz#6f8af2e5273167fea85fe718a4a75f3b7bab936c"
+  integrity sha512-9PK+NQOC1f0CrXY3yPO4KWVpdrd48LyttUeepgb/4D4cncIa8j48tfYx1/ETvOoruBJxpYjcbYzvIHWt0OoGPg==
+
 react-native-geolocation-service@^5.3.1:
   version "5.3.1"
   resolved "https://registry.yarnpkg.com/react-native-geolocation-service/-/react-native-geolocation-service-5.3.1.tgz#4ce1017789da6fdfcf7576eb6f59435622af4289"

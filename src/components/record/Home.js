@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { AppState } from 'react-native';
 import {Platform, PermissionsAndroid, View, Text, StyleSheet, TouchableOpacity, BackHandler, Alert} from 'react-native';
 import BackgroundService from 'react-native-background-actions';
 import Geolocation from 'react-native-geolocation-service';
@@ -38,17 +39,17 @@ function Home({ navigation }) {
     const { delay } = taskDataArguments;
     await new Promise( async (resolve) => {
       for (let i = 0; BackgroundService.isRunning(); i++) {
-        recordDistance();
-        await BackgroundService.updateNotification({taskDesc: 'New ExampleTask description'});
+        console.log(i);
+        recordDistance(i);
         await sleep(delay);
       }
     });
   };
 
   const options = {
-    taskName: 'Example',
-    taskTitle: 'ExampleTask title',
-    taskDesc: 'ExampleTask description',
+    taskName: 'MRC',
+    taskTitle: '모두의 러닝코치',
+    taskDesc: '앱이 실행중입니다.',
     taskIcon: {
         name: 'ic_launcher',
         type: 'mipmap',
@@ -56,7 +57,7 @@ function Home({ navigation }) {
     color: '#ff00ff',
     linkingURI: 'yourSchemeHere://chat/jane', // See Deep Linking for more info
     parameters: {
-        delay: 3000,
+        delay: 2000,
     },
   };
 
@@ -84,6 +85,10 @@ function Home({ navigation }) {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         );
+        await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+        );
+        
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
           initGeo(); 
         } else {
@@ -110,9 +115,10 @@ function Home({ navigation }) {
   }
 
   /** 위치 추적 + 기록 */
-  const recordDistance = () => {
+  const recordDistance = (i) => {
     try {
-      watchId.current = Geolocation.getCurrentPosition(
+      console.log('called');
+      Geolocation.getCurrentPosition(
         position => {
           const {latitude, longitude} = position.coords;
           if (distanceRef.current != null) {
@@ -123,24 +129,17 @@ function Home({ navigation }) {
           distanceRef.current = { latitude, longitude };
         },
         e => {
-          Alert.alert("", e.message, [
-            {
-              text: "확인",
-              onPress: () => null,
-            },
-          ]);
+          console.log(e);
         },
         {
+          forceLocationManager: true,
           enableHighAccuracy: true,
+          timeout: 2000,
+          maximumAge: 36000000
         }
       );
     } catch (e) {
-      Alert.alert("", e.message, [
-        {
-          text: "확인",
-          onPress: () => null,
-        },
-      ]);
+      console.log(e);
     }
   }
 
@@ -303,17 +302,21 @@ function Home({ navigation }) {
     }
   };
 
+  handleAppStateChange = (nextAppState) => {
+    if (nextAppState === 'active') {
+      console.log('포그라운드');
+    } else {
+      console.log('백그라운드');
+    }
+  };
+
   /** init */
   useEffect(() => {
     onClear();
     setRecord('');
     setCaptureURL('');
     requestPermissions();
-    return () => {
-      if (watchId.current) {
-        Geolocation.clearWatch(watchId.current);
-      };
-    }
+    AppState.addEventListener('change', handleAppStateChange);
   }, []);
 
   /** Back Event */
@@ -369,6 +372,10 @@ function Home({ navigation }) {
           <Text style={styles.missionContent}>{trainingMission.content}</Text>
         </View>
       }
+      <View style={styles.alert}>
+        <Text style={styles.alertText}>Background mode is not supported yet.</Text>
+        <Text style={styles.alertText}>아직 백그라운드 모드를 지원하지 않습니다.</Text>
+      </View>
       {isStarted
         ?
           <View style={styles.record_wrap}>
@@ -478,7 +485,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignContent: 'center',
-    backgroundColor: 'red',
     width: 300,
     paddingHorizontal: 10,
     paddingVertical: 20,
@@ -516,6 +522,23 @@ const styles = StyleSheet.create({
   startText: {
     fontSize: 28,
     fontWeight: '700',
+    color: '#fff',
+    textAlign: 'center',
+  },
+  alert: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    display: 'flex',
+    justifyContent: 'center',
+    alignContent: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 7,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    zIndex: 9,
+  },
+  alertText: {
+    fontSize: 12,
     color: '#fff',
     textAlign: 'center',
   }

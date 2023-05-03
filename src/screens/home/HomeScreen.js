@@ -15,6 +15,7 @@ function HomeScreen() {
   const [distanceMonth, setDistanceMonth] = useState(0);
   const [calorieMonth, setCalorieMonth] = useState(0);
   const [month, setMonth] = useState(0);
+  const [competition, setCompetition] = useState([]);
   const user = useStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
 
@@ -77,13 +78,26 @@ function HomeScreen() {
     }
   }
 
-  // const getCompetition = async () => {
-  //   try {
-  //     const snapshot = await firestore().collection('Competitions').get();
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // }
+  const getCompetition = async () => {
+    try {
+      const snapshot = await firestore().collection('Competitions').get();
+      let data = [];
+      snapshot.forEach(doc => {
+        const current = new Date(doc.data().date.toDate());
+        const year = current.getFullYear();
+        const month = current.getMonth() + 1;
+        const date = current.getDate();
+        const item = {
+          ...doc.data(),
+          date: year + '.' + month + '.' + date
+        };
+        data.push(item);
+      });
+      setCompetition(data);
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   const refreshUser = async () => {
     try {
@@ -100,7 +114,7 @@ function HomeScreen() {
 
   useEffect(() => {
     getMyRecord();
-    // getCompetition();
+    getCompetition();
     refreshUser();
   }, [isFocused]);
 
@@ -113,6 +127,7 @@ function HomeScreen() {
       distanceMonth={distanceMonth}
       calorieMonth={calorieMonth}
       month={month}
+      competition={competition}
     />
   );
 };

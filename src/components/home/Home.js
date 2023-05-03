@@ -13,7 +13,8 @@ function Home({
   calorieWeek,
   distanceMonth,
   calorieMonth,
-  month
+  month,
+  competition
 }) {
   
   const user = useStore((state) => state.user);
@@ -58,18 +59,15 @@ function Home({
           </CustomWrap>
           <CustomWrap>
             <Text style={styles.title}>대회정보</Text>
-            <Pressable style={styles.competitionWrap} onPress={() => openURL('http://bbangrun.com/')}>
-              <Text style={[styles.label, styles.competitionTitle]}>빵빵런</Text>
-              <Text style={[styles.text, styles.date]}>2023.5.14</Text>
-            </Pressable>
-            <Pressable style={styles.competitionWrap} onPress={() => openURL('http://www.irunman.kr')}>
-              <Text style={[styles.label, styles.competitionTitle]}>러너스 레이스</Text>
-              <Text style={[styles.text, styles.date]}>2023.5.20</Text>
-            </Pressable>
-            <Pressable style={styles.competitionWrap} onPress={() => openURL('http://amarunsb.com/')}>
-              <Text style={[styles.label, styles.competitionTitle]}>새벽강변 국제마라톤대회</Text>
-              <Text style={[styles.text, styles.date]}>2023.6.17</Text>
-            </Pressable>
+            {competition.map((item) => (
+              <Pressable key={item.url} style={styles.competitionWrap} onPress={() => openURL(item.url)}>
+                <View>
+                  <Text style={styles.label}>{item.title}</Text>
+                  <Text style={styles.location}>{item.location}</Text>
+                </View>
+                <Text style={[styles.text, styles.date]}>{item.date}</Text>
+              </Pressable>
+            ))}
           </CustomWrap>
         </ScrollView>
       </SafeAreaView>
@@ -93,6 +91,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   levelWrap: {
+    marginTop: 10,
     marginBottom: 20,
   },
   levelTitleWrap: {
@@ -139,7 +138,7 @@ const styles = StyleSheet.create({
   },
   title: {
     marginTop: 5,
-    marginBottom: 20,
+    marginBottom: 5,
     fontSize: 20,
     fontWeight: 700,
     color: '#000',
@@ -153,33 +152,26 @@ const styles = StyleSheet.create({
     color: '#454545',
     textAlign: 'center',
   },
+  location: {
+    marginTop: 3,
+    fontSize: 12,
+    color: '#999'
+  },
   date: {
     fontSize: 14,
-    color: '#999',
+    color: '#454545',
   },
   competitionWrap: {
-    marginBottom: 10,
+    paddingVertical: 15,
     width: '100%',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
   },
-  competitionTitle: {
-    // marginLeft: 10,
-    marginRight: 'auto',
-  },
-  thumb: {
-    width: 50,
-    height: 50,
-    backgroundColor: '#eee',
-    borderRadius: 5,
-    overflow: 'hidden',
-  },
-  image: {
-    width: 50,
-    height: 50,
-  }
+
 });
 
 export default Home

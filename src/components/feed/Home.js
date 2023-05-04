@@ -20,8 +20,8 @@ function Home({isLoading, feeds}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 15,
-    paddingHorizontal: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
     backgroundColor: '#f3f3f3',
   },
 });

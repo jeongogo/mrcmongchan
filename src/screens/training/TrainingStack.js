@@ -1,6 +1,5 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useIsFocused } from "@react-navigation/native";
 import HomeScreen from './HomeScreen';
 import DetailScreen from "./DetailScreen";
 import ProgressScreen from "./ProgressScreen";
@@ -9,17 +8,11 @@ import useStore from "../../store/store";
 const Stack = createNativeStackNavigator();
 
 function TrainingStack() {
-  const isFocused = useIsFocused();
-  const [isProgress, setIsProgress] = useState();
   const user = useStore((state) => state.user);
-
-  useEffect(() => {
-    setIsProgress(user.training?.program?.length > 0);
-  }, [isFocused])
 
   return (
     <Stack.Navigator>
-      {isProgress
+      {user.trainingStartDate !== ''
         ?
           <Stack.Screen
             name='TrainingProgress'
@@ -42,13 +35,6 @@ function TrainingStack() {
               component={DetailScreen}
               options={() => ({
                 title: '훈련 프로그램 상세'
-              })}
-            />
-            <Stack.Screen
-              name='TrainingProgress'
-              component={ProgressScreen}
-              options={() => ({
-                title: '미션 도전'
               })}
             />
           </>

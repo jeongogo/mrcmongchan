@@ -38,7 +38,6 @@ function WelcomeScreen({route}) {
         trainingStartDate: '',
         trainingMission: '',
         challenge: '',
-        challengeApplicant: '',
       }
       createUser(newUser)
       setUser(newUser);

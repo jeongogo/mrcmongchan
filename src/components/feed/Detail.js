@@ -113,17 +113,18 @@ const styles = StyleSheet.create({
   },
   title: {
     marginBottom: 10,
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 700,
-    color: '#222',
-  },
-  text: {
-    fontSize: 24,
     color: '#454545',
   },
+  text: {
+    fontSize: 26,
+    fontWeight: 500,
+    color: '#222',
+  },
   label: {
-    marginTop: 5,
-    fontSize: 16,
+    marginTop: 3,
+    fontSize: 14,
     color: '#222',
   },
   paceWrap: {

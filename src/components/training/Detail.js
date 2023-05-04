@@ -46,7 +46,7 @@ function Detail() {
         <View style={styles.content}>
           <View style={styles.wrap}>
             <Text style={styles.label}>일차</Text>
-            <Text style={[styles.contentText, styles.center]}>내용</Text>
+            <Text style={[styles.contentText, styles.center]}>미션 내용</Text>
           </View>
           {trainingDetail.program.map((item) => (
             <View key={item.day} style={styles.wrap}>
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     borderWidth: 1,
-    borderColor: '#ededed',
+    borderColor: '#ddd',
   },
   label: {
     width: 50,
@@ -92,7 +92,8 @@ const styles = StyleSheet.create({
     color: '#222',
     textAlign: 'center',
     borderRightWidth: 1,
-    borderRightColor: '#ededed',
+    borderRightColor: '#ddd',
+    backgroundColor: '#efefef'
   },
   contentText: {
     flex: 1,
@@ -102,12 +103,13 @@ const styles = StyleSheet.create({
   },
   center: {
     textAlign: 'center',
+    backgroundColor: '#efefef'
   },
   btn: {
     marginTop: 20,
-    marginBottom: 40,
+    marginBottom: 20,
     paddingVertical: 17,
-    backgroundColor: '#E53A40',
+    backgroundColor: '#30A9DE',
     borderRadius: 5,
   },
   btnText: {

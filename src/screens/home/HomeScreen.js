@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useIsFocused } from "@react-navigation/native";
 import firestore from '@react-native-firebase/firestore';
-import { getUser } from "../../lib/user";
 import crashlytics from '@react-native-firebase/crashlytics';
 import useStore from "../../store/store";
 import Home from "../../components/home/Home";
 
 function HomeScreen() {
-  const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [exCurrent, setExCurrent] = useState(0);
   const [distanceWeek, setDistanceWeek] = useState(0);
@@ -17,7 +14,6 @@ function HomeScreen() {
   const [month, setMonth] = useState(0);
   const [competition, setCompetition] = useState([]);
   const user = useStore((state) => state.user);
-  const setUser = useStore((state) => state.setUser);
 
   /** 내 기록 가져오기 */
   const getMyRecord = async () => {
@@ -80,7 +76,7 @@ function HomeScreen() {
 
   const getCompetition = async () => {
     try {
-      const snapshot = await firestore().collection('Competitions').get();
+      const snapshot = await firestore().collection('Competitions').orderBy('date').get();
       let data = [];
       snapshot.forEach(doc => {
         const current = new Date(doc.data().date.toDate());
@@ -99,24 +95,17 @@ function HomeScreen() {
     }
   }
 
-  const refreshUser = async () => {
-    try {
-      const u = await getUser(user.uid);
-      setUser(u);
-
-      const lv = +u.level + 1;
-      const nextLevelEx = (( lv - 1 ) * ( lv - 1 )) * ( (lv*lv) - 13*lv + 82 );
-      setExCurrent((u.exPoint/nextLevelEx) * 100);
-    } catch (e) {
-      console.log(e);
-    }
+  const levelCheck = () => {
+    const lv = user.level + 1;
+    const nextLevelEx = (( lv - 1 ) * ( lv - 1 )) * ( (lv*lv) - 13*lv + 82 );
+    setExCurrent((user.exPoint/nextLevelEx) * 100);
   }
 
   useEffect(() => {
     getMyRecord();
     getCompetition();
-    refreshUser();
-  }, [isFocused]);
+    levelCheck();
+  }, []);
 
   return (
     <Home

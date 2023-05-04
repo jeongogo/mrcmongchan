@@ -40,11 +40,9 @@ function Home({isLoading, challenges}) {
         <Text style={styles.createText}>훈련 추가</Text>
       </Pressable> */}
       <View style={styles.btnWrap}>
-        {user.isAdmin &&
-          <Pressable style={styles.create} onPress={() => navigation.navigate('ChallengeWrite')}>
-            <Text style={styles.createText}>챌린지 만들기</Text>
-          </Pressable>
-        }
+        <Pressable style={styles.create} onPress={() => navigation.navigate('ChallengeWrite')}>
+          <Text style={styles.createText}>챌린지 만들기</Text>
+        </Pressable>
       </View>
         {(challenges.length > 0) && 
           challenges.map((challenge) => (
@@ -58,8 +56,8 @@ function Home({isLoading, challenges}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 15,
-    paddingHorizontal: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f3f3f3',
@@ -69,7 +67,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     width: '100%',
-    marginBottom: 15,
+    marginBottom: 10,
   },
   create: {
     paddingVertical: 15,

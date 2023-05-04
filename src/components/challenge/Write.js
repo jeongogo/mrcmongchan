@@ -32,13 +32,13 @@ function Write({ handleSubmit }) {
 
   const onStartDate = (current) => {
     const date = new Date(current);
-    setStartDate(date.getFullYear() + '. ' + (date.getMonth() + 1) + '. ' + date.getDate());
+    setStartDate(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate());
     hideStartPicker();
   };
 
   const onEndDate = (current) => {
     const date = new Date(current);
-    setEndDate(date.getFullYear() + '. ' + (date.getMonth() + 1) + '. ' + date.getDate());
+    setEndDate(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate());
     hideEndPicker();
   };
 
@@ -51,14 +51,9 @@ function Write({ handleSubmit }) {
       title,
       creator: user.uid,
       goal,
-      startDate,
-      endDate,
-      entry: [{
-        uid: user.uid,
-        name: user.name,
-        distance: 0,
-      }],
-      applicants: [],
+      startDate: new Date(startDate),
+      endDate: new Date(endDate),
+      entry: [],
     };
     handleSubmit(challenge);
   }

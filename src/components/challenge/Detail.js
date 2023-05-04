@@ -1,13 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import useStore from "../../store/store";
 import {View, Pressable, Text, StyleSheet, Alert} from 'react-native';
 import Entry from './Entry';
-import Applicant from './Applicant';
 
 function Challenge({
+  route,
   challenge,
   goalCurrent,
-  onApplicant,
   handleAttend,
   handleLeave,
   handleDelete,
@@ -68,33 +67,22 @@ function Challenge({
         ))}
       </View>
       <View style={styles.btnWrap}>
-        {(user.challenge === '' && user.challengeApplicant === '')
-          ?
-            <Pressable onPress={onApplicant}>
-              <Text style={[styles.btn, styles.submit]}>참가 신청하기</Text>
-            </Pressable>
-          :
-            <Pressable onPress={onLeave}>
-              <Text style={[styles.btn, styles.cancel]}>참가 취소하기</Text>
-            </Pressable>
+        {user.challenge === '' &&
+          <Pressable onPress={handleAttend}>
+            <Text style={[styles.btn, styles.submit]}>참가 신청하기</Text>
+          </Pressable>
         }
-        {user.isAdmin &&
+        {user.challenge === route.params.id &&
+          <Pressable onPress={onLeave}>
+            <Text style={[styles.btn, styles.cancel]}>참가 취소하기</Text>
+          </Pressable>
+        }
+        {(user.isAdmin || user.uid === challenge.creator) &&
           <Pressable onPress={onDelete}>
             <Text style={[styles.btn, styles.submit]}>챌린지 삭제하기</Text>
           </Pressable>
         }
       </View>
-      {(user.isAdmin && challenge.applicants?.length > 0)
-        ?
-          <View style={styles.applicant}>
-            <Text style={styles.subTitle}>신청자 목록</Text>
-            {challenge.applicants.map((i) => (
-              <Applicant key={i.uid} applicant={i} handleAttend={handleAttend} />
-            ))}
-          </View>
-        :
-          <></>
-      }
     </View>
   )
 };
@@ -168,16 +156,15 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   btnWrap: {
-    paddingTop: 30,
+    marginTop: 10,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
-    borderTopWidth: 10,
-    borderTopColor: '#f6f6f6',
   },
   btn: {
     paddingVertical: 15,
     paddingHorizontal: 30,
+    marginHorizontal: 5,
     fontSize: 16,
     textAlign: 'center',
     borderRadius: 5,
@@ -194,9 +181,6 @@ const styles = StyleSheet.create({
     paddingVertical: 30,
     paddingHorizontal: 30,
   },
-  applicant: {
-    paddingVertical: 30,
-  }
 });
 
 export default Challenge

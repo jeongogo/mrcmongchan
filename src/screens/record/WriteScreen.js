@@ -11,6 +11,7 @@ function WriteScreen({navigation}) {
   const record = useStore((state) => state.record);
   const user = useStore((state) => state.user);
   const trainingMission = useStore((state) => state.trainingMission);
+  const setTrainingMission = useStore((state) => state.setTrainingMission);
   const captureURL = useStore((state) => state.captureURL);
   let missionExp = 0;
 
@@ -60,8 +61,8 @@ function WriteScreen({navigation}) {
         const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
         const kr_curr = new Date(curr + KR_TIME_DIFF);
   
-        const start = new Date(data.startDate.replaceAll(". ", "-"));
-        const end = new Date(data.endDate.replaceAll(". ", "-"));
+        const start = new Date(data.startDate);
+        const end = new Date(data.endDate);
   
         if (kr_curr > start && kr_curr < end) {
           const entry = data.entry.map((i) => {
@@ -87,11 +88,15 @@ function WriteScreen({navigation}) {
         if (trainingMission.time > 0) {
           if (record.totalTime >= trainingMission.time/60) {
             onSuccessMission();
+          } else {
+            setTrainingMission('');
           }
         }
         if (trainingMission.distance > 0) {
           if (record.distance >= trainingMission.distance) {
             onSuccessMission();
+          } else {
+            setTrainingMission('');
           }
         }
       }

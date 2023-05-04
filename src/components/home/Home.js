@@ -45,16 +45,16 @@ function Home({
               </View>
             </View>
             <View style={styles.wrap}>
-              <Text style={styles.label}>이번주</Text>
-              <Text style={styles.text}>{distanceWeek}km / {calorieWeek}k㎈</Text>
+              <Text style={styles.label}>이번주 기록</Text>
+              <Text style={styles.text}>{distanceWeek > 0 ? distanceWeek.toFixed(2) : 0}km / {calorieWeek}k㎈</Text>
             </View>
             <View style={styles.wrap}>
-              <Text style={styles.label}>{month}월</Text>
-              <Text style={styles.text}>{distanceMonth}km / {calorieMonth}k㎈</Text>
+              <Text style={styles.label}>{month}월 기록</Text>
+              <Text style={styles.text}>{distanceMonth > 0 ? distanceMonth.toFixed(2) : 0}km / {calorieMonth}k㎈</Text>
             </View>
             <View style={styles.wrap}>
               <Text style={styles.label}>누적 거리</Text>
-              <Text style={styles.text}>{user.distance}km</Text>
+              <Text style={styles.text}>{user.distance > 0 ? (parseFloat(user.distance)).toFixed(2) : 0}km</Text>
             </View>
           </CustomWrap>
           <CustomWrap>
@@ -78,8 +78,8 @@ function Home({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 15,
-    paddingHorizontal: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
     backgroundColor: '#f3f3f3',
   },
   imageWrap: {
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
   title: {
     marginTop: 5,
     marginBottom: 5,
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 700,
     color: '#000',
   },

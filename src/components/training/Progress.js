@@ -22,17 +22,12 @@ function Progress() {
     navigation.navigate('RecordHome');
   }
 
-  if (user?.training?.program?.length < 1) {
-    return;
-  }
-
   useEffect(() => {
-    setTrainingMission('');
     const today = new Date();
     const todayStr = today.getFullYear() + '' + (today.getMonth() + 1) + '' + today.getDate();
     
     const currentProgram = user.training.program.filter((i) => {
-      let startDay = new Date(user.trainingStartDate.toDate());
+      let startDay = new Date(user.trainingStartDate);
       startDay.setDate(startDay.getDate() + i.day - 1);
       const currentStr = startDay.getFullYear() + '' + (startDay.getMonth() + 1) + '' + startDay.getDate();
       if (todayStr === currentStr) {
@@ -40,6 +35,7 @@ function Progress() {
       }
     });
     if (currentProgram.length < 1) {
+      setTrainingMission('');
       updateUser(user.uid, {...user, training: '', trainingStartDate: ''});
       setUser({...user, training: '', trainingStartDate: ''});
       navigation.navigate('RecordHome');
@@ -107,7 +103,7 @@ const styles = StyleSheet.create({
   btn: {
     paddingVertical: 15,
     paddingHorizontal: 25,
-    backgroundColor: '#E53A40',
+    backgroundColor: '#30A9DE',
     borderRadius: 5,
   },
   btnText: {
@@ -117,7 +113,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   complete: {
-    backgroundColor: '#34314c',
+    backgroundColor: '#ddd',
   }
 });
 

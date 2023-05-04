@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { AppState } from 'react-native';
 import {Platform, PermissionsAndroid, View, Text, StyleSheet, TouchableOpacity, BackHandler, Alert} from 'react-native';
-import BackgroundService from 'react-native-background-actions';
+import BackgroundGeolocation from "react-native-background-geolocation";
 import Geolocation from 'react-native-geolocation-service';
 import ViewShot from "react-native-view-shot";
 import MapView, {Polyline} from 'react-native-maps';
@@ -10,8 +9,6 @@ import useStore from "../../store/store";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Loader from "../../components/common/Loader";
 
-const sleep = (time) => new Promise((resolve) => setTimeout(() => resolve(), time));
-
 function Home({ navigation }) {
   const user = useStore((state) => state.user);
   const setRecord = useStore((state) => state.setRecord);
@@ -19,7 +16,6 @@ function Home({ navigation }) {
   const trainingMission = useStore((state) => state.trainingMission);
   const [isLoading, setIsLoading] = useState(true);                  // loading
   const captureRef = useRef(null);                                   // 지도 캡쳐용 Ref
-  const watchId = useRef(null);                                      // 위치 추적용 Ref
   const [initLocation, setInitLocation] = useState('');              // 실시간 현재 위치
   const [isStarted, setIsStarted] = useState(false);                 // 시작 여부
   const [isRecoding, setIsRecoding] = useState(false);               // 기록중 여부
@@ -33,33 +29,6 @@ function Home({ navigation }) {
   const paceRef = useRef(1);                                         // 상세 페이스용 Ref
   const [paceDetail, setPaceDetail] = useState([]);                  // 상세 페이스
   const [path, setPath] = useState([]);                              // 경로 그리기
-
-  const veryIntensiveTask = async (taskDataArguments) => {
-    // Example of an infinite loop task
-    const { delay } = taskDataArguments;
-    await new Promise( async (resolve) => {
-      for (let i = 0; BackgroundService.isRunning(); i++) {
-        console.log(i);
-        recordDistance(i);
-        await sleep(delay);
-      }
-    });
-  };
-
-  const options = {
-    taskName: 'MRC',
-    taskTitle: '모두의 러닝코치',
-    taskDesc: '앱이 실행중입니다.',
-    taskIcon: {
-        name: 'ic_launcher',
-        type: 'mipmap',
-    },
-    color: '#ff00ff',
-    linkingURI: 'yourSchemeHere://chat/jane', // See Deep Linking for more info
-    parameters: {
-        delay: 2000,
-    },
-  };
 
   /** 지도 초기값 세팅 */
   const initGeo = () => {
@@ -92,7 +61,7 @@ function Home({ navigation }) {
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
           initGeo(); 
         } else {
-          console.log('권한을 못받음');
+          navigation.navigate('HomeStack');          
         }
       }
       if (Platform.OS === 'ios') {
@@ -101,7 +70,6 @@ function Home({ navigation }) {
       }
     } catch (e) {
       console.log(e);
-      crashlytics().recordError(e);
     } finally {
       setIsLoading(false);
     }
@@ -115,29 +83,25 @@ function Home({ navigation }) {
   }
 
   /** 위치 추적 + 기록 */
-  const recordDistance = (i) => {
+  const recordDistance = () => {
     try {
-      console.log('called');
-      Geolocation.getCurrentPosition(
-        position => {
-          const {latitude, longitude} = position.coords;
-          if (distanceRef.current != null) {
-            const currentDistance = haversine(distanceRef.current, position.coords, {unit: 'meter'});
-            setDistance(prev => prev + currentDistance);
-            setPath(prev => [...prev, { latitude, longitude }]);
-          }
-          distanceRef.current = { latitude, longitude };
-        },
-        e => {
-          console.log(e);
-        },
-        {
-          forceLocationManager: true,
-          enableHighAccuracy: true,
-          timeout: 2000,
-          maximumAge: 36000000
+      BackgroundGeolocation.watchPosition((location) => {
+        const {latitude, longitude} = location.coords;
+        if (distanceRef.current != null) {
+          const currentDistance = haversine(distanceRef.current, location.coords, {unit: 'meter'});
+          setDistance(prev => prev + currentDistance);
+          setPath(prev => [...prev, { latitude, longitude }]);
         }
-      );
+        distanceRef.current = { latitude, longitude };
+      }, (e) => {
+        console.log(e);
+      }, {
+        interval: 4000,
+        desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
+        persist: false,
+        extras: {foo: "bar"},
+        timeout: 60000
+      });
     } catch (e) {
       console.log(e);
     }
@@ -168,27 +132,23 @@ function Home({ navigation }) {
   }, [totalTime]);
 
   /** 시작하기 */
-  const onStart = async () => {
+  const onStart = () => {
     setIsStarted(true);
     setIsRecoding(true);
     recordTime();
-    // recordDistance();
-    await BackgroundService.start(veryIntensiveTask, options);
+    recordDistance();
   }
 
   /** 일시 정지 */
-  const onPause = async () => {
-    await BackgroundService.stop();
+  const onPause = () => {
     setIsRecoding(false);
     clearInterval(timeRef.current);
     timeRef.current = null;
-    Geolocation.clearWatch(watchId.current);
-    watchId.current = null;
+    BackgroundGeolocation.stopWatchPosition();
   }
 
   /** 측정 초기화 */
-  const onClear = async () => {
-    await BackgroundService.stop();
+  const onClear = () => {
     setTotalTime(0);
     setDistance(0);
     setPace('00:00');
@@ -198,7 +158,7 @@ function Home({ navigation }) {
     clearInterval(timeRef.current);
     paceRef.current = 1;
     timeRef.current = null;
-    watchId.current = null;
+    BackgroundGeolocation.stopWatchPosition();
   }
 
   /** 완료 Alert */
@@ -219,7 +179,6 @@ function Home({ navigation }) {
 
   /** 완료 */
   const handleComplete = async () => {
-    await BackgroundService.stop();
     try {
       if (distance - ((paceRef.current - 1) * 1000) > 490) {
         setPaceDetail(prev => [...prev, totalTime/1000]);
@@ -302,21 +261,36 @@ function Home({ navigation }) {
     }
   };
 
-  handleAppStateChange = (nextAppState) => {
-    if (nextAppState === 'active') {
-      console.log('포그라운드');
-    } else {
-      console.log('백그라운드');
-    }
-  };
-
   /** init */
   useEffect(() => {
     onClear();
     setRecord('');
     setCaptureURL('');
     requestPermissions();
-    AppState.addEventListener('change', handleAppStateChange);
+    BackgroundGeolocation.ready({
+      // Geolocation Config
+      desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
+      distanceFilter: 10,
+      // Activity Recognition
+      stopTimeout: 5,
+      // Application config
+      debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
+      logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
+      stopOnTerminate: false,   // <-- Allow the background-service to continue tracking when user closes the app.
+      startOnBoot: true,        // <-- Auto start tracking when device is powered-up.
+      // HTTP / SQLite config
+      url: 'http://yourserver.com/locations',
+      batchSync: false,       // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
+      autoSync: true,         // <-- [Default: true] Set true to sync each location to server as it arrives.
+      headers: {              // <-- Optional HTTP headers
+        "X-FOO": "bar"
+      },
+      params: {               // <-- Optional HTTP params
+        "auth_token": "maybe_your_server_authenticates_via_token_YES?"
+      }
+    }).then((state) => {
+      console.log("BackgroundGeolocation is configured and ready: ", state.enabled);
+    });
   }, []);
 
   /** Back Event */
@@ -372,10 +346,6 @@ function Home({ navigation }) {
           <Text style={styles.missionContent}>{trainingMission.content}</Text>
         </View>
       }
-      <View style={styles.alert}>
-        <Text style={styles.alertText}>Background mode is not supported yet.</Text>
-        <Text style={styles.alertText}>아직 백그라운드 모드를 지원하지 않습니다.</Text>
-      </View>
       {isStarted
         ?
           <View style={styles.record_wrap}>
@@ -495,13 +465,13 @@ const styles = StyleSheet.create({
   },
   missionTitle: {
     fontSize: 16,
+    fontWeight: 500,
     color: '#000',
-    textDecorationLine: 'underline',
     textAlign: 'center',
   },
   missionContent: {
     marginTop: 10,
-    fontSize: 16,
+    fontSize: 15,
     color: '#333',
     textAlign: 'center',
   },
@@ -525,23 +495,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     textAlign: 'center',
   },
-  alert: {
-    position: 'absolute',
-    top: 10,
-    left: 10,
-    display: 'flex',
-    justifyContent: 'center',
-    alignContent: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 7,
-    backgroundColor: 'rgba(0,0,0,0.7)',
-    zIndex: 9,
-  },
-  alertText: {
-    fontSize: 12,
-    color: '#fff',
-    textAlign: 'center',
-  }
 });
 
 export default Home;

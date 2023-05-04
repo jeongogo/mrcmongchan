@@ -27,6 +27,8 @@
     "react-native": "0.71.6",
     "react-native-auto-height-image": "^3.2.4",
     "react-native-background-actions": "^3.0.0",
+    "react-native-background-fetch": "^4.1.0",
+    "react-native-background-geolocation": "^4.11.4",
     "react-native-foreground-service-android": "^1.0.18",
     "react-native-geolocation-service": "^5.3.1",
     "react-native-loader": "^1.3.1",

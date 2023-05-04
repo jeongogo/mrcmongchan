@@ -1,12 +1,30 @@
-import React from 'react';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import React, { useEffect, useState } from 'react';
+import useStore from "../../store/store";
 import {View, Text, StyleSheet, Pressable} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import CustomWrap from '../common/CustomWrap';
 
 function Challenge({ challenge, navigation }) {
+  const user = useStore((state) => state.user);
+  const [start, setStart] = useState('');
+  const [end, setEnd] = useState('');
+
   const onDetail = (id) => {
     navigation.navigate('ChallengeDetail', {id});
   }
+
+  useEffect(() => {
+    const currentStart = new Date(challenge.startDate.toDate());
+    const currentEnd = new Date(challenge.endDate.toDate());
+    const startYear = currentStart.getFullYear();
+    const startMonth = currentStart.getMonth() + 1;
+    const startDate = currentStart.getDate();
+    const endYear = currentEnd.getFullYear();
+    const endMonth = currentEnd.getMonth() + 1;
+    const endDate = currentEnd.getDate();
+    setStart(startYear + '.' + startMonth + '.' + startDate);
+    setEnd(endYear + '.' + endMonth + '.' + endDate);
+  }, []);
 
   return (
     <CustomWrap>
@@ -15,9 +33,9 @@ function Challenge({ challenge, navigation }) {
           <Text style={styles.text}>{challenge.title}</Text>
         </View>
         <View style={styles.wrap}>
-          <Text style={styles.text}>{challenge.startDate}</Text>
+          <Text style={styles.text}>{start}</Text>
           <Text style={styles.text}> ~ </Text>
-          <Text style={styles.text}>{challenge.endDate}</Text>
+          <Text style={styles.text}>{end}</Text>
         </View>
         <View style={styles.wrap}>
           <Text style={styles.text}>{challenge.goal}km</Text>
@@ -26,6 +44,9 @@ function Challenge({ challenge, navigation }) {
             <Icon name={'account-multiple'} color={'#222'} size={16} />
           </View>
           <Text style={styles.text}>{challenge.entry.length}</Text>
+          {user.challenge === challenge.id &&
+            <Text style={styles.hasAttend}>참가중</Text>
+          }
         </View>
       </Pressable>
     </CustomWrap>
@@ -45,6 +66,9 @@ const styles = StyleSheet.create({
   },
   margin: {
     marginHorizontal: 10,
+  },
+  hasAttend: {
+    marginLeft: 'auto',
   }
 });
 

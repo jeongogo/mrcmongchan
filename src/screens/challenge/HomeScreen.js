@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import firestore from '@react-native-firebase/firestore';
+import useStore from "../../store/store";
+import { updateUser } from "../../lib/user";
 import { useIsFocused } from "@react-navigation/native";
 import Home from "../../components/challenge/Home";
 
@@ -7,11 +9,15 @@ function HomeScreen() {
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState();
   const [challenges, setChallenges] = useState([]);
+  const user = useStore((state) => state.user);
+  const setUser = useStore((state) => state.setUser);
 
   const getChanllenges = async () => {
     setIsLoading(true);
     try {
-      const snapshot = await firestore().collection('Challenges').get();
+      let currentDay = new Date();
+      currentDay.setDate(currentDay.getDate() - 4);
+      const snapshot = await firestore().collection('Challenges').where('endDate', '>', currentDay).get();
       let data = [];
       snapshot.forEach(doc => {
         const item = {
@@ -21,13 +27,15 @@ function HomeScreen() {
         data.push(item);
       });
       setChallenges(data);
+
+      const filterData = data.filter((i) => i.id === user.challenge);
+
+      if (filterData.length < 1) {
+        setUser({...user, challenge: ''});
+        await updateUser(user.uid, {challenge: ''});
+      }
     } catch (e) {
-      Alert.alert("실패", e.message, [
-        {
-          text: "확인",
-          onPress: () => null,
-        },
-      ]);
+      console.log(e);
     } finally {
       setIsLoading(false);
     }

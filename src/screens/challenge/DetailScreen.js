@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import { useIsFocused } from "@react-navigation/native";
 import useStore from "../../store/store";
-import { getUser, updateUser } from "../../lib/user";
+import { updateUser } from "../../lib/user";
 import {Alert} from 'react-native';
 import Detail from "../../components/challenge/Detail";
 
@@ -14,12 +14,6 @@ function DetailScreen({route, navigation}) {
   const [goalCurrent, setGoalCurrent] = useState(0);
   const user = useStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
-
-  /** Update User */
-  const refreshUser = async () => {
-    const profile = await getUser(user.uid);
-    setUser(profile);
-  }
 
   /** 챌린지 가져오기 */
   const getChallenge = async () => {
@@ -36,30 +30,28 @@ function DetailScreen({route, navigation}) {
   }
 
   /** 참가 신청하기 */
-  const onApplicant = async () => {
+  const handleAttend = async () => {
     try {
-      const newApplicant = {
+      const newEntry = {
         uid: user.uid,
-        name: user.name
-      };
+        name: user.name,
+        distance: 0,
+      }
 
-      await docRef.update({
-        applicants: [...challenge.applicants, newApplicant]
-      });
+      // 챌린지에 참가자 추가
+      await docRef.update({ entry: [...challenge.entry, newEntry] });
+      setChallenge({...challenge, entry: [...challenge.entry, newEntry]});
+      
+      // 유저에 챌린지 추가
+      await updateUser(user.uid, {challenge: route.params.id});
+      setUser({...user, challenge: route.params.id});
 
-      await updateUser(user.uid, {challengeApplicant: route.params.id});
-
-      Alert.alert("", "챌린지 신청이 완료되었습니다.", [
+      Alert.alert("", "참가 완료되었습니다.", [
         {
           text: "확인",
           onPress: () => null
         }
       ]);
-
-      setChallenge({...challenge, applicants: [...challenge.applicants, newApplicant]});
-
-      setUser({...user, challengeApplicant: route.params.id});
-
     } catch (e) {
       console.log('여기', e);
     }
@@ -68,66 +60,14 @@ function DetailScreen({route, navigation}) {
   /** 참가 취소하기 */
   const handleLeave = async () => {
     try {
-      let filterEntry = [];
-      let filterApplicants = [];
+      let filterEntry = challenge.entry.filter((i) => i.uid !== user.uid);
 
-      if (challenge.entry?.length > 0) {
-        filterEntry = challenge.entry.filter((i) => i.uid !== user.uid);
-      }
-      if (challenge.applicants?.length > 0) {
-        filterApplicants = challenge.applicants.filter((i) => i.uid !== user.uid);
-      }
-      if (user.challenges?.length > 0) {
-        filterApplicants = challenge.applicants.filter((i) => i.uid !== user.uid);
-      }
+      await docRef.update({ entry: filterEntry });
+      await updateUser(user.uid, { challenge: '' });
 
-      await docRef.update({
-        entry: filterEntry,
-        applicants: filterApplicants,
-      });
-
-      await updateUser(user.uid, { challenge: '', challengeApplicant: '' });
-
-      setUser({...user, challenge: '', challengeApplicant: '' });
+      setUser({...user, challenge: ''});
 
       navigation.navigate('ChallengeHome');
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  /** 신청 수락하기 */
-  const handleAttend = async (uid, name) => {
-    try {
-      const newEntry = {
-        uid,
-        name,
-        distance: 0,
-      }
-
-      const filterApplicants = challenge.applicants.filter((i) => i.uid !== uid);
-
-      // 챌린지에 참가자 추가
-      await docRef.update({
-        entry: [...challenge.entry, newEntry],
-        applicants: filterApplicants,
-      });
-      
-      // 유저에 챌린지 추가
-      await updateUser(uid, {challenge: route.params.id, challengeApplicant: ''});
-
-      Alert.alert("", "수락 완료되었습니다.", [
-        {
-          text: "확인",
-          onPress: () => null
-        }
-      ]);
-
-      setUser({...user, challenge: route.params.id});
-
-      // 챌린지 업데이트
-      setChallenge({...challenge, entry: [...challenge.entry, newEntry], applicants: filterApplicants});
-
     } catch (e) {
       console.log(e);
     }
@@ -141,7 +81,6 @@ function DetailScreen({route, navigation}) {
 
   useEffect(() => {
     getChallenge();
-    refreshUser();
   }, [isFocused]);
 
   useEffect(() => {
@@ -150,9 +89,9 @@ function DetailScreen({route, navigation}) {
 
   return (
     <Detail
+      route={route}
       challenge={challenge}
       goalCurrent={goalCurrent}
-      onApplicant={onApplicant}
       handleAttend={handleAttend}
       handleLeave={handleLeave}
       handleDelete={handleDelete}

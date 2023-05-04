@@ -84,7 +84,7 @@ function Write({navigation, isLoading, handleSubmit}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 15,
+    paddingVertical: 10,
     paddingHorizontal: 15,
     backgroundColor: '#fff',
   },

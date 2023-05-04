@@ -3,10 +3,10 @@ import firestore from '@react-native-firebase/firestore';
 import Write from "../../components/challenge/Write";
 
 function WriteScreen({navigation}) {
-  const handleSubmit = async (data) => {
+  const handleSubmit = async (challenge) => {
     try {
-      const data = await firestore().collection('Challenges').add(data);
-      navigation.navigate('ChallengeHome', {id: data.id})
+      const data = await firestore().collection('Challenges').add(challenge);
+      navigation.navigate('ChallengeDetail', {id: data.id})
     } catch (e) {
       console.log(e);
     }

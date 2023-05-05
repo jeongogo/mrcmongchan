@@ -2,6 +2,7 @@
 #import "AppDelegate.h"
 
 #import <React/RCTBundleURLProvider.h>
+#import <TSBackgroundFetch/TSBackgroundFetch.h>
 
 @implementation AppDelegate
 
@@ -13,6 +14,8 @@
   self.initialProps = @{};
 
   [FIRApp configure];
+  // [REQUIRED] Register BackgroundFetch
+  [[TSBackgroundFetch sharedInstance] didFinishLaunching];
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 

@@ -93,6 +93,7 @@ function Home({ navigation }) {
           setPath(prev => [...prev, { latitude, longitude }]);
         }
         distanceRef.current = { latitude, longitude };
+        console.log(latitude, longitude);
       }, (e) => {
         console.log(e);
       }, {

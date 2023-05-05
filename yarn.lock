@@ -6086,17 +6086,17 @@ react-native-background-actions@^3.0.0:
   dependencies:
     eventemitter3 "^4.0.7"
 
-react-native-background-fetch@^4.1.0, react-native-background-fetch@~4.1.5:
+react-native-background-fetch@^4.0.1, react-native-background-fetch@~4.1.10:
   version "4.1.10"
   resolved "https://registry.yarnpkg.com/react-native-background-fetch/-/react-native-background-fetch-4.1.10.tgz#12c7e85140af67fb05edb7cd9960e4f09a457797"
   integrity sha512-Ug54vTctZuD/c06ZLk/VyvFdhw/hCVVOHYR5heyMqc6FlT/m9fVhFWyl4uH3JmPCzmWDVR3fO28CzrGpKOrusw==
 
-react-native-background-geolocation@^4.11.4:
-  version "4.11.4"
-  resolved "https://registry.yarnpkg.com/react-native-background-geolocation/-/react-native-background-geolocation-4.11.4.tgz#6c2bf97c3ac6b1e599fcf3752ef5e46e684567f8"
-  integrity sha512-Cu/orYxctMEX8grHuIGA5M0wbyK6Vx8RlVQnO7k0tganAaWz1mv+IyHoxjlPKhnuxQkJ4MaeElc/kW1aNCvVfw==
+react-native-background-geolocation@^4.12.0:
+  version "4.12.0"
+  resolved "https://registry.yarnpkg.com/react-native-background-geolocation/-/react-native-background-geolocation-4.12.0.tgz#2dce8094d8ce2a71c46668e780f00d95ec200093"
+  integrity sha512-xsRV+32ktCKp9LfHSfW7Z7+hn+W55NeFuCY9G+wHlBkueTSH4xo7Vo5DCbUimkrrqqE+FkCl/ZILy2kSH3FvIw==
   dependencies:
-    react-native-background-fetch "~4.1.5"
+    react-native-background-fetch "~4.1.10"
 
 react-native-codegen@^0.71.5:
   version "0.71.5"

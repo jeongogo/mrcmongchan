@@ -609,6 +609,9 @@ PODS:
   - BoringSSL-GRPC/Implementation (0.0.24):
     - BoringSSL-GRPC/Interface (= 0.0.24)
   - BoringSSL-GRPC/Interface (0.0.24)
+  - CocoaLumberjack (3.7.4):
+    - CocoaLumberjack/Core (= 3.7.4)
+  - CocoaLumberjack/Core (3.7.4)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.71.6)
   - FBReactNativeSpec (0.71.6):
@@ -1139,6 +1142,11 @@ PODS:
     - React-perflogger (= 0.71.6)
   - ReactNativeART (1.2.0):
     - React
+  - RNBackgroundFetch (4.1.10):
+    - React-Core
+  - RNBackgroundGeolocation (4.12.0):
+    - CocoaLumberjack (~> 3.7.2)
+    - React-Core
   - RNCAsyncStorage (1.18.1):
     - React-Core
   - RNDateTimePicker (7.0.1):
@@ -1216,6 +1224,8 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "ReactNativeART (from `../node_modules/@react-native-community/art`)"
+  - RNBackgroundFetch (from `../node_modules/react-native-background-fetch`)
+  - RNBackgroundGeolocation (from `../node_modules/react-native-background-geolocation`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
@@ -1233,6 +1243,7 @@ SPEC REPOS:
     - abseil
     - AppAuth
     - BoringSSL-GRPC
+    - CocoaLumberjack
     - Firebase
     - FirebaseAppCheckInterop
     - FirebaseAuth
@@ -1339,6 +1350,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   ReactNativeART:
     :path: "../node_modules/@react-native-community/art"
+  RNBackgroundFetch:
+    :path: "../node_modules/react-native-background-fetch"
+  RNBackgroundGeolocation:
+    :path: "../node_modules/react-native-background-geolocation"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNDateTimePicker:
@@ -1367,6 +1382,7 @@ SPEC CHECKSUMS:
   AppAuth: e48b432bb4ba88b10cb2bcc50d7f3af21e78b9c2
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
   BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
+  CocoaLumberjack: 543c79c114dadc3b1aba95641d8738b06b05b646
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   FBLazyVector: a83ceaa8a8581003a623facdb3c44f6d4f342ac5
   FBReactNativeSpec: 85eee79837cb797ab6176f0243a2b40511c09158
@@ -1431,6 +1447,8 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 8692ac548bec648fa121980ccb4304afd136d584
   ReactCommon: 0982e4657e0ecdc3a90858fbb529d54cd0be8fb4
   ReactNativeART: 78edc68dd4a1e675338cd0cd113319cf3a65f2ab
+  RNBackgroundFetch: 9fcdeee8aa00e1e1b3895ff9bbaaf10275288a87
+  RNBackgroundGeolocation: ef78e7fd69eab7b46c54925eb362d73656853a10
   RNCAsyncStorage: b90b71f45b8b97be43bc4284e71a6af48ac9f547
   RNDateTimePicker: e073697ac3e8a378968d68ab0581fef542b8af8a
   RNFBApp: 0f6bd7ee155a50f5e68cd68aab2709a4d24bfdff

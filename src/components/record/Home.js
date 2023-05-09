@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {Platform, PermissionsAndroid, View, Text, StyleSheet, TouchableOpacity, BackHandler, Alert} from 'react-native';
+import {Platform, PermissionsAndroid, View, Text, StyleSheet, TouchableOpacity, BackHandler, Alert, AppState} from 'react-native';
 import BackgroundGeolocation from "react-native-background-geolocation";
 import Geolocation from 'react-native-geolocation-service';
 import ViewShot from "react-native-view-shot";
@@ -15,6 +15,7 @@ function Home({ navigation }) {
   const setCaptureURL = useStore((state) => state.setCaptureURL);
   const trainingMission = useStore((state) => state.trainingMission);
   const [isLoading, setIsLoading] = useState(true);                  // loading
+  const appState = useRef(AppState.currentState);
   const captureRef = useRef(null);                                   // 지도 캡쳐용 Ref
   const [initLocation, setInitLocation] = useState('');              // 실시간 현재 위치
   const [isStarted, setIsStarted] = useState(false);                 // 시작 여부
@@ -92,12 +93,14 @@ function Home({ navigation }) {
           setDistance(prev => prev + currentDistance);
           setPath(prev => [...prev, { latitude, longitude }]);
         }
+        if (appState.current !== 'active') {
+          setTotalTime(prev => prev + 2000);
+        }
         distanceRef.current = { latitude, longitude };
-        console.log(latitude, longitude);
       }, (e) => {
         console.log(e);
       }, {
-        interval: 4000,
+        interval: 2000,
         desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
         persist: false,
         extras: {foo: "bar"},
@@ -290,8 +293,19 @@ function Home({ navigation }) {
         "auth_token": "maybe_your_server_authenticates_via_token_YES?"
       }
     }).then((state) => {
+      BackgroundGeolocation.start();
       console.log("BackgroundGeolocation is configured and ready: ", state.enabled);
     });
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+        console.log('App has come to the foreground!');
+      }
+      appState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
+    };
   }, []);
 
   /** Back Event */

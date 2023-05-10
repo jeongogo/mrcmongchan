@@ -11,6 +11,10 @@ let state = (set) => ({
   record: '',
   setRecord: (data) => set(() => ({ record: data })),
 
+  /** 권한 */
+  permission: false,
+  setPermission: (data) => set(() => ({ permission: data })),
+
   /** 지도 캡쳐 */
   captureURL: '',
   setCaptureURL: (data) => set(() => ({ captureURL: data })),

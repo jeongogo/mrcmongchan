@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {Platform, PermissionsAndroid, View, Text, StyleSheet, TouchableOpacity, BackHandler, Alert, AppState} from 'react-native';
+import {Platform, PermissionsAndroid, View, Text, StyleSheet, TouchableOpacity, BackHandler, Alert, AppState, Pressable} from 'react-native';
 import BackgroundGeolocation from "react-native-background-geolocation";
 import Geolocation from 'react-native-geolocation-service';
 import ViewShot from "react-native-view-shot";
@@ -11,6 +11,8 @@ import Loader from "../../components/common/Loader";
 
 function Home({ navigation }) {
   const user = useStore((state) => state.user);
+  const permission = useStore((state) => state.permission);
+  const setPermission = useStore((state) => state.setPermission);
   const setRecord = useStore((state) => state.setRecord);
   const setCaptureURL = useStore((state) => state.setCaptureURL);
   const trainingMission = useStore((state) => state.trainingMission);
@@ -265,50 +267,55 @@ function Home({ navigation }) {
     }
   };
 
-  /** init */
   useEffect(() => {
     onClear();
     setRecord('');
     setCaptureURL('');
     requestPermissions();
-    BackgroundGeolocation.ready({
-      // Geolocation Config
-      desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-      distanceFilter: 10,
-      // Activity Recognition
-      stopTimeout: 5,
-      // Application config
-      debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
-      logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
-      stopOnTerminate: false,   // <-- Allow the background-service to continue tracking when user closes the app.
-      startOnBoot: true,        // <-- Auto start tracking when device is powered-up.
-      // HTTP / SQLite config
-      url: 'http://yourserver.com/locations',
-      batchSync: false,       // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
-      autoSync: true,         // <-- [Default: true] Set true to sync each location to server as it arrives.
-      headers: {              // <-- Optional HTTP headers
-        "X-FOO": "bar"
-      },
-      params: {               // <-- Optional HTTP params
-        "auth_token": "maybe_your_server_authenticates_via_token_YES?"
-      }
-    }).then((state) => {
-      BackgroundGeolocation.start();
-      console.log("BackgroundGeolocation is configured and ready: ", state.enabled);
-    });
-    const subscription = AppState.addEventListener('change', nextAppState => {
-      if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
-        console.log('App has come to the foreground!');
-      }
-      appState.current = nextAppState;
-    });
-
-    return () => {
-      subscription.remove();
-    };
   }, []);
 
-  /** Back Event */
+  useEffect(() => {
+    let subscription = '';
+    if (permission) {
+      BackgroundGeolocation.ready({
+        // Geolocation Config
+        desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
+        distanceFilter: 10,
+        // Activity Recognition
+        stopTimeout: 5,
+        // Application config
+        debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
+        logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
+        stopOnTerminate: false,   // <-- Allow the background-service to continue tracking when user closes the app.
+        startOnBoot: true,        // <-- Auto start tracking when device is powered-up.
+        // HTTP / SQLite config
+        url: 'http://yourserver.com/locations',
+        batchSync: false,       // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
+        autoSync: true,         // <-- [Default: true] Set true to sync each location to server as it arrives.
+        headers: {              // <-- Optional HTTP headers
+          "X-FOO": "bar"
+        },
+        params: {               // <-- Optional HTTP params
+          "auth_token": "maybe_your_server_authenticates_via_token_YES?"
+        }
+      }).then((state) => {
+        BackgroundGeolocation.start();
+        console.log("BackgroundGeolocation is configured and ready: ", state.enabled);
+      });
+      subscription = AppState.addEventListener('change', nextAppState => {
+        if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+          console.log('App has come to the foreground!');
+        }
+        appState.current = nextAppState;
+      });
+    }
+    return () => {
+      if (permission) {
+        subscription.remove();
+      }
+    };
+  }, [permission]);
+
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
@@ -327,6 +334,29 @@ function Home({ navigation }) {
 
   return (
     <View style={styles.container}>
+      {!permission &&
+        <View style={styles.permission}>
+          <View style={styles.permissionWrap}>
+            <Text style={styles.permissionTitle}>권한 안내</Text>
+            <View style={styles.permissionContent}>
+              <Text style={styles.permissionContentText}>
+                - 모두의 러닝 코치 앱은 앱이 종료되었거나 사용 중이 아닐 때도 위치 데이터를 수집하여 러닝 추적 기능을 지원합니다.
+              </Text>
+              <Text style={styles.permissionContentText}>
+                - 상세한 러닝 트래킹 정보를 추적하기 위해 백그라운드 모드 권한, 신체활동 정보 권한이 필요합니다.
+              </Text>
+            </View>
+            <View style={styles.permissionBtns}>
+              <Pressable style={styles.permissionBtnCancel} onPress={() => navigation.navigate('HomeStack')}>
+                <Text style={styles.permissionBtnTextCancel}>취소</Text>
+              </Pressable>
+              <Pressable style={styles.permissionBtn} onPress={() => setPermission(true)}>
+                <Text style={styles.permissionBtnText}>확인</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      }
       <ViewShot ref={captureRef} options={{ fileName: "map", format: "jpg", quality: 0.9 }}>
         {initLocation &&
           <MapView
@@ -408,6 +438,72 @@ function Home({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  permission: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    height: '100%',
+    width: '100%',
+    paddingHorizontal: 50,
+    display: 'flex',
+    justifyContent: 'center',
+    alignContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    zIndex: 12,
+  },
+  permissionWrap: {
+    padding: 25,
+    backgroundColor: '#fff',
+    borderRadius: 20,
+  },
+  permissionTitle: {
+    fontSize: 22,
+    fontWeight: 500,
+    color: '#222',
+    textAlign: 'center',
+  },
+  permissionContent: {
+    paddingVertical: 10,
+    fontSize: 14,
+    color: '#222',
+  },
+  permissionContentText: {
+    paddingVertical: 5,
+    fontSize: 14,
+    color: '#454545',
+  },
+  permissionBtns: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  permissionBtn: {
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    flexGrow: 1,
+    backgroundColor: '#E53A40',
+    borderRadius: 5,
+  },
+  permissionBtnCancel: {
+    marginRight: 10,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    flexGrow: 1,
+    borderWidth: 1,
+    borderColor: '#E53A40',
+    borderRadius: 5,
+  },
+  permissionBtnText: {
+    fontSize: 14,
+    fontWeight: 500,
+    textAlign: 'center',
+    color: '#fff',
+  },
+  permissionBtnTextCancel: {
+    fontSize: 14,
+    fontWeight: 500,
+    textAlign: 'center',
+    color: '#E53A40',
   },
   record_wrap: {
     position: 'absolute',

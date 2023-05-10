@@ -7,6 +7,14 @@ let state = (set) => ({
   user: '',
   setUser: (data) => set(() => ({ user: data })),
 
+  /** 약관 동의 */
+  terms: {
+    service: false,
+    privacy: false,
+    record: false,
+  },
+  setPolicy: (data) => set(() => ({ policy: data })),
+
   /** 기록 측정 */
   record: '',
   setRecord: (data) => set(() => ({ record: data })),

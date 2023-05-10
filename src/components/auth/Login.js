@@ -1,6 +1,8 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, View, Text, TextInput, Pressable } from 'react-native';
+import useStore from "../../store/store";
+import Terms from "./Terms";
 
 function Login({isSignUp, handleLogin}) {
   const navigation = useNavigation();
@@ -11,6 +13,7 @@ function Login({isSignUp, handleLogin}) {
   });
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
+  const terms = useStore((state) => state.terms);
 
   const createChangeTextHandler = (name) => (value) => {
     setForm({...form, [name]: value});
@@ -31,8 +34,17 @@ function Login({isSignUp, handleLogin}) {
     handleLogin(form);
   }
 
+  useEffect(() => {
+    if (!terms.service) {
+      console.log('약관 동의 받자');
+    }
+  }, []);
+
   return (
     <View style={styles.container}>
+      {!terms.service &&
+        <Terms />
+      }
       <TextInput
         style={styles.input}
         value={form.email}

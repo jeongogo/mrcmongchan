@@ -1,11 +1,10 @@
 import React from 'react'
-import {View, StyleSheet} from 'react-native';
-import { Bubbles } from 'react-native-loader';
+import {View, StyleSheet, ActivityIndicator} from 'react-native';
 
 const Loader = () => {
   return (
     <View style={styles.container}>
-      <Bubbles size={6} color="#E53A40" />
+      <ActivityIndicator size='large' color="#E53A40" />
     </View>
   )
 }

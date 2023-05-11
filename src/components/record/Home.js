@@ -32,12 +32,14 @@ function Home({ navigation }) {
   const paceRef = useRef(1);                                         // 상세 페이스용 Ref
   const [paceDetail, setPaceDetail] = useState([]);                  // 상세 페이스
   const [path, setPath] = useState([]);                              // 경로 그리기
+  const [areaName, setAreaName] = useState('');                      // 현재 위치 지역 이름
 
   /** 지도 초기값 세팅 */
   const initGeo = () => {
     Geolocation.getCurrentPosition((position) => {
       const {latitude, longitude} = position.coords;
       setInitLocation({ latitude, longitude });
+      getAreaName(latitude, longitude);
     },
     (error) => {
       console.log(error.code, error.message);
@@ -236,6 +238,7 @@ function Home({ navigation }) {
         paceDetail,
         calorie: calorie.toFixed(0),
         date: new Date(),
+        areaName,
       };
       setRecord(recordData);
       onClear();
@@ -269,6 +272,22 @@ function Home({ navigation }) {
       return true;
     }
   };
+
+  /** 지역 이름 가져오기 */
+  const getAreaName = async (latitude, longitude) => {
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&language=ko&key=${'AIzaSyDgFKJXcVa_LwwV3mPMxmPrEu1SDz9W9Y4'}`,
+      );
+      const responseJson = await response.json();
+      const addressArr = responseJson.results[0].formatted_address.split(
+        ' ',
+      );
+      setAreaName(`${addressArr[2]} ${addressArr[3]}`);
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   useEffect(() => {
     onClear();

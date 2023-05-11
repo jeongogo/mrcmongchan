@@ -1,7 +1,7 @@
 import React from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import useStore from "../../store/store";
-import {ScrollView, View, Text, StyleSheet, Linking, Image, useWindowDimensions, Pressable} from 'react-native';
+import {ScrollView, View, Text, StyleSheet, Linking, useWindowDimensions, Pressable} from 'react-native';
 import AutoHeightImage from "react-native-auto-height-image";
 import CustomWrap from '../common/CustomWrap';
 import Loader from "../../components/common/Loader";

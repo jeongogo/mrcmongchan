@@ -142,6 +142,7 @@ function Home({ navigation }) {
     setIsStarted(true);
     setIsRecoding(true);
     recordTime();
+    BackgroundGeolocation.start();
     recordDistance();
   }
 
@@ -151,6 +152,7 @@ function Home({ navigation }) {
     clearInterval(timeRef.current);
     timeRef.current = null;
     BackgroundGeolocation.stopWatchPosition();
+    BackgroundGeolocation.stop();
   }
 
   /** 측정 초기화 */
@@ -165,6 +167,7 @@ function Home({ navigation }) {
     paceRef.current = 1;
     timeRef.current = null;
     BackgroundGeolocation.stopWatchPosition();
+    BackgroundGeolocation.stop();
   }
 
   /** 완료 Alert */
@@ -284,10 +287,10 @@ function Home({ navigation }) {
         // Activity Recognition
         stopTimeout: 5,
         // Application config
-        debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
+        debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
         logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
         stopOnTerminate: false,   // <-- Allow the background-service to continue tracking when user closes the app.
-        startOnBoot: true,        // <-- Auto start tracking when device is powered-up.
+        startOnBoot: false,        // <-- Auto start tracking when device is powered-up.
         // HTTP / SQLite config
         url: 'http://yourserver.com/locations',
         batchSync: false,       // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
@@ -299,7 +302,7 @@ function Home({ navigation }) {
           "auth_token": "maybe_your_server_authenticates_via_token_YES?"
         }
       }).then((state) => {
-        BackgroundGeolocation.start();
+        // BackgroundGeolocation.start();
         console.log("BackgroundGeolocation is configured and ready: ", state.enabled);
       });
       subscription = AppState.addEventListener('change', nextAppState => {

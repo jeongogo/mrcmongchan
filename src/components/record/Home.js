@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {Platform, PermissionsAndroid, View, Text, StyleSheet, TouchableOpacity, BackHandler, Alert, AppState, Pressable} from 'react-native';
+import {Platform, PermissionsAndroid, View, Text, StyleSheet, BackHandler, Alert, AppState, Pressable} from 'react-native';
 import BackgroundGeolocation from "react-native-background-geolocation";
 import Geolocation from 'react-native-geolocation-service';
-import ViewShot from "react-native-view-shot";
-import MapView, {Polyline} from 'react-native-maps';
 import haversine from 'haversine';
 import useStore from "../../store/store";
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Map from "./Map";
+import Popup from "./Popup";
+import Record from "./Record";
 import Loader from "../../components/common/Loader";
 
 function Home({ navigation }) {
@@ -17,7 +17,7 @@ function Home({ navigation }) {
   const setCaptureURL = useStore((state) => state.setCaptureURL);
   const trainingMission = useStore((state) => state.trainingMission);
   const [isLoading, setIsLoading] = useState(true);                  // loading
-  const appState = useRef(AppState.currentState);
+  const appState = useRef(AppState.currentState);                    // App State
   const captureRef = useRef(null);                                   // 지도 캡쳐용 Ref
   const [initLocation, setInitLocation] = useState('');              // 실시간 현재 위치
   const [isStarted, setIsStarted] = useState(false);                 // 시작 여부
@@ -33,13 +33,15 @@ function Home({ navigation }) {
   const [paceDetail, setPaceDetail] = useState([]);                  // 상세 페이스
   const [path, setPath] = useState([]);                              // 경로 그리기
   const [areaName, setAreaName] = useState('');                      // 현재 위치 지역 이름
+  const [weather, setWeather] = useState('');                        // 현재 위치 날씨
   
   /** 지도 초기값 세팅 */
   const initGeo = () => {
     Geolocation.getCurrentPosition((position) => {
       const {latitude, longitude} = position.coords;
       setInitLocation({ latitude, longitude });
-      getAreaName(latitude, longitude);
+      getAreaInfo(latitude, longitude);
+      setIsLoading(false);
     },
     (error) => {
       console.log(error.code, error.message);
@@ -50,6 +52,26 @@ function Home({ navigation }) {
         maximumAge: 10000
       }
     );
+  }
+
+  /** 지역 이름, 날씨 가져오기 */
+  const getAreaInfo = async (latitude, longitude) => {
+    try {
+      const areaNameRes = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&language=ko&key=${'AIzaSyDgFKJXcVa_LwwV3mPMxmPrEu1SDz9W9Y4'}`,
+      );
+      const areaNameResJson = await areaNameRes.json();
+      const addressArr = areaNameResJson.results[0].formatted_address.split(
+        ' ',
+      );
+      setAreaName(`${addressArr[2]} ${addressArr[3]}`);
+
+      const areaWeatherRes = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&APPID=4f73a6b7126147928e173d4caa9d8d8b`);
+      const areaWeatherResJson = await areaWeatherRes.json();
+      setWeather(areaWeatherResJson.weather[0].main);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   /** 권한 받기 */
@@ -75,9 +97,41 @@ function Home({ navigation }) {
       }
     } catch (e) {
       console.log(e);
-    } finally {
-      setIsLoading(false);
     }
+  }
+
+  /** 백그라운드 서비스 권한 */
+  const requestBackgroundPermission = () => {
+    BackgroundGeolocation.ready({
+      locationAuthorizationRequest: 'Always',
+      backgroundPermissionRationale: {
+        title: "위치 권한 사용 설정 안내",
+        message: "러닝 추적을 위해 위치 서비스에서 '항상 허용'을 사용하도록 설정해야 합니다.",
+        positiveAction: "'항상 허용' 설정"
+      },
+      locationAuthorizationAlert: {
+        titleWhenNotEnabled: "위치 권한 사용 설정 안내",
+        titleWhenOff: "위치 권한 사용 설정 안내",
+        instructions: "러닝 추적을 위해 위치 서비스에서 '항상 허용'을 사용하도록 설정해야 합니다.",
+        cancelButton: "취소",
+        settingsButton: "'항상 허용' 설정"
+      },
+      notification: {
+        title: "모두의 러닝 코치",
+        text: "앱이 실행중입니다."
+      },
+      desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
+      distanceFilter: 10,
+      stopTimeout: 5,
+      debug: false,
+      logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
+      stopOnTerminate: false,
+      startOnBoot: false,
+    }).then((state) => {
+      setPermission(true)
+      BackgroundGeolocation.start();
+      console.log("BackgroundGeolocation is configured and ready: ", state.enabled);
+    });
   }
 
   /** 시간 계산 */
@@ -238,6 +292,7 @@ function Home({ navigation }) {
         calorie: calorie.toFixed(0),
         date: new Date(),
         areaName,
+        weather,
       };
       setRecord(recordData);
       onClear();
@@ -272,69 +327,6 @@ function Home({ navigation }) {
     }
   };
 
-  /** 지역 이름 가져오기 */
-  const getAreaName = async (latitude, longitude) => {
-    try {
-      const response = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&language=ko&key=${'AIzaSyDgFKJXcVa_LwwV3mPMxmPrEu1SDz9W9Y4'}`,
-      );
-      const responseJson = await response.json();
-      const addressArr = responseJson.results[0].formatted_address.split(
-        ' ',
-      );
-      setAreaName(`${addressArr[2]} ${addressArr[3]}`);
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  const requestBackgroundPermission = () => {
-    BackgroundGeolocation.ready({
-      locationAuthorizationRequest: 'Always',
-      backgroundPermissionRationale: {
-        title: "위치 권한 사용 설정 안내",
-        message: "러닝 추적을 위해 위치 서비스에서 '항상 허용'을 사용하도록 설정해야 합니다.",
-        positiveAction: "설정"
-      },
-      locationAuthorizationAlert: {
-        titleWhenNotEnabled: "위치 권한 사용 설정 안내",
-        titleWhenOff: "위치 권한 사용 설정 안내",
-        instructions: "러닝 추적을 위해 위치 서비스에서 '항상 허용'을 사용하도록 설정해야 합니다.",
-        cancelButton: "취소",
-        settingsButton: "설정"
-      },
-      notification: {
-        title: "모두의 러닝 코치",
-        text: "앱이 실행중입니다."
-      },
-      // Geolocation Config
-      desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-      distanceFilter: 10,
-      // Activity Recognition
-      stopTimeout: 5,
-      // Application config
-      debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
-      logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
-      stopOnTerminate: false,   // <-- Allow the background-service to continue tracking when user closes the app.
-      startOnBoot: false,        // <-- Auto start tracking when device is powered-up.
-      // HTTP / SQLite config
-      // url: 'http://yourserver.com/locations',
-      // batchSync: false,       // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
-      // autoSync: true,         // <-- [Default: true] Set true to sync each location to server as it arrives.
-      // headers: {              // <-- Optional HTTP headers
-      //   "X-FOO": "bar"
-      // },
-      // params: {               // <-- Optional HTTP params
-      //   "auth_token": "maybe_your_server_authenticates_via_token_YES?"
-      // }
-    }).then((state) => {
-      setPermission(true)
-      BackgroundGeolocation.start();
-      console.log("BackgroundGeolocation is configured and ready: ", state.enabled);
-    });
-  }
-
-
   useEffect(() => {
     onClear();
     setRecord('');
@@ -364,65 +356,15 @@ function Home({ navigation }) {
     }
   }, [isStarted]);
 
-  if (isLoading) {
-    return (
-      <Loader />
-    )
-  }
-
   return (
     <View style={styles.container}>
+      {isLoading && <Loader />}
       {!permission &&
-        <View style={styles.permission}>
-          <View style={styles.permissionWrap}>
-            <Text style={styles.permissionTitle}>권한 안내</Text>
-            <View style={styles.permissionContent}>
-              <Text style={styles.permissionContentText}>
-                - 모두의 러닝 코치 앱은 앱이 종료되었거나 사용 중이 아닐 때도 위치 데이터를 수집하여 러닝 추적 기능을 지원합니다.
-              </Text>
-              <Text style={styles.permissionContentText}>
-                - 상세한 러닝 트래킹 정보를 추적하기 위해 백그라운드 모드 권한, 신체활동 정보 권한이 필요합니다.
-              </Text>
-            </View>
-            <View style={styles.permissionBtns}>
-              <Pressable style={styles.permissionBtnCancel} onPress={() => navigation.navigate('HomeStack')}>
-                <Text style={styles.permissionBtnTextCancel}>취소</Text>
-              </Pressable>
-              <Pressable style={styles.permissionBtn} onPress={requestBackgroundPermission}>
-                <Text style={styles.permissionBtnText}>확인</Text>
-              </Pressable>
-            </View>
-          </View>
-        </View>
+        <Popup navigation={navigation} requestBackgroundPermission={requestBackgroundPermission} />
       }
-      <ViewShot ref={captureRef} options={{ fileName: "map", format: "jpg", quality: 0.9 }}>
-        {initLocation &&
-          <MapView
-            style={{width: '100%', height: '100%'}}
-            initialRegion={{
-              latitude: initLocation.latitude,
-              longitude: initLocation.longitude,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}
-            showsUserLocation={true}
-            followsUserLocation={true}
-            zoomEnabled={false}
-            minZoomLevel={13}
-            maxZoomLevel={13}
-            rotateEnabled={false}
-            scrollEnabled={false}
-          >
-            {(path.length > 1) &&
-              <Polyline
-                coordinates={path}
-                strokeColor='red'
-                strokeWidth={5}
-              />
-            }
-          </MapView>
-        }
-      </ViewShot>
+      {initLocation &&
+        <Map captureRef={captureRef} initLocation={initLocation} path={path} />
+      }
       {trainingMission !== '' &&
         <View style={styles.mission}>
           <Text style={styles.missionTitle}>진행중인 미션</Text>
@@ -431,43 +373,20 @@ function Home({ navigation }) {
       }
       {isStarted
         ?
-          <View style={styles.record_wrap}>
-            <View style={styles.record_el}>
-              <Text style={styles.record_current}>{(distance/1000).toFixed(2)}</Text>
-              <Text style={styles.record_title}>거리</Text>
-            </View>
-            <View style={styles.record_el}>
-              <Text style={styles.record_current}>{minutes < 10 ? '0' + minutes : minutes}:{seconds < 10 ? '0' + seconds : seconds}</Text>
-              <Text style={styles.record_title}>시간</Text>
-            </View>
-            <View style={styles.record_el}>
-              <Text style={styles.record_current}>{pace}</Text>
-              <Text style={styles.record_title}>페이스</Text>
-            </View>
-            <View style={styles.record_btn_wrap}>
-              {isRecoding
-                ?
-                  <TouchableOpacity activeOpacity={0.5} onPress={onPause} style={styles.record_btn}>
-                    <Icon name='pause' color='white' size={30} />
-                  </TouchableOpacity>
-                :
-                  <TouchableOpacity activeOpacity={0.5} onPress={onStart} style={styles.record_btn}>
-                    <Text style={styles.record_btn_text}>
-                      <Icon name='play-pause' color='white' size={30} />
-                    </Text>
-                  </TouchableOpacity>
-              }
-              <TouchableOpacity activeOpacity={0.5} onPress={onComplete} style={styles.record_btn}>
-                <Text style={styles.record_btn_text}>
-                  <Icon name='stop' color='white' size={30} />
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+          <Record
+            isRecoding={isRecoding}
+            distance={distance}
+            minutes={minutes}
+            seconds={seconds}
+            pace={pace}
+            onPause={onPause}
+            onStart={onStart}
+            onComplete={onComplete}
+          />
         :
-          <TouchableOpacity style={styles.start} activeOpacity={0.5} onPress={onStart}>
+          <Pressable style={styles.start} activeOpacity={0.5} onPress={onStart}>
             <Text style={styles.startText}>시작</Text>
-          </TouchableOpacity>
+          </Pressable>
       }
     </View>
   );
@@ -476,121 +395,6 @@ function Home({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  permission: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    height: '100%',
-    width: '100%',
-    paddingHorizontal: 50,
-    display: 'flex',
-    justifyContent: 'center',
-    alignContent: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    zIndex: 12,
-  },
-  permissionWrap: {
-    padding: 25,
-    backgroundColor: '#fff',
-    borderRadius: 20,
-  },
-  permissionTitle: {
-    fontSize: 22,
-    fontWeight: 500,
-    color: '#222',
-    textAlign: 'center',
-  },
-  permissionContent: {
-    paddingVertical: 10,
-    fontSize: 14,
-    color: '#222',
-  },
-  permissionContentText: {
-    paddingVertical: 5,
-    fontSize: 14,
-    color: '#454545',
-  },
-  permissionBtns: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  permissionBtn: {
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    flexGrow: 1,
-    backgroundColor: '#E53A40',
-    borderRadius: 5,
-  },
-  permissionBtnCancel: {
-    marginRight: 10,
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    flexGrow: 1,
-    borderWidth: 1,
-    borderColor: '#E53A40',
-    borderRadius: 5,
-  },
-  permissionBtnText: {
-    fontSize: 14,
-    fontWeight: 500,
-    textAlign: 'center',
-    color: '#fff',
-  },
-  permissionBtnTextCancel: {
-    fontSize: 14,
-    fontWeight: 500,
-    textAlign: 'center',
-    color: '#E53A40',
-  },
-  record_wrap: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    height: '100%',
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignContent: 'center',
-    padding: 30,
-    backgroundColor: '#090707',
-    zIndex: 10,
-  },
-  record_el: {
-    marginBottom: 40,
-  },
-  record_current: {
-    fontSize: 60,
-    fontWeight: 700,
-    color: '#fff',
-    textAlign: 'center',
-  },
-  record_title: {
-    fontSize: 20,
-    color: '#fff',
-    textAlign: 'center',
-  },
-  record_btn_wrap: {
-    marginTop: 40,
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  record_btn: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 60,
-    height: 60,
-    borderRadius: 40,
-    marginLeft: 10,
-    marginRight: 10,
-    borderWidth: 2,
-    borderColor: 'white',
-  },
-  record_btn_text: {
-    textAlign: 'center',
   },
   toggleBtn: {
     position: 'absolute',

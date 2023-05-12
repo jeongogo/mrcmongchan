@@ -318,15 +318,15 @@ function Home({ navigation }) {
       stopOnTerminate: false,   // <-- Allow the background-service to continue tracking when user closes the app.
       startOnBoot: false,        // <-- Auto start tracking when device is powered-up.
       // HTTP / SQLite config
-      url: 'http://yourserver.com/locations',
-      batchSync: false,       // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
-      autoSync: true,         // <-- [Default: true] Set true to sync each location to server as it arrives.
-      headers: {              // <-- Optional HTTP headers
-        "X-FOO": "bar"
-      },
-      params: {               // <-- Optional HTTP params
-        "auth_token": "maybe_your_server_authenticates_via_token_YES?"
-      }
+      // url: 'http://yourserver.com/locations',
+      // batchSync: false,       // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
+      // autoSync: true,         // <-- [Default: true] Set true to sync each location to server as it arrives.
+      // headers: {              // <-- Optional HTTP headers
+      //   "X-FOO": "bar"
+      // },
+      // params: {               // <-- Optional HTTP params
+      //   "auth_token": "maybe_your_server_authenticates_via_token_YES?"
+      // }
     }).then((state) => {
       setPermission(true)
       BackgroundGeolocation.start();

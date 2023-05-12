@@ -31,7 +31,7 @@ function Home({trainings}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 10,
+    paddingVertical: 15,
     paddingHorizontal: 10,
     backgroundColor: '#f3f3f3',
   },

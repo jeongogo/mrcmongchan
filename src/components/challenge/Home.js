@@ -3,11 +3,10 @@ import { useNavigation } from "@react-navigation/native";
 import useStore from "../../store/store";
 import {Pressable, SafeAreaView, ScrollView, Text, StyleSheet, View} from 'react-native';
 import Challenge from './Challenge';
-import Loader from "../../components/common/Loader";
 
 // import firestore from '@react-native-firebase/firestore';
 
-function Home({isLoading, challenges}) {
+function Home({challenges}) {
   const navigation = useNavigation();
   const user = useStore((state) => state.user);
 
@@ -35,7 +34,6 @@ function Home({isLoading, challenges}) {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.full}>
-      {isLoading && <Loader />}
       {/* <Pressable style={styles.create} onPress={() => onAdd()}>
         <Text style={styles.createText}>훈련 추가</Text>
       </Pressable> */}

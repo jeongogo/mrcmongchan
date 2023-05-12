@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useIsFocused } from "@react-navigation/native";
 import firestore from '@react-native-firebase/firestore';
 import crashlytics from '@react-native-firebase/crashlytics';
 import useStore from "../../store/store";
 import Home from "../../components/home/Home";
 
 function HomeScreen() {
-  const [isLoading, setIsLoading] = useState(true);
+  const isFocused = useIsFocused();
   const [exCurrent, setExCurrent] = useState(0);
   const [distanceWeek, setDistanceWeek] = useState(0);
   const [calorieWeek, setCalorieWeek] = useState(0);
@@ -69,8 +70,6 @@ function HomeScreen() {
     } catch (e) {
       console.log('에러', e)
       crashlytics().recordError(e);
-    } finally {
-      setIsLoading(false);
     }
   }
 
@@ -105,11 +104,10 @@ function HomeScreen() {
     getMyRecord();
     getCompetition();
     levelCheck();
-  }, []);
+  }, [isFocused]);
 
   return (
     <Home
-      isLoading={isLoading}
       exCurrent={exCurrent}
       distanceWeek={distanceWeek}
       calorieWeek={calorieWeek}

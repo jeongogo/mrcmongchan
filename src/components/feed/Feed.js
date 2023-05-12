@@ -41,6 +41,8 @@ function Feed({ feed }) {
         }
         <View style={styles.wrap}>
           <Text style={styles.text}>{date}</Text>
+          <Text style={styles.marginRight}></Text>
+          <Text style={styles.text}>{feed.areaName}</Text>
         </View>
         <View style={[styles.wrap, styles.marginTop]}>
           <Text style={styles.text}>거리 </Text>

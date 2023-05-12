@@ -33,7 +33,7 @@ function Home({ navigation }) {
   const [paceDetail, setPaceDetail] = useState([]);                  // 상세 페이스
   const [path, setPath] = useState([]);                              // 경로 그리기
   const [areaName, setAreaName] = useState('');                      // 현재 위치 지역 이름
-
+  
   /** 지도 초기값 세팅 */
   const initGeo = () => {
     Geolocation.getCurrentPosition((position) => {
@@ -144,7 +144,6 @@ function Home({ navigation }) {
     setIsStarted(true);
     setIsRecoding(true);
     recordTime();
-    BackgroundGeolocation.start();
     recordDistance();
   }
 
@@ -289,54 +288,71 @@ function Home({ navigation }) {
     }
   }
 
+  const requestBackgroundPermission = () => {
+    BackgroundGeolocation.ready({
+      locationAuthorizationRequest: 'Always',
+      backgroundPermissionRationale: {
+        title: "위치 권한 사용 설정 안내",
+        message: "러닝 추적을 위해 위치 서비스에서 '항상 허용'을 사용하도록 설정해야 합니다.",
+        positiveAction: "설정"
+      },
+      locationAuthorizationAlert: {
+        titleWhenNotEnabled: "위치 권한 사용 설정 안내",
+        titleWhenOff: "위치 권한 사용 설정 안내",
+        instructions: "러닝 추적을 위해 위치 서비스에서 '항상 허용'을 사용하도록 설정해야 합니다.",
+        cancelButton: "취소",
+        settingsButton: "설정"
+      },
+      notification: {
+        title: "모두의 러닝 코치",
+        text: "앱이 실행중입니다."
+      },
+      // Geolocation Config
+      desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
+      distanceFilter: 10,
+      // Activity Recognition
+      stopTimeout: 5,
+      // Application config
+      debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
+      logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
+      stopOnTerminate: false,   // <-- Allow the background-service to continue tracking when user closes the app.
+      startOnBoot: false,        // <-- Auto start tracking when device is powered-up.
+      // HTTP / SQLite config
+      url: 'http://yourserver.com/locations',
+      batchSync: false,       // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
+      autoSync: true,         // <-- [Default: true] Set true to sync each location to server as it arrives.
+      headers: {              // <-- Optional HTTP headers
+        "X-FOO": "bar"
+      },
+      params: {               // <-- Optional HTTP params
+        "auth_token": "maybe_your_server_authenticates_via_token_YES?"
+      }
+    }).then((state) => {
+      setPermission(true)
+      BackgroundGeolocation.start();
+      console.log("BackgroundGeolocation is configured and ready: ", state.enabled);
+    });
+  }
+
+
   useEffect(() => {
     onClear();
     setRecord('');
     setCaptureURL('');
     requestPermissions();
-  }, []);
-
-  useEffect(() => {
     let subscription = '';
-    if (permission) {
-      BackgroundGeolocation.ready({
-        // Geolocation Config
-        desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-        distanceFilter: 10,
-        // Activity Recognition
-        stopTimeout: 5,
-        // Application config
-        debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
-        logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
-        stopOnTerminate: false,   // <-- Allow the background-service to continue tracking when user closes the app.
-        startOnBoot: false,        // <-- Auto start tracking when device is powered-up.
-        // HTTP / SQLite config
-        url: 'http://yourserver.com/locations',
-        batchSync: false,       // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
-        autoSync: true,         // <-- [Default: true] Set true to sync each location to server as it arrives.
-        headers: {              // <-- Optional HTTP headers
-          "X-FOO": "bar"
-        },
-        params: {               // <-- Optional HTTP params
-          "auth_token": "maybe_your_server_authenticates_via_token_YES?"
-        }
-      }).then((state) => {
-        // BackgroundGeolocation.start();
-        console.log("BackgroundGeolocation is configured and ready: ", state.enabled);
-      });
-      subscription = AppState.addEventListener('change', nextAppState => {
-        if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
-          console.log('App has come to the foreground!');
-        }
-        appState.current = nextAppState;
-      });
-    }
+    subscription = AppState.addEventListener('change', nextAppState => {
+      if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+        console.log('App has come to the foreground!');
+      }
+      appState.current = nextAppState;
+    });
     return () => {
       if (permission) {
         subscription.remove();
       }
     };
-  }, [permission]);
+  }, []);
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
@@ -372,7 +388,7 @@ function Home({ navigation }) {
               <Pressable style={styles.permissionBtnCancel} onPress={() => navigation.navigate('HomeStack')}>
                 <Text style={styles.permissionBtnTextCancel}>취소</Text>
               </Pressable>
-              <Pressable style={styles.permissionBtn} onPress={() => setPermission(true)}>
+              <Pressable style={styles.permissionBtn} onPress={requestBackgroundPermission}>
                 <Text style={styles.permissionBtnText}>확인</Text>
               </Pressable>
             </View>
@@ -418,15 +434,15 @@ function Home({ navigation }) {
           <View style={styles.record_wrap}>
             <View style={styles.record_el}>
               <Text style={styles.record_current}>{(distance/1000).toFixed(2)}</Text>
-              <Text style={styles.record_title}>Distance</Text>
+              <Text style={styles.record_title}>거리</Text>
             </View>
             <View style={styles.record_el}>
               <Text style={styles.record_current}>{minutes < 10 ? '0' + minutes : minutes}:{seconds < 10 ? '0' + seconds : seconds}</Text>
-              <Text style={styles.record_title}>Time</Text>
+              <Text style={styles.record_title}>시간</Text>
             </View>
             <View style={styles.record_el}>
               <Text style={styles.record_current}>{pace}</Text>
-              <Text style={styles.record_title}>Pace</Text>
+              <Text style={styles.record_title}>페이스</Text>
             </View>
             <View style={styles.record_btn_wrap}>
               {isRecoding
@@ -537,7 +553,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignContent: 'center',
     padding: 30,
-    backgroundColor: '#000',
+    backgroundColor: '#090707',
     zIndex: 10,
   },
   record_el: {
@@ -583,7 +599,7 @@ const styles = StyleSheet.create({
   },
   mission: {
     position: 'absolute',
-    bottom: 170,
+    bottom: 180,
     left: '50%',
     display: 'flex',
     justifyContent: 'center',
@@ -615,15 +631,15 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignContent: 'center',
-    width: 100,
-    height: 100,
+    width: 110,
+    height: 110,
     backgroundColor: '#000',
-    transform: [{ translateX: -50 }],
-    borderRadius: 50,
+    transform: [{ translateX: -55 }],
+    borderRadius: 55,
     zIndex: 10,
   },
   startText: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: '700',
     color: '#fff',
     textAlign: 'center',

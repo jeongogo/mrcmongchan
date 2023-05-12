@@ -4,10 +4,8 @@ import useStore from "../../store/store";
 import {ScrollView, View, Text, StyleSheet, Linking, useWindowDimensions, Pressable} from 'react-native';
 import AutoHeightImage from "react-native-auto-height-image";
 import CustomWrap from '../common/CustomWrap';
-import Loader from "../../components/common/Loader";
 
 function Home({
-  isLoading,
   exCurrent,
   distanceWeek,
   calorieWeek,
@@ -28,7 +26,6 @@ function Home({
     <SafeAreaProvider style={styles.container}>
       <SafeAreaView>
         <ScrollView>
-          {isLoading && <Loader /> }
           <Pressable onPress={() => openURL('https://smartstore.naver.com/xionstore/products/6853375059?NaPm=ct%3Dlh5ls0u8%7Cci%3D0683128f05c1e4d8c73b509545c6713d9da6fa4d%7Ctr%3Dsls%7Csn%3D3186798%7Chk%3Dba46cc1982d38532c1b3049e95605d5e006dd580')} style={styles.imageWrap}>
             <AutoHeightImage width={width} source={require('../../assets/images/x_kit.jpg')} />
           </Pressable>
@@ -78,7 +75,6 @@ function Home({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 10,
     paddingHorizontal: 10,
     backgroundColor: '#f3f3f3',
   },
@@ -86,13 +82,14 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 12,
+    marginTop: 15,
+    marginBottom: 15,
     borderRadius: 10,
     overflow: "hidden",
   },
   levelWrap: {
     marginTop: 10,
-    marginBottom: 20,
+    marginBottom: 25,
   },
   levelTitleWrap: {
     display: 'flex',
@@ -137,9 +134,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   title: {
-    marginTop: 5,
-    marginBottom: 5,
-    fontSize: 18,
+    marginVertical: 7,
+    fontSize: 22,
     fontWeight: 700,
     color: '#000',
   },

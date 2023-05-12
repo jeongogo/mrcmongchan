@@ -7,13 +7,11 @@ import Home from "../../components/challenge/Home";
 
 function HomeScreen() {
   const isFocused = useIsFocused();
-  const [isLoading, setIsLoading] = useState();
   const [challenges, setChallenges] = useState([]);
   const user = useStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
 
   const getChanllenges = async () => {
-    setIsLoading(true);
     try {
       let currentDay = new Date();
       currentDay.setDate(currentDay.getDate() - 4);
@@ -36,8 +34,6 @@ function HomeScreen() {
       }
     } catch (e) {
       console.log(e);
-    } finally {
-      setIsLoading(false);
     }
   }
 
@@ -46,7 +42,7 @@ function HomeScreen() {
   }, [isFocused]);
 
   return (
-    <Home isLoading={isLoading} challenges={challenges} />
+    <Home challenges={challenges} />
   )
 };
 

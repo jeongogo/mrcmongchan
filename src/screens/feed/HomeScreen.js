@@ -7,12 +7,10 @@ import Home from "../../components/feed/Home";
 function HomeScreen() {
   const user = useStore((state) => state.user);
   const isFocused = useIsFocused();
-  const [isLoading, setIsLoading] = useState();
   const [feeds, setFeeds] = useState([]);
 
   /** 피드 리스트 가져오기 */
   const getFeeds = async () => {
-    setIsLoading(true);
     try {
       const snapshot = await firestore().collection('Records').where('uid', '==', user.uid).orderBy('date', 'desc').get();
       let data = [];
@@ -26,8 +24,6 @@ function HomeScreen() {
       setFeeds(data);
     } catch (e) {
       console.log(e);
-    } finally {
-      setIsLoading(false);
     }
   }
 
@@ -36,7 +32,7 @@ function HomeScreen() {
   }, [isFocused]);
 
   return (
-    <Home isLoading={isLoading} feeds={feeds} />
+    <Home feeds={feeds} />
   );
 }
 

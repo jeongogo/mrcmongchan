@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import useStore from "../../store/store";
-import { updateUser } from "../../lib/user";
+import { getUser, updateUser } from "../../lib/user";
 import {Alert} from 'react-native';
 import Write from "../../components/record/Write";
 
@@ -10,6 +10,7 @@ function WriteScreen({navigation}) {
   const [isLoading, setIsLoading] = useState('');
   const record = useStore((state) => state.record);
   const user = useStore((state) => state.user);
+  const setUser = useStore((state) => state.setUser);
   const trainingMission = useStore((state) => state.trainingMission);
   const setTrainingMission = useStore((state) => state.setTrainingMission);
   const captureURL = useStore((state) => state.captureURL);
@@ -61,8 +62,8 @@ function WriteScreen({navigation}) {
         const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
         const kr_curr = new Date(curr + KR_TIME_DIFF);
   
-        const start = new Date(data.startDate);
-        const end = new Date(data.endDate);
+        const start = data.startDate.toDate();
+        const end = data.endDate.toDate();
   
         if (kr_curr > start && kr_curr < end) {
           const entry = data.entry.map((i) => {
@@ -107,16 +108,16 @@ function WriteScreen({navigation}) {
       const lv = user.level + 1;
       const nextLvExp = ((lv-1) * (lv-1)) * ((lv * lv) - (13 * lv) + 82);
 
-      if (currentExp > nextLvExp) {
+      if (currentExp >= nextLvExp) {
         await updateUser(user.uid, {
           level: +user.level + 1,
           exPoint: currentExp - nextLvExp,
-          distance: record.distance,
+          distance: +user.distance + +record.distance,
         });
       } else {
         await updateUser(user.uid, {
           exPoint: currentExp,
-          distance: record.distance,
+          distance: +user.distance + +record.distance,
         });
       }
 
@@ -126,7 +127,10 @@ function WriteScreen({navigation}) {
       //   ex += 보너스 경험치 (레벨*10)
       // }
       
-      navigation.navigate('HomeStack');
+      const u = await getUser(user.uid);
+      setUser(u);
+
+      navigation.navigate('FeedStack');
     } catch (e) {
       Alert.alert("", e.message, [
         {

@@ -66,11 +66,11 @@ function Detail() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 25,
     paddingHorizontal: 15,
     backgroundColor: '#fff',
   },
   title: {
+    marginTop: 25,
     marginBottom: 20,
     fontSize: 20,
     fontWeight: 500,
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 20,
     paddingVertical: 17,
-    backgroundColor: '#30A9DE',
+    backgroundColor: '#E53A40',
     borderRadius: 5,
   },
   btnText: {

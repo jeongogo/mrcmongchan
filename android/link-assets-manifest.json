@@ -2,28 +2,20 @@
   "migIndex": 1,
   "data": [
     {
-      "path": "src/assets/fonts/NotoSansKR-Black.otf",
-      "sha1": "b18be16f27c79887646cae422a38ba54ccf4f20c"
+      "path": "src/assets/fonts/Pretendard-Bold.otf",
+      "sha1": "6a04b4fbeb9a1a5d96a5b25b7e7cfbdd123fbcd0"
     },
     {
-      "path": "src/assets/fonts/NotoSansKR-Bold.otf",
-      "sha1": "5cfcd07470b3d98342bc4256d62f5c1370d10c4f"
+      "path": "src/assets/fonts/Pretendard-Light.otf",
+      "sha1": "6e537b8f43e958790c4f2bd5b314262d575e5195"
     },
     {
-      "path": "src/assets/fonts/NotoSansKR-Light.otf",
-      "sha1": "9b0d5d8851338e06877319bf0e7654ac6cffdebb"
+      "path": "src/assets/fonts/Pretendard-Medium.otf",
+      "sha1": "b05adb9ac89775d7f22733216ff7fa9fe0364853"
     },
     {
-      "path": "src/assets/fonts/NotoSansKR-Medium.otf",
-      "sha1": "72a1d7af139b6c3481a62a691ff2f2d20438ad0a"
-    },
-    {
-      "path": "src/assets/fonts/NotoSansKR-Regular.otf",
-      "sha1": "400c2bf82b3d2c0237750eae0ca8c2b6c9bb3a88"
-    },
-    {
-      "path": "src/assets/fonts/NotoSansKR-Thin.otf",
-      "sha1": "df5c9ea3913c275a715ef789362ad48f3cc703c7"
+      "path": "src/assets/fonts/Pretendard-Regular.otf",
+      "sha1": "49c62f4738334d812f4407dbdc27a2108c7c2756"
     }
   ]
 }

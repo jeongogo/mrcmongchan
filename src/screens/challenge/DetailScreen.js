@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import firestore from '@react-native-firebase/firestore';
-import { useIsFocused } from "@react-navigation/native";
 import useStore from "../../store/store";
 import { updateUser } from "../../lib/user";
 import {Alert} from 'react-native';
@@ -8,7 +7,6 @@ import Detail from "../../components/challenge/Detail";
 
 function DetailScreen({route, navigation}) {
   const docRef = firestore().collection('Challenges').doc(route.params.id);
-  const isFocused = useIsFocused();
   const [challenge, setChallenge] = useState('');
   const [totalDistance, setTotalDistance] = useState(0);
   const [goalCurrent, setGoalCurrent] = useState(0);
@@ -81,7 +79,7 @@ function DetailScreen({route, navigation}) {
 
   useEffect(() => {
     getChallenge();
-  }, [isFocused]);
+  }, []);
 
   useEffect(() => {
     setGoalCurrent((totalDistance/challenge.goal)*100);

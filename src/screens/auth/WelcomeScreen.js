@@ -26,12 +26,9 @@ function WelcomeScreen({route}) {
         exPoint: 0,
         distance: 0,
         record: {
-          one: 0,
           five: 0,
           ten: 0,
-          fifteen: 0,
-          twenty: 0,
-          thirty: 0,
+          half: 0,
           full: 0,
         },
         training: '',

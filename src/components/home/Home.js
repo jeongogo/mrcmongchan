@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import useStore from "../../store/store";
 import {ScrollView, View, Text, StyleSheet, Linking, useWindowDimensions, Pressable} from 'react-native';
@@ -6,21 +6,25 @@ import AutoHeightImage from "react-native-auto-height-image";
 import CustomWrap from '../common/CustomWrap';
 
 function Home({
-  exCurrent,
   distanceWeek,
   calorieWeek,
   distanceMonth,
   calorieMonth,
-  month,
   competition
 }) {
-  
+  const [exCurrent, setExCurrent] = useState(0);
   const user = useStore((state) => state.user);
   const width = useWindowDimensions().width;
   
   const openURL = (url) => {
     Linking.openURL(url);
   }
+
+  useEffect(() => {
+    const lv = user.level + 1;
+    const nextLevelEx = (( lv - 1 ) * ( lv - 1 )) * ( (lv*lv) - 13*lv + 82 );
+    setExCurrent(((user.exPoint/nextLevelEx) * 100).toFixed(2));
+  }, []);
 
   return (
     <SafeAreaProvider style={styles.container}>
@@ -34,7 +38,7 @@ function Home({
             <View style={styles.levelWrap}>
               <View style={styles.levelTitleWrap}>
                 <Text style={styles.label}>레벨 {user.level}</Text>
-                <Text style={styles.levelExp}>{exCurrent.toFixed(2)}%</Text>
+                <Text style={styles.levelExp}>{exCurrent}%</Text>
               </View>
               <View style={styles.exWrap}>
                 <View style={[styles.exCurrent, {width: exCurrent + '%'}]}></View>
@@ -42,18 +46,22 @@ function Home({
               </View>
             </View>
             <View style={styles.wrap}>
-              <Text style={styles.label}>이번주 기록</Text>
-              <Text style={styles.text}>{distanceWeek > 0 ? distanceWeek.toFixed(2) : 0}km / {calorieWeek}k㎈</Text>
+              <Text style={styles.label}>이번 주</Text>
+              <Text style={styles.text}>{distanceWeek}km / {calorieWeek}k㎈</Text>
             </View>
             <View style={styles.wrap}>
-              <Text style={styles.label}>{month}월 기록</Text>
-              <Text style={styles.text}>{distanceMonth > 0 ? distanceMonth.toFixed(2) : 0}km / {calorieMonth}k㎈</Text>
+              <Text style={styles.label}>이번 달</Text>
+              <Text style={styles.text}>{distanceMonth}km / {calorieMonth}k㎈</Text>
             </View>
             <View style={styles.wrap}>
               <Text style={styles.label}>누적 거리</Text>
               <Text style={styles.text}>{user.distance > 0 ? (parseFloat(user.distance)).toFixed(2) : 0}km</Text>
             </View>
           </CustomWrap>
+          {/* <CustomWrap>
+            <Text style={styles.title}>최고기록</Text>
+            <Text style={styles.text}>준비중</Text>
+          </CustomWrap> */}
           <CustomWrap>
             <Text style={styles.title}>대회정보</Text>
             {competition.map((item) => (

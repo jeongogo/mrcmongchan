@@ -41,7 +41,7 @@ function Detail() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
+      <ScrollView style={styles.contentWrap}>
         <Text style={styles.title}>{trainingDetail.title}</Text>
         <View style={styles.content}>
           <View style={styles.wrap}>
@@ -55,10 +55,10 @@ function Detail() {
             </View>
           ))}
         </View>
-        <Pressable onPress={onStart} style={styles.btn}>
-          <Text style={styles.btnText}>시작하기</Text>
-        </Pressable>
       </ScrollView>
+      <Pressable onPress={onStart} style={styles.btn}>
+        <Text style={styles.btnText}>시작하기</Text>
+      </Pressable>
     </SafeAreaView>
   )
 };
@@ -66,8 +66,10 @@ function Detail() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 15,
     backgroundColor: '#fff',
+  },
+  contentWrap: {
+    paddingHorizontal: 15,
   },
   title: {
     marginTop: 25,
@@ -78,6 +80,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   content: {
+    paddingBottom: 80,
   },
   wrap: {
     marginTop: -1,
@@ -93,7 +96,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     borderRightWidth: 1,
     borderRightColor: '#ddd',
-    backgroundColor: '#efefef'
+    backgroundColor: '#f6f6f6'
   },
   contentText: {
     flex: 1,
@@ -103,14 +106,16 @@ const styles = StyleSheet.create({
   },
   center: {
     textAlign: 'center',
-    backgroundColor: '#efefef'
+    backgroundColor: '#f6f6f6'
   },
   btn: {
-    marginTop: 20,
-    marginBottom: 20,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    width: '100%',
     paddingVertical: 17,
     backgroundColor: '#E53A40',
-    borderRadius: 5,
+    zIndex: 2,
   },
   btnText: {
     fontSize: 18,

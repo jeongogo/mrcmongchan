@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useStore from "../../store/store";
 import {SafeAreaView, ScrollView, View, Text, Image, StyleSheet, useWindowDimensions} from 'react-native';
-import CustomWrap from '../common/CustomWrap';
 
 function Detail() {
   const width = useWindowDimensions().width;

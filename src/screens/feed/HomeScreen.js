@@ -1,38 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import { useIsFocused } from "@react-navigation/native";
+import React from 'react';
+import { useQuery } from 'react-query';
 import firestore from '@react-native-firebase/firestore';
 import useStore from "../../store/store";
 import Home from "../../components/feed/Home";
+import Loader from "../../components/common/Loader";
 
 function HomeScreen() {
   const user = useStore((state) => state.user);
-  const isFocused = useIsFocused();
-  const [feeds, setFeeds] = useState([]);
 
-  /** 피드 리스트 가져오기 */
-  const getFeeds = async () => {
-    try {
-      const snapshot = await firestore().collection('Records').where('uid', '==', user.uid).orderBy('date', 'desc').get();
-      let data = [];
-      snapshot.forEach(doc => {
-        const item = {
-          ...doc.data(),
-          id: doc.id
-        }
-        data.push(item);
-      });
-      setFeeds(data);
-    } catch (e) {
-      console.log(e);
-    }
+  const getFeed = async () => {
+    const snapshot = await firestore().collection('Records').where('uid', '==', user.uid).orderBy('date', 'desc').get();
+    let data = [];
+    snapshot.forEach(doc => {
+      const item = {
+        ...doc.data(),
+        id: doc.id
+      }
+      data.push(item);
+    });
+    return data;
   }
 
-  useEffect(() => {
-    getFeeds();
-  }, [isFocused]);
+  const feedQuery = useQuery('feed', getFeed);
+
+  if (!feedQuery.data) {
+    return <Loader />
+  }
 
   return (
-    <Home feeds={feeds} />
+    <Home feeds={feedQuery.data} />
   );
 }
 

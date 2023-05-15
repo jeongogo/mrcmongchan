@@ -11,32 +11,8 @@ function WriteScreen({navigation}) {
   const record = useStore((state) => state.record);
   const user = useStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
-  const trainingMission = useStore((state) => state.trainingMission);
-  const setTrainingMission = useStore((state) => state.setTrainingMission);
   const captureURL = useStore((state) => state.captureURL);
   let missionExp = 0;
-
-  /** 도전 성공 */
-  const onSuccessMission = () => {
-    const updateTraining = user.training.program.map((i) => {
-      if (trainingMission.day === i.day) {
-        return {
-          ...i,
-          isComplete: true,
-        }
-      }
-      return i;
-    })
-    Alert.alert("축하합니다.", "미션 도전에 성공했습니다.", [
-      {
-        text: "확인",
-        onPress: async () => {
-          missionExp = trainingMission.exPoint;
-          await updateUser(user.uid, {training: updateTraining});
-        }
-      }
-    ]);
-  }
 
   /** 저장하기 */
   const handleSubmit = async (title) => {
@@ -81,24 +57,6 @@ function WriteScreen({navigation}) {
   
         if (kr_curr > res.endDate) {
           await updateUser(user.uid, {challenge: ''});
-        }
-      }
-
-      // 미션 도전중일 경우
-      if (trainingMission?.content?.length > 0) {
-        if (trainingMission.time > 0) {
-          if (record.totalTime >= trainingMission.time/60) {
-            onSuccessMission();
-          } else {
-            setTrainingMission('');
-          }
-        }
-        if (trainingMission.distance > 0) {
-          if (record.distance >= trainingMission.distance) {
-            onSuccessMission();
-          } else {
-            setTrainingMission('');
-          }
         }
       }
       

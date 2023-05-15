@@ -1,42 +1,14 @@
 import React from 'react';
 import { useNavigation } from "@react-navigation/native";
-import useStore from "../../store/store";
 import {Pressable, SafeAreaView, ScrollView, Text, StyleSheet, View} from 'react-native';
 import Challenge from './Challenge';
 
-// import firestore from '@react-native-firebase/firestore';
-
 function Home({challenges}) {
   const navigation = useNavigation();
-  const user = useStore((state) => state.user);
-
-  // const onAdd = async () => {
-  //   try {
-  //     const data = {
-  //       title: '하프 완주 12주 프로그램',
-  //       program: [
-  //         {
-  //           day: 1,
-  //           content: '크로스 트레이닝 20분',
-  //           exPoint: 0,
-  //           time: 0,
-  //           distance: 0,
-  //           isComplete: false,
-  //         },
-  //       ]
-  //     }
-  //     await firestore().collection('Trainings').add(data);
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // }
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.full}>
-      {/* <Pressable style={styles.create} onPress={() => onAdd()}>
-        <Text style={styles.createText}>훈련 추가</Text>
-      </Pressable> */}
       <View style={styles.btnWrap}>
         <Pressable style={styles.create} onPress={() => navigation.navigate('ChallengeWrite')}>
           <Text style={styles.createText}>챌린지 만들기</Text>
@@ -54,7 +26,7 @@ function Home({challenges}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 10,
+    paddingVertical: 15,
     paddingHorizontal: 10,
     justifyContent: 'center',
     alignItems: 'center',
@@ -65,19 +37,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     width: '100%',
-    marginBottom: 10,
+    marginBottom: 15,
   },
   create: {
+    width: '100%',
     paddingVertical: 15,
-    paddingHorizontal: 20,
-    backgroundColor: '#E53A40',
+    borderWidth: 1,
+    backgroundColor: '#fff',
+    borderColor: '#E53A40',
     borderRadius: 5,
   },
   createText: {
     fontSize: 14,
     fontWeight: 500,
     textAlign: 'center',
-    color: '#fff',
+    color: '#E53A40',
   },
   full: {
     width: '100%',

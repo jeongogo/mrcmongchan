@@ -30,7 +30,7 @@ function Challenge({ challenge, navigation }) {
     <CustomWrap>
       <Pressable onPress={() => onDetail(challenge.id)}>
         <View style={styles.wrap}>
-          <Text style={styles.text}>{challenge.title}</Text>
+          <Text style={styles.title}>{challenge.title}</Text>
         </View>
         <View style={styles.wrap}>
           <Text style={styles.text}>{start}</Text>
@@ -38,12 +38,13 @@ function Challenge({ challenge, navigation }) {
           <Text style={styles.text}>{end}</Text>
         </View>
         <View style={styles.wrap}>
-          <Text style={styles.text}>{challenge.goal}km</Text>
+          <Text style={styles.text}>
+            <Icon name={'flag'} color={'#222'} size={16} /> {challenge.goal}km
+          </Text>
           <Text style={styles.margin}></Text>
-          <View>
-            <Icon name={'account-multiple'} color={'#222'} size={16} />
-          </View>
-          <Text style={styles.text}>{challenge.entry.length}</Text>
+          <Text style={styles.text}>
+            <Icon name={'account-multiple'} color={'#222'} size={16} /> {challenge.entry.length}
+          </Text>
           {user.challenge === challenge.id &&
             <Text style={styles.hasAttend}>참가중</Text>
           }
@@ -60,15 +61,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 5,
   },
+  title: {
+    fontSize: 18,
+    fontWeight: 500,
+    color: '#222',
+  },
   text: {
     fontSize: 15,
-    color: '#222',
+    color: '#454545',
   },
   margin: {
     marginHorizontal: 10,
   },
   hasAttend: {
     marginLeft: 'auto',
+    textDecorationLine: 'underline',
   }
 });
 

@@ -26,14 +26,6 @@ let state = (set) => ({
   /** 지도 캡쳐 */
   captureURL: '',
   setCaptureURL: (data) => set(() => ({ captureURL: data })),
-  
-  /** 훈련 상세 */
-  trainingDetail: '',
-  setTrainingDetail: (data) => set(() => ({ trainingDetail: data })),
-
-  /** 미션 */
-  trainingMission: '',
-  setTrainingMission: (data) => set(() => ({ trainingMission: data })),
 
   /** 활동 상세 */
   feedDetail: '',

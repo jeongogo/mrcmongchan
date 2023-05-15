@@ -9,8 +9,6 @@ function Write({navigation, isLoading, handleSubmit}) {
   const [seconds, setSeconds] = useState(0);
   const [title, setTitle] = useState('');
   const width = useWindowDimensions().width;
-  const user = useStore((state) => state.user);
-  const setUser = useStore((state) => state.setUser);
   const record = useStore((state) => state.record);
   const captureURL = useStore((state) => state.captureURL);
 
@@ -24,7 +22,6 @@ function Write({navigation, isLoading, handleSubmit}) {
       {
         text: "확인",
         onPress: () => {
-          setUser({...user, trainingMission: ''});
           navigation.navigate('RecordHome');
         }
       }

@@ -15,7 +15,6 @@ function Home({ navigation }) {
   const setPermission = useStore((state) => state.setPermission);
   const setRecord = useStore((state) => state.setRecord);
   const setCaptureURL = useStore((state) => state.setCaptureURL);
-  const trainingMission = useStore((state) => state.trainingMission);
   const [isLoading, setIsLoading] = useState(true);                  // loading
   const appState = useRef(AppState.currentState);                    // App State
   const captureRef = useRef(null);                                   // 지도 캡쳐용 Ref
@@ -365,12 +364,6 @@ function Home({ navigation }) {
       {initLocation &&
         <Map captureRef={captureRef} initLocation={initLocation} path={path} />
       }
-      {/* {trainingMission !== '' &&
-        <View style={styles.mission}>
-          <Text style={styles.missionTitle}>진행중인 미션</Text>
-          <Text style={styles.missionContent}>{trainingMission.content}</Text>
-        </View>
-      } */}
       {isStarted
         ?
           <Record

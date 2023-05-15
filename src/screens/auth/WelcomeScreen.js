@@ -31,9 +31,6 @@ function WelcomeScreen({route}) {
           half: 0,
           full: 0,
         },
-        training: '',
-        trainingStartDate: '',
-        trainingMission: '',
         challenge: '',
       }
       createUser(newUser)

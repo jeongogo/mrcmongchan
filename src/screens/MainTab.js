@@ -1,10 +1,10 @@
 import React from 'react';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import HomeStack from './home/HomeStack';
-import TrainingStack from "./training/TrainingStack";
+import FeedStack from "./feed/FeedStack";
 import RecordStack from './record/RecordStack';
 import ChallengeStack from "./challenge/ChallengeStack";
-import FeedStack from "./feed/FeedStack";
+import MypageStack from "./mypage/MypageStack";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Tab = createMaterialBottomTabNavigator();
@@ -32,11 +32,11 @@ const MainTab = ({navigation}) => {
         }} 
         />
       <Tab.Screen
-        name="TrainingStack"
-        component={TrainingStack}
+        name="FeedStack"
+        component={FeedStack}
         options={{
-          tabBarLabel: '훈련',
-          tabBarIcon: ({color}) => MIcon('calendar-today', color),
+          tabBarLabel: '활동',
+          tabBarIcon: ({color}) => MIcon('format-list-bulleted', color),
         }}
       />
       <Tab.Screen
@@ -62,14 +62,13 @@ const MainTab = ({navigation}) => {
         }}
       />
       <Tab.Screen
-        name="FeedStack"
-        component={FeedStack}
+        name="MypageStack"
+        component={MypageStack}
         options={{
-          tabBarLabel: '활동',
-          tabBarIcon: ({color}) => MIcon('format-list-bulleted', color),
+          tabBarLabel: '마이페이지',
+          tabBarIcon: ({color}) => MIcon('account', color),
         }}
       />
-      {/* tabBarIcon: ({color}) => MIcon('account', color), */}
     </Tab.Navigator>
   );
 };

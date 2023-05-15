@@ -365,12 +365,12 @@ function Home({ navigation }) {
       {initLocation &&
         <Map captureRef={captureRef} initLocation={initLocation} path={path} />
       }
-      {trainingMission !== '' &&
+      {/* {trainingMission !== '' &&
         <View style={styles.mission}>
           <Text style={styles.missionTitle}>진행중인 미션</Text>
           <Text style={styles.missionContent}>{trainingMission.content}</Text>
         </View>
-      }
+      } */}
       {isStarted
         ?
           <Record

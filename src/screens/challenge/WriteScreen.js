@@ -1,8 +1,10 @@
 import React from 'react';
+import { useMutation, useQueryClient } from 'react-query';
 import firestore from '@react-native-firebase/firestore';
 import Write from "../../components/challenge/Write";
 
 function WriteScreen({navigation}) {
+  const queryClient = useQueryClient();
   const handleSubmit = async (challenge) => {
     try {
       const data = await firestore().collection('Challenges').add(challenge);
@@ -12,8 +14,17 @@ function WriteScreen({navigation}) {
     }
   }
 
+  const challengeMutation = useMutation(handleSubmit, {
+    onError: (error) => {
+      console.log(error);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries('challenges');
+    },
+  });
+
   return (
-    <Write handleSubmit={handleSubmit} />
+    <Write challengeMutation={challengeMutation} />
   )
 };
 

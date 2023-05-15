@@ -3,7 +3,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import useStore from "../../store/store";
 import {View, Text, Pressable, TextInput, StyleSheet, Keyboard} from 'react-native';
 
-function Write({ handleSubmit }) {
+function Write({ challengeMutation }) {
   const [title, setTitle] = useState('');
   const [goal, setGoal] = useState('');
   const [startDate, setStartDate] = useState('');
@@ -55,7 +55,7 @@ function Write({ handleSubmit }) {
       endDate: new Date(endDate),
       entry: [],
     };
-    handleSubmit(challenge);
+    challengeMutation.mutate(challenge);
   }
 
   return (

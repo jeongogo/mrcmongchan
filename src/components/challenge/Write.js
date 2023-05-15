@@ -66,7 +66,7 @@ function Write({ handleSubmit }) {
       </View>
       <View style={styles.wrap}>
         <Text style={styles.title}>목표 거리</Text>
-        <TextInput value={goal} style={styles.input} onChangeText={setGoal} placeholder="km" placeholderTextColor='white' />
+        <TextInput value={goal} style={styles.input} onChangeText={setGoal} placeholder="km" placeholderTextColor='#aaa' />
       </View>
       <View style={styles.wrap}>
         <Text style={styles.title}>기간</Text>

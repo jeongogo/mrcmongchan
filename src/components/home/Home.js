@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import useStore from "../../store/store";
-import {ScrollView, View, Text, StyleSheet, Linking, useWindowDimensions, Pressable} from 'react-native';
+import {ScrollView, View, Text, StyleSheet, Linking, useWindowDimensions, Pressable, Alert} from 'react-native';
 import AutoHeightImage from "react-native-auto-height-image";
 import CustomWrap from '../common/CustomWrap';
 
@@ -16,8 +16,14 @@ function Home({
   const user = useStore((state) => state.user);
   const width = useWindowDimensions().width;
   
-  const openURL = (url) => {
-    Linking.openURL(url);
+  const openURL = async (url) => {
+    const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      await Linking.openURL(url);
+    } else {
+      console.log("Don't know how to open this URL");
+    }
   }
 
   useEffect(() => {

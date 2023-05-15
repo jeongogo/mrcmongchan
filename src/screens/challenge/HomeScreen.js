@@ -37,7 +37,9 @@ function HomeScreen() {
   }
 
   useEffect(() => {
-    checkChallenge();
+    if (challengesQuery.data) {
+      checkChallenge();
+    }
   }, []);
 
   if (!challengesQuery.data) {

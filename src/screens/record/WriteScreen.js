@@ -65,7 +65,7 @@ function WriteScreen({navigation}) {
         const start = data.startDate.toDate();
         const end = data.endDate.toDate();
   
-        if (kr_curr > start && kr_curr < end) {
+        if (kr_curr > start && kr_curr <= end) {
           const entry = data.entry.map((i) => {
             if (i.uid === user.uid) {
               const n = {
@@ -127,6 +127,7 @@ function WriteScreen({navigation}) {
       //   ex += 보너스 경험치 (레벨*10)
       // }
       
+      // 유저 상태 업데이트
       const u = await getUser(user.uid);
       setUser(u);
 

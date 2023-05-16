@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, Pressable, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-function Record({isRecoding, distance, minutes, seconds, pace, onPause}) {
+function Record({isRecoding, distance, minutes, seconds, pace, onStart, onPause, onComplete}) {
   return (
     <View style={styles.record_wrap}>
       <View style={styles.record_el}>

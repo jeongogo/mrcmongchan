@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import firestore from '@react-native-firebase/firestore';
+import { useMutation, useQueryClient } from 'react-query';
 import storage from '@react-native-firebase/storage';
 import useStore from "../../store/store";
 import { getUser, updateUser } from "../../lib/user";
@@ -7,6 +8,7 @@ import {Alert} from 'react-native';
 import Write from "../../components/record/Write";
 
 function WriteScreen({navigation}) {
+  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState('');
   const record = useStore((state) => state.record);
   const user = useStore((state) => state.user);
@@ -88,6 +90,8 @@ function WriteScreen({navigation}) {
       // 유저 상태 업데이트
       const u = await getUser(user.uid);
       setUser(u);
+
+      queryClient.invalidateQueries('feed');
 
       navigation.navigate('FeedStack');
     } catch (e) {

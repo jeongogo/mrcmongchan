@@ -41,17 +41,15 @@ const styles = StyleSheet.create({
   },
   create: {
     width: '100%',
-    paddingVertical: 15,
-    borderWidth: 1,
-    backgroundColor: '#fff',
-    borderColor: '#E53A40',
-    borderRadius: 5,
+    paddingVertical: 17,
+    backgroundColor: '#E53A40',
+    borderRadius: 10,
   },
   createText: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: 500,
     textAlign: 'center',
-    color: '#E53A40',
+    color: '#fff',
   },
   full: {
     width: '100%',

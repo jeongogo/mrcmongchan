@@ -22,6 +22,10 @@ function WelcomeScreen({route}) {
         uid,
         name,
         weight,
+        weightList: [{
+          weight,
+          date: new Date(),
+        }],
         level: 1,
         exPoint: 0,
         distance: 0,

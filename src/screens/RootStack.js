@@ -1,13 +1,15 @@
 import React, {useEffect} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import useStore from "../store/store";
+import { subscribeAuth } from '../lib/auth';
+import { getUser } from '../lib/user';
 import MainTab from './MainTab';
 import LoginScreen from './auth/LoginScreen';
 import WelcomeScreen from './auth/WelcomeScreen';
 import RecordHomeScreen from "./record/HomeScreen";
 import RecordWriteScreen from "./record/WriteScreen";
-import { subscribeAuth } from '../lib/auth';
-import { getUser } from '../lib/user';
+import WeightScreen from "./mypage/WeightScreen";
+import PaceScreen from "./mypage/PaceScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -54,6 +56,20 @@ function RootStack() {
               component={RecordWriteScreen}
               options={{
                 headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name='WeightManage'
+              component={WeightScreen}
+              options={{
+                title: '체중 관리'
+              }}
+            />
+            <Stack.Screen
+              name='PaceCalc'
+              component={PaceScreen}
+              options={{
+                title: '페이스 계산'
               }}
             />
           </>

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, Button, TextInput, Alert, StyleSheet, Pressable} from 'react-native';
+import {View, Text, TextInput, StyleSheet, Pressable} from 'react-native';
 import Loader from "../../components/common/Loader";
 import useStore from "../../store/store";
 import { createUser } from "../../lib/user";
@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   title: {
+    fontFamily: 'Pretendard-Medium',
     fontSize: 20,
     textAlign: 'center',
     marginBottom: 20,
@@ -94,6 +95,7 @@ const styles = StyleSheet.create({
   input: {
     marginBottom: 10,
     padding: 10,
+    fontFamily: 'Pretendard-Medium',
     fontSize: 15,
     color: 'black',
     borderWidth: 1,
@@ -107,6 +109,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   btnText: {
+    fontFamily: 'Pretendard-Medium',
     fontSize: 15,
     color: 'white',
     textAlign: 'center',

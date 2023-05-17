@@ -1,5 +1,6 @@
 import React from 'react';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
+import { Text } from "react-native";
 import HomeStack from './home/HomeStack';
 import FeedStack from "./feed/FeedStack";
 import RecordStack from './record/RecordStack';
@@ -27,7 +28,7 @@ const MainTab = ({navigation}) => {
         name="HomeStack"
         component={HomeStack}
         options={{
-          tabBarLabel: '홈',
+          tabBarLabel: <Text style={{fontFamily: 'Pretendard-Regular',}}>홈</Text>,
           tabBarIcon: ({color}) => MIcon('home', color),
         }} 
         />
@@ -35,7 +36,7 @@ const MainTab = ({navigation}) => {
         name="FeedStack"
         component={FeedStack}
         options={{
-          tabBarLabel: '활동',
+          tabBarLabel: <Text style={{fontFamily: 'Pretendard-Regular',}}>기록</Text>,
           tabBarIcon: ({color}) => MIcon('format-list-bulleted', color),
         }}
       />
@@ -43,7 +44,7 @@ const MainTab = ({navigation}) => {
         name="RecordStack"
         component={RecordStack}
         options={{
-          tabBarLabel: '달리기',
+          tabBarLabel: <Text style={{fontFamily: 'Pretendard-Regular',}}>달리기</Text>,
           tabBarIcon: ({color}) => MIcon('run', color),
         }}
         listeners={() => ({
@@ -57,7 +58,7 @@ const MainTab = ({navigation}) => {
         name="ChallengeStack"
         component={ChallengeStack}
         options={{
-          tabBarLabel: '챌린지',
+          tabBarLabel: <Text style={{fontFamily: 'Pretendard-Regular',}}>챌린지</Text>,
           tabBarIcon: ({color}) => MIcon('flag', color),
         }}
       />
@@ -65,7 +66,7 @@ const MainTab = ({navigation}) => {
         name="MypageStack"
         component={MypageStack}
         options={{
-          tabBarLabel: '마이페이지',
+          tabBarLabel: <Text style={{fontFamily: 'Pretendard-Regular',}}>마이페이지</Text>,
           tabBarIcon: ({color}) => MIcon('account', color),
         }}
       />

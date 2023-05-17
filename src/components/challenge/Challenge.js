@@ -77,6 +77,9 @@ const styles = StyleSheet.create({
   },
   hasAttend: {
     marginLeft: 'auto',
+    fontFamily: 'Pretendard-Medium',
+    fontSize: 14,
+    color: '#999',
     textDecorationLine: 'underline',
   }
 });

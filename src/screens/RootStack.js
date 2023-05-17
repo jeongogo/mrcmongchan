@@ -5,6 +5,7 @@ import { subscribeAuth } from '../lib/auth';
 import { getUser } from '../lib/user';
 import MainTab from './MainTab';
 import LoginScreen from './auth/LoginScreen';
+import FindPasswordScreen from './auth/FindPasswordScreen';
 import WelcomeScreen from './auth/WelcomeScreen';
 import RecordHomeScreen from "./record/HomeScreen";
 import RecordWriteScreen from "./record/WriteScreen";
@@ -81,6 +82,11 @@ function RootStack() {
               options={{
                 headerShown: false,
               }}
+            />
+            <Stack.Screen
+              name='FindPassword'
+              component={FindPasswordScreen}
+              options={{title: ''}}
             />
             <Stack.Screen
               name="Welcome"

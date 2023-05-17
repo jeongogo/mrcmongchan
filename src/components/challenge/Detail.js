@@ -69,17 +69,17 @@ function Challenge({
       <View style={styles.btnWrap}>
         {user.challenge === '' &&
           <Pressable onPress={handleAttend}>
-            <Text style={[styles.btn, styles.submit]}>참가 신청하기</Text>
+            <Text style={[styles.btn, styles.submit]}>참가하기</Text>
           </Pressable>
         }
         {user.challenge === route.params.id &&
           <Pressable onPress={onLeave}>
-            <Text style={[styles.btn, styles.cancel]}>참가 취소하기</Text>
+            <Text style={[styles.btn, styles.cancel]}>챌린지 나가기</Text>
           </Pressable>
         }
         {(user.isAdmin || user.uid === challenge.creator) &&
           <Pressable onPress={onDelete}>
-            <Text style={[styles.btn, styles.submit]}>챌린지 삭제하기</Text>
+            <Text style={[styles.btn, styles.cancel]}>챌린지 삭제하기</Text>
           </Pressable>
         }
       </View>

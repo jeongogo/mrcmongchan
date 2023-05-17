@@ -113,6 +113,9 @@ function Login({isSignUp, handleLogin}) {
       >
         <Text style={[styles.text]}>{isSignUp ? '로그인' : '회원가입'}</Text>
       </Pressable>
+      <Pressable style={styles.find} onPress={() => navigation.navigate('FindPassword')}>
+        <Text style={styles.findText}>비밀번호 찾기</Text>
+      </Pressable>
       <View style={styles.hr}></View>
     </View>
   )
@@ -124,31 +127,36 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   input: {
-    borderColor: '#bdbdbd',
-    borderWidth: 1,
     paddingHorizontal: 16,
     borderRadius: 4,
     height: 48,
+    fontFamily: 'Pretendard-Regular',
+    fontSize: 14,
     color: '#000',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: '#bdbdbd',
   },
   wrapper: {
     marginTop: 10,
-    borderRadius: 4,
     height: 48,
     alignItems: 'center',
     justifyContent: 'center',
     borderColor: '#E53A40',
     borderWidth: 1,
     backgroundColor: '#fff',
+    borderRadius: 4,
   },
   primaryWrapper: {
     backgroundColor: '#E53A40',
   },
   text: {
+    fontFamily: 'Pretendard-Medium',
+    fontSize: 14,
     color: '#E53A40',
   },
   primaryText: {
+    fontFamily: 'Pretendard-Medium',
     color: 'white',
   },
   margin: {
@@ -159,6 +167,16 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderTopWidth: 1,
     borderTopColor: '#ddd',
+  },
+  find: {
+    marginTop: 16,
+    display: 'flex',
+    alignItems: 'flex-end',
+  },
+  findText: {
+    fontSize: 14,
+    color: '#666',
+    textDecorationLine: 'underline',
   }
 });
 

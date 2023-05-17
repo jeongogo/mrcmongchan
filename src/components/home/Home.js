@@ -67,17 +67,24 @@ function Home({
           <CustomWrap>
             <Text style={styles.title}>서울에서 부산까지</Text>
             <View style={styles.totalWrap}>
-              <View style={[styles.totalDistance, {left: disCurrent + '%'}]}>
+              <View style={[styles.totalDistance, {left: (disCurrent >= 100 ? 100 : disCurrent) + '%'}]}>
                 <Icon name='run' color='#090707' size={20} />
               </View>
               <View style={styles.goal}>
-                <Icon name='flag-variant-outline' color='#090707' size={20} />
+                {disCurrent > 90
+                  ? <Icon name='flag-variant-outline' color='#fcbe32' size={20} />
+                  : <Icon name='flag-variant-outline' color='#090707' size={20} />
+                }
               </View>
-              <View style={[styles.disCurrent, {width: disCurrent + '%'}]}></View>
-              <View style={styles.disTotal}></View>
+              <View style={styles.disTotal}>
+                <View style={[styles.disCurrent, {width: (disCurrent > 100 ? 100 : disCurrent) + '%'}]}></View>
+              </View>
             </View>
             <View style={styles.totalLabelWrap}>
-              <Text style={[styles.label, styles.city]}>{320 - user.distance}km 남았습니다.</Text>
+              {disCurrent >= 100
+                ? <Text style={[styles.label, styles.city]}>축하합니다! 부산에 도착했습니다. 😃</Text>
+                : <Text style={[styles.label, styles.city]}>{320 - user.distance}km 남았습니다.</Text>
+              }              
             </View>
           </CustomWrap>
           <CustomWrap>
@@ -123,11 +130,13 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     marginLeft: -8,
+    zIndex: 2,
   },
   goal: {
     position: 'absolute',
     top: 0,
     right: -10,
+    zIndex: 1,
   },
   disCurrent: {
     position: 'absolute',
@@ -147,6 +156,7 @@ const styles = StyleSheet.create({
     height: 10,
     backgroundColor: '#ddd',
     borderRadius: 10,
+    overflow: "hidden",
     zIndex: 1,
   },
   totalLabelWrap: {

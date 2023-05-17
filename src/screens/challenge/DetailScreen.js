@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import { useQueryClient } from 'react-query';
 import firestore from '@react-native-firebase/firestore';
 import useStore from "../../store/store";
 import { updateUser } from "../../lib/user";
@@ -6,12 +7,13 @@ import {Alert} from 'react-native';
 import Detail from "../../components/challenge/Detail";
 
 function DetailScreen({route, navigation}) {
-  const docRef = firestore().collection('Challenges').doc(route.params.id);
+  const queryClient = useQueryClient();
   const [challenge, setChallenge] = useState('');
   const [totalDistance, setTotalDistance] = useState(0);
   const [goalCurrent, setGoalCurrent] = useState(0);
   const user = useStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
+  const docRef = firestore().collection('Challenges').doc(route.params.id);
 
   /** 챌린지 가져오기 */
   const getChallenge = async () => {
@@ -72,8 +74,9 @@ function DetailScreen({route, navigation}) {
   }
 
   /** 챌린지 삭제하기 */
-  const handleDelete = () => {
-    docRef.delete();
+  const handleDelete = async () => {
+    await docRef.delete();
+    queryClient.invalidateQueries('challenges');
     navigation.navigate('ChallengeHome');
   }
 

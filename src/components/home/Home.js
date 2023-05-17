@@ -65,18 +65,19 @@ function Home({
             <Text style={styles.text}>준비중</Text>
           </CustomWrap> */}
           <CustomWrap>
-            <Text style={styles.title}>{user.distance}km</Text>
+            <Text style={styles.title}>서울에서 부산까지</Text>
             <View style={styles.totalWrap}>
               <View style={[styles.totalDistance, {left: disCurrent + '%'}]}>
                 <Icon name='run' color='#090707' size={20} />
+              </View>
+              <View style={styles.goal}>
+                <Icon name='flag-variant-outline' color='#090707' size={20} />
               </View>
               <View style={[styles.disCurrent, {width: disCurrent + '%'}]}></View>
               <View style={styles.disTotal}></View>
             </View>
             <View style={styles.totalLabelWrap}>
-              <Text style={[styles.label, styles.city, {left: 0}]}>서울</Text>
-              <Text style={[styles.label, styles.city, {right: 0}]}>부산</Text>
-              {/* <Text style={[styles.label, styles.city]}>도쿄</Text> */}
+              <Text style={[styles.label, styles.city]}>{320 - user.distance}km 남았습니다.</Text>
             </View>
           </CustomWrap>
           <CustomWrap>
@@ -110,20 +111,23 @@ const styles = StyleSheet.create({
   distance: {
     fontFamily: 'Pretendard-Regular',
     fontSize: 18,
-    fontWeight: 400,
   },
   totalWrap: {
     position: 'relative',
     width: '100%',
     height: 38,
     marginTop: 12,
-    overflow: 'hidden',
   },
   totalDistance: {
     position: 'absolute',
     top: 0,
     left: 0,
-    marginLeft: -10,
+    marginLeft: -8,
+  },
+  goal: {
+    position: 'absolute',
+    top: 0,
+    right: -10,
   },
   disCurrent: {
     position: 'absolute',
@@ -148,11 +152,10 @@ const styles = StyleSheet.create({
   totalLabelWrap: {
     position: 'relative',
     marginTop: 10,
-    height: 27,
+    paddingVertical: 7,
   },
   city: {
-    position: 'absolute',
-    top: 0,
+    textAlign: 'center',
   },
   imageWrap: {
     display: 'flex',
@@ -173,6 +176,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   levelExp: {
+    fontFamily: 'Pretendard-Regular',
     fontSize: 11,
     color: '#666',
   },
@@ -227,10 +231,12 @@ const styles = StyleSheet.create({
   },
   location: {
     marginTop: 3,
+    fontFamily: 'Pretendard-Regular',
     fontSize: 12,
     color: '#999'
   },
   date: {
+    fontFamily: 'Pretendard-Regular',
     fontSize: 14,
     color: '#454545',
   },

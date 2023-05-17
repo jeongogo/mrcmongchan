@@ -23,11 +23,13 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
   },
   label: {
+    fontFamily: 'Pretendard-Medium',
     fontSize: 15,
     fontWeight: 500,
     color: '#222',
   },
   text: {
+    fontFamily: 'Pretendard-Regular',
     fontSize: 15,
     color: '#454545',
   },

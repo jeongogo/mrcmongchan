@@ -15,11 +15,11 @@ function Map({initLocation, captureRef, path}) {
         }}
         showsUserLocation={true}
         followsUserLocation={true}
-        zoomEnabled={false}
+        zoomEnabled={true}
         minZoomLevel={13}
         maxZoomLevel={13}
         rotateEnabled={false}
-        scrollEnabled={false}
+        scrollEnabled={true}
       >
         {(path.length > 1) &&
           <Polyline

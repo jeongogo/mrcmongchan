@@ -101,6 +101,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     width: '100%',
     paddingHorizontal: 10,
+    fontFamily: 'Pretendard-Regular',
     fontSize: 15,
     color: '#222',
     borderWidth: 1,
@@ -115,6 +116,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
   },
   text: {
+    fontFamily: 'Pretendard-Regular',
     fontSize: 16,
     color: '#222',
   },
@@ -133,6 +135,7 @@ const styles = StyleSheet.create({
   btnText: {
     paddingVertical: 15,
     paddingHorizontal: 30,
+    fontFamily: 'Pretendard-Medium',
     fontSize: 14,
     fontWeight: 500,
     textAlign: 'center',

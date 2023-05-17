@@ -65,11 +65,13 @@ const styles = StyleSheet.create({
   },
   title: {
     marginBottom: 10,
+    fontFamily: 'Pretendard-Medium',
     fontSize: 20,
     fontWeight: 500,
     color: '#222',
   },
   name: {
+    fontFamily: 'Pretendard-Regular',
     fontSize: 18,
     color: '#222',
   },
@@ -87,6 +89,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ededed',
   },
   menuText: {
+    fontFamily: 'Pretendard-Medium',
     fontSize: 18,
     fontWeight: 500,
     color: '#222',

@@ -58,12 +58,14 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   record_current: {
+    fontFamily: 'Pretendard-Bold',
     fontSize: 60,
     fontWeight: 700,
     color: '#fff',
     textAlign: 'center',
   },
   record_title: {
+    fontFamily: 'Pretendard-Regular',
     fontSize: 20,
     color: '#fff',
     textAlign: 'center',

@@ -23,6 +23,10 @@ function Home({ navigation }) {
   const [isRecoding, setIsRecoding] = useState(false);               // 기록중 여부
   const distanceRef = useRef(null);                                  // 거리용 Ref
   const timeRef = useRef(null);                                      // 시간용 Ref
+  const backgroundRef = useRef(null);                                // Background Ref
+  const altitudeRef = useRef(1);                                     // 고도 Ref
+  const [currentAltitude, setCurrentAltitude] = useState('');        // 실시간 고도
+  const [altitude, setAltitude] = useState([]);                      // 기록 고도
   const [totalTime, setTotalTime] = useState(0);                     // 누적 시간
   const [minutes, setMinutes] = useState(0);                         // 렌더링용 분
   const [seconds, setSeconds] = useState(0);                         // 렌더링용 초
@@ -143,8 +147,9 @@ function Home({ navigation }) {
   /** 위치 추적 + 기록 */
   const recordDistance = () => {
     try {
-      BackgroundGeolocation.watchPosition((location) => {
+      backgroundRef.current = BackgroundGeolocation.watchPosition((location) => {
         const {latitude, longitude} = location.coords;
+        setCurrentAltitude(location.coords.altitude);
         if (distanceRef.current != null) {
           const currentDistance = haversine(distanceRef.current, location.coords, {unit: 'meter'});
           setDistance(prev => prev + currentDistance);
@@ -184,6 +189,10 @@ function Home({ navigation }) {
       paceRef.current++;
       setPaceDetail(prev => [...prev, totalTime/1000]);
     }
+    if (distance > altitudeRef.current * 100) {
+      altitudeRef.current++;
+      setAltitude(prev => [...prev, currentAltitude]);
+    }
   }, [distance]);
 
   /** 누적 분:초 */
@@ -205,6 +214,8 @@ function Home({ navigation }) {
     setIsRecoding(false);
     clearInterval(timeRef.current);
     timeRef.current = null;
+    distanceRef.current = null;
+    backgroundRef.current = null;
     BackgroundGeolocation.stopWatchPosition();
     BackgroundGeolocation.stop();
   }
@@ -220,6 +231,9 @@ function Home({ navigation }) {
     clearInterval(timeRef.current);
     paceRef.current = 1;
     timeRef.current = null;
+    distanceRef.current = null;
+    altitudeRef.current = 1;
+    backgroundRef.current = null;
     BackgroundGeolocation.stopWatchPosition();
     BackgroundGeolocation.stop();
   }
@@ -292,6 +306,7 @@ function Home({ navigation }) {
         date: new Date(),
         areaName,
         weather,
+        altitude,
       };
       setRecord(recordData);
       onClear();
@@ -410,6 +425,7 @@ const styles = StyleSheet.create({
     zIndex: 9,
   },
   missionTitle: {
+    fontFamily: 'Pretendard-Medium',
     fontSize: 16,
     fontWeight: 500,
     color: '#000',
@@ -417,6 +433,7 @@ const styles = StyleSheet.create({
   },
   missionContent: {
     marginTop: 10,
+    fontFamily: 'Pretendard-Regular',
     fontSize: 15,
     color: '#333',
     textAlign: 'center',
@@ -436,8 +453,9 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   startText: {
+    fontFamily: 'Pretendard-Bold',
     fontSize: 32,
-    fontWeight: '700',
+    fontWeight: 700,
     color: '#fff',
     textAlign: 'center',
   },

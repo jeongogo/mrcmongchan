@@ -67,6 +67,7 @@ function Weight() {
       });
       await updateUser(user.uid, {weight, weightList: processWeight});
     } else if (mode === 'write') {
+      setShowAddBtn(false);
       await updateUser(user.uid, {weight, weightList: [...user.weightList, {date: new Date(), weight}]});
     }
     const u = await getUser(user.uid);
@@ -189,6 +190,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   text: {
+    fontFamily: 'Pretendard-Regular',
     fontSize: 16,
     color: '#222',
   },
@@ -203,6 +205,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   addBtnText: {
+    fontFamily: 'Pretendard-Medium',
     fontSize: 15,
     fontWeight: 500,
     textAlign: 'center',
@@ -229,12 +232,14 @@ const styles = StyleSheet.create({
   },
   editDate: {
     marginTop: 15,
+    fontFamily: 'Pretendard-Regular',
     fontSize: 20,
     color: '#222',
     textAlign: 'center',
   },
   input: {
     marginTop: 15,
+    fontFamily: 'Pretendard-Regular',
     fontSize: 15,
     color: '#222',
     textAlign: 'center',
@@ -250,6 +255,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   confirmText: {
+    fontFamily: 'Pretendard-Medium',
     fontSize: 15,
     fontWeight: 500,
     textAlign: 'center',

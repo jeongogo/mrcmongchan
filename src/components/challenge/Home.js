@@ -1,18 +1,22 @@
 import React from 'react';
 import { useNavigation } from "@react-navigation/native";
 import {Pressable, SafeAreaView, ScrollView, Text, StyleSheet, View} from 'react-native';
+import useStore from "../../store/store";
 import Challenge from './Challenge';
 
 function Home({challenges}) {
   const navigation = useNavigation();
+  const user = useStore((state) => state.user);
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.full}>
       <View style={styles.btnWrap}>
-        <Pressable style={styles.create} onPress={() => navigation.navigate('ChallengeWrite')}>
-          <Text style={styles.createText}>챌린지 만들기</Text>
-        </Pressable>
+        {user?.isAdmin &&
+          <Pressable style={styles.create} onPress={() => navigation.navigate('ChallengeWrite')}>
+            <Text style={styles.createText}>챌린지 만들기</Text>
+          </Pressable>
+        }
       </View>
         {(challenges.length > 0) && 
           challenges.map((challenge) => (
@@ -46,6 +50,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   createText: {
+    fontFamily: 'Pretendard-Medium',
     fontSize: 15,
     fontWeight: 500,
     textAlign: 'center',

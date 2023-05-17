@@ -115,6 +115,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   title: {
+    fontFamily: 'Pretendard-Medium',
     fontSize: 16,
     fontWeight: 500,
     color: '#222',
@@ -126,6 +127,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 42,
     paddingHorizontal: 10,
+    fontFamily: 'Pretendard-Regular',
     fontSize: 15,
     color: '#222',
     borderWidth: 1,
@@ -153,6 +155,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   btnText: {
+    fontFamily: 'Pretendard-Medium',
     fontSize: 15,
     fontWeight: 500,
     color: 'white',

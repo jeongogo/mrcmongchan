@@ -39,25 +39,30 @@ function Detail() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
+        <View style={styles.titleWrap}>
+          <Text style={styles.title}>{feedDetail.title}</Text>
+          <Text style={styles.area}>{feedDetail.areaName}</Text>
+        </View>
         <View style={styles.imageWrap}>
-          <Image style={styles.image} width={width} source={{uri: feedDetail.captureURL}} />
+          <Image style={styles.image} width={width - 30} source={{uri: feedDetail.captureURL}} />
         </View>
         <View style={styles.infoWrap}>
           <View style={styles.wrap}>
             <Text style={styles.text}>{feedDetail.distance}km</Text>
-            <Text style={styles.label}>이동 거리</Text>
+            <Text style={styles.label}>거리</Text>
           </View>
           <View style={styles.wrap}>
             <Text style={styles.text}>{minutes < 10 ? '0' + minutes : minutes}:{seconds < 10 ? '0' + seconds : seconds}</Text>
-            <Text style={styles.label}>이동 시간</Text>
+            <Text style={styles.label}>시간</Text>
           </View>
           <View style={styles.wrap}>
             <Text style={styles.text}>{feedDetail.pace}</Text>
-            <Text style={styles.label}>평균 페이스</Text>
+            <Text style={styles.label}>페이스</Text>
           </View>
         </View>
+        <View style={styles.hr}></View>
         <View style={styles.contentWrap}>
-          <Text style={styles.title}>페이스</Text>
+          <Text style={[styles.title, styles.margin]}>페이스</Text>
           {paceDetail.length > 0 &&
             paceDetail.map((item, index) => (
               <View style={styles.paceWrap} key={index}>
@@ -70,8 +75,9 @@ function Detail() {
             ))
           }
         </View>
+        <View style={styles.hr}></View>
         <View style={styles.contentWrap}>
-          <Text style={styles.title}>고도</Text>
+          <Text style={[styles.title, styles.margin]}>고도</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -83,8 +89,23 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+  hr: {
+    borderTopWidth: 1,
+    borderTopColor: '#ededed',
+    borderBottomWidth: 10,
+    borderBottomColor: '#f3f3f3',
+  },
+  titleWrap: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 20,
+    paddingBottom: 15,
+    paddingHorizontal: 15,
+  },
   imageWrap: {
-    
+    paddingHorizontal: 15,
   },
   image: {
     height: 200,
@@ -95,7 +116,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignContent: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f6f6f6',
     overflow: 'hidden',
   },
   wrap: {
@@ -105,24 +125,31 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   contentWrap: {
-    marginBottom: 10,
-    paddingTop: 30,
-    paddingHorizontal: 15,
+    paddingVertical: 25,
+    paddingHorizontal: 30,
     backgroundColor: '#fff',
   },
   title: {
-    marginBottom: 10,
+    fontFamily: 'Pretendard-Bold',
     fontSize: 18,
     fontWeight: 700,
     color: '#454545',
   },
+  margin: {
+    marginBottom: 10,
+  },
+  area: {
+
+  },
   text: {
+    fontFamily: 'Pretendard-Medium',
     fontSize: 26,
     fontWeight: 500,
     color: '#222',
   },
   label: {
     marginTop: 3,
+    fontFamily: 'Pretendard-Regular',
     fontSize: 14,
     color: '#222',
   },
@@ -134,6 +161,7 @@ const styles = StyleSheet.create({
   },
   paceLabel: {
     marginRight: 10,
+    fontFamily: 'Pretendard-Regular',
     fontSize: 14,
     color: '#222',
   },
@@ -153,6 +181,7 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   paceText: {
+    fontFamily: 'Pretendard-Regular',
     fontSize: 14,
     color: '#222',
   },

@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   permissionTitle: {
+    fontFamily: 'Pretendard-Medium',
     fontSize: 22,
     fontWeight: 500,
     color: '#222',
@@ -54,11 +55,13 @@ const styles = StyleSheet.create({
   },
   permissionContent: {
     paddingVertical: 10,
+    fontFamily: 'Pretendard-Regular',
     fontSize: 14,
     color: '#222',
   },
   permissionContentText: {
     paddingVertical: 5,
+    fontFamily: 'Pretendard-Regular',
     fontSize: 14,
     color: '#454545',
   },
@@ -83,12 +86,14 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   permissionBtnText: {
+    fontFamily: 'Pretendard-Medium',
     fontSize: 14,
     fontWeight: 500,
     textAlign: 'center',
     color: '#fff',
   },
   permissionBtnTextCancel: {
+    fontFamily: 'Pretendard-Medium',
     fontSize: 14,
     fontWeight: 500,
     textAlign: 'center',

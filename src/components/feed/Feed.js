@@ -68,11 +68,13 @@ const styles = StyleSheet.create({
   },
   title: {
     marginBottom: 3,
+    fontFamily: 'Pretendard-Medium',
     fontSize: 18,
     fontWeight: 500,
     color: '#222',
   },
   text: {
+    fontFamily: 'Pretendard-Regular',
     fontSize: 15,
     color: '#454545',
   },

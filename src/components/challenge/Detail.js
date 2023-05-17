@@ -100,6 +100,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f6f6f6',
   },
   title: {
+    fontFamily: 'Pretendard-Medium',
     fontSize: 20,
     fontWeight: 500,
     color: '#222',
@@ -114,12 +115,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   goalCurrentText: {
+    fontFamily: 'Pretendard-Medium',
     fontSize: 18,
     color: '#E53A40',
     fontWeight: 500,
     textAlign: 'center',
   },
   goalText: {
+    fontFamily: 'Pretendard-Regular',
     fontSize: 18,
     color: '#454545',
     textAlign: 'center',
@@ -150,6 +153,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   subTitle: {
+    fontFamily: 'Pretendard-Medium',
     marginBottom: 10,
     fontSize: 20,
     fontWeight: 500,
@@ -165,6 +169,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 30,
     marginHorizontal: 5,
+    fontFamily: 'Pretendard-Regular',
     fontSize: 16,
     textAlign: 'center',
     borderRadius: 5,

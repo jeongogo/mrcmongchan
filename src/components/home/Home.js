@@ -39,6 +39,9 @@ function Home({
     <SafeAreaProvider style={styles.container}>
       <SafeAreaView>
         <ScrollView>
+          <Pressable onPress={() => openURL('https://smartstore.naver.com/xionstore/products/6853375059?NaPm=ct%3Dlh5ls0u8%7Cci%3D0683128f05c1e4d8c73b509545c6713d9da6fa4d%7Ctr%3Dsls%7Csn%3D3186798%7Chk%3Dba46cc1982d38532c1b3049e95605d5e006dd580')} style={styles.imageWrap}>
+            <AutoHeightImage width={width} source={require('../../assets/images/x_kit.jpg')} />
+          </Pressable>
           <CustomWrap>
             <Text style={styles.title}>리포트</Text>
             <View style={styles.levelWrap}>
@@ -99,9 +102,6 @@ function Home({
               </Pressable>
             ))}
           </CustomWrap>
-          <Pressable onPress={() => openURL('https://smartstore.naver.com/xionstore/products/6853375059?NaPm=ct%3Dlh5ls0u8%7Cci%3D0683128f05c1e4d8c73b509545c6713d9da6fa4d%7Ctr%3Dsls%7Csn%3D3186798%7Chk%3Dba46cc1982d38532c1b3049e95605d5e006dd580')} style={styles.imageWrap}>
-            <AutoHeightImage width={width} source={require('../../assets/images/x_kit.jpg')} />
-          </Pressable>
         </ScrollView>
       </SafeAreaView>
     </SafeAreaProvider>

@@ -4,15 +4,15 @@ import {View, Pressable, Text, StyleSheet, Alert} from 'react-native';
 import Entry from './Entry';
 
 function Challenge({
-  route,
+  routeId,
   challenge,
-  goalCurrent,
   handleAttend,
   handleLeave,
   handleDelete,
-  totalDistance
 }) {
   const user = useStore((state) => state.user);
+  const [totalDistance, setTotalDistance] = useState(0);
+  const [goalCurrent, setGoalCurrent] = useState(0);
 
   /** 참가 취소 Alert */
   const onLeave = () => {
@@ -46,6 +46,14 @@ function Challenge({
     ]);
   }
 
+  useEffect(() => {
+    const total = challenge.entry.reduce((accumulator, current, index, array) => {
+      return accumulator + current.distance;
+    }, 0);
+    setTotalDistance(total);
+    setGoalCurrent((total/challenge.goal)*100);
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.info}>
@@ -58,9 +66,14 @@ function Challenge({
           <View style={[styles.goalCurrent, {width: goalCurrent + '%'}]}></View>
           <View style={styles.goalTotal}></View>
         </View>
+        {goalCurrent >= 100 &&
+          <View style={styles.goalIn}>
+            <Text style={styles.goalInText}>축하합니다! 목표 거리에 도달했습니다.😃</Text>
+          </View>
+        }
+        <View></View>
       </View>
       <View style={styles.entry}>
-        <Text style={styles.subTitle}>참가자</Text>
         {(challenge.entry?.length > 0) && 
           challenge.entry.map((i) => (
             <Entry key={i.uid} entry={i} />
@@ -72,7 +85,7 @@ function Challenge({
             <Text style={[styles.btn, styles.submit]}>참가하기</Text>
           </Pressable>
         }
-        {user.challenge === route.params.id &&
+        {user.challenge === routeId &&
           <Pressable onPress={onLeave}>
             <Text style={[styles.btn, styles.cancel]}>챌린지 나가기</Text>
           </Pressable>
@@ -151,6 +164,14 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: '#ddd',
     zIndex: 1,
+  },
+  goalIn: {
+    marginTop: 20,
+  },
+  goalInText: {
+    fontSize: 15,
+    color: '#222',
+    textAlign: 'center',
   },
   subTitle: {
     fontFamily: 'Pretendard-Medium',

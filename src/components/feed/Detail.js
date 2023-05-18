@@ -1,6 +1,18 @@
 import React, { useEffect, useState } from 'react';
+import {LineChart} from "react-native-chart-kit";
 import useStore from "../../store/store";
 import {SafeAreaView, ScrollView, View, Text, Image, StyleSheet, useWindowDimensions} from 'react-native';
+
+const chartConfig = {
+  backgroundGradientFrom: "white",
+  backgroundGradientFromOpacity: 1,
+  backgroundGradientTo: "white",
+  backgroundGradientToOpacity: 1,
+  color: (opacity = 1) => `rgba(55, 55, 55, ${opacity})`,
+  strokeWidth: 2,
+  barPercentage: 11,
+  useShadowColorFromDataset: true,
+};
 
 function Detail() {
   const width = useWindowDimensions().width;
@@ -8,6 +20,7 @@ function Detail() {
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
   const [paceDetail, setPaceDetail] = useState([]);
+  const [altitude, setAltitude] = useState([]);
 
   useEffect(() => {
     setMinutes(Math.floor(feedDetail.totalTime/60));
@@ -34,6 +47,12 @@ function Detail() {
       });
       setPaceDetail(processData);
     }
+    const altitudeCount = Math.ceil((feedDetail.altitude.length)/10) - 1;
+    let currentCount = [];
+    for (let i=0; i <= altitudeCount; i++) {
+      currentCount.push(i);
+    }
+    setAltitude(currentCount);
   }, []);
 
   return (
@@ -48,7 +67,7 @@ function Detail() {
         </View>
         <View style={styles.infoWrap}>
           <View style={styles.wrap}>
-            <Text style={styles.text}>{feedDetail.distance}km</Text>
+            <Text style={styles.text}>{feedDetail.distance}</Text>
             <Text style={styles.label}>거리</Text>
           </View>
           <View style={styles.wrap}>
@@ -76,8 +95,30 @@ function Detail() {
           }
         </View>
         <View style={styles.hr}></View>
-        <View style={styles.contentWrap}>
-          <Text style={[styles.title, styles.margin]}>고도</Text>
+        <View style={styles.altitudeWrap}>
+          <Text style={[styles.title, styles.margin, styles.altitude]}>고도</Text>
+          {feedDetail.altitude.length > 0 &&
+            <LineChart
+              data={
+                {
+                  labels: altitude,
+                  datasets: [
+                    {
+                      data: feedDetail.altitude,
+                      color: () => '#30A9DE',
+                    },
+                  ],
+                }
+              }
+              width={width-40}
+              height={220}
+              chartConfig={chartConfig}
+              withDots={false}
+              withInnerLines={false}
+              yAxisSuffix="m"
+              fromZero={true}
+            />
+          }
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -100,15 +141,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 20,
-    paddingBottom: 15,
+    paddingVertical: 20,
     paddingHorizontal: 15,
   },
   imageWrap: {
     paddingHorizontal: 15,
   },
   image: {
-    height: 200,
+    aspectRatio: 1,
   },
   infoWrap: {
     paddingVertical: 10,
@@ -127,13 +167,20 @@ const styles = StyleSheet.create({
   contentWrap: {
     paddingVertical: 25,
     paddingHorizontal: 30,
-    backgroundColor: '#fff',
+  },
+  altitudeWrap: {
+    paddingLeft: 10,
+    paddingVertical: 30,
   },
   title: {
     fontFamily: 'Pretendard-Bold',
     fontSize: 18,
     fontWeight: 700,
     color: '#454545',
+  },
+  altitude: {
+    paddingLeft: 20,
+    marginBottom: 20,
   },
   margin: {
     marginBottom: 10,

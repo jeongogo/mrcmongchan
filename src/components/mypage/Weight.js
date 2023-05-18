@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, SafeAreaView, ScrollView, StatusBar, TextInput, View, Text, Pressable, useWindowDimensions} from 'react-native';
+import {LineChart} from "react-native-chart-kit";
 import useStore from "../../store/store";
 import { updateUser } from "../../lib/user";
-import {LineChart} from "react-native-chart-kit";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import CustomWrap from "../common/CustomWrap";
 import { getUser } from "../../lib/user";
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
   chartWrap: {
     paddingTop: 30,
     paddingBottom: 15,
-    marginBottom: 15,
+    marginBottom: 10,
     backgroundColor: '#fff',
     borderRadius: 10,
     overflow: 'hidden',

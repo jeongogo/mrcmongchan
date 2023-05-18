@@ -45,6 +45,7 @@ function HomeScreen() {
   if (!challengesQuery.data) {
     return <Loader />
   }
+  
   return (
     <Home challenges={challengesQuery.data} />
   )

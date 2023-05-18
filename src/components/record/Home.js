@@ -22,6 +22,7 @@ function Home({ navigation }) {
   const [isStarted, setIsStarted] = useState(false);                 // 시작 여부
   const [isRecoding, setIsRecoding] = useState(false);               // 기록중 여부
   const distanceRef = useRef(null);                                  // 거리용 Ref
+  const backgroundStartTimeRef = useRef(null);                                 // 시작 시간용 Ref
   const timeRef = useRef(null);                                      // 시간용 Ref
   const backgroundRef = useRef(null);                                // Background Ref
   const altitudeRef = useRef(1);                                     // 고도 Ref
@@ -155,9 +156,6 @@ function Home({ navigation }) {
           setDistance(prev => prev + currentDistance);
           setPath(prev => [...prev, { latitude, longitude }]);
         }
-        if (appState.current !== 'active') {
-          setTotalTime(prev => prev + 2000);
-        }
         distanceRef.current = { latitude, longitude };
       }, (e) => {
         console.log(e);
@@ -213,6 +211,7 @@ function Home({ navigation }) {
   const onPause = () => {
     setIsRecoding(false);
     clearInterval(timeRef.current);
+    backgroundStartTimeRef.current = null;
     timeRef.current = null;
     distanceRef.current = null;
     backgroundRef.current = null;
@@ -229,6 +228,7 @@ function Home({ navigation }) {
     setIsStarted(false);
     setIsRecoding(false);
     clearInterval(timeRef.current);
+    backgroundStartTimeRef.current = null;
     paceRef.current = 1;
     timeRef.current = null;
     distanceRef.current = null;
@@ -345,11 +345,26 @@ function Home({ navigation }) {
     onClear();
     setRecord('');
     setCaptureURL('');
-    requestPermissions();
+    requestPermissions();    
+  }, []);
+
+  useEffect(() => {
     let subscription = '';
     subscription = AppState.addEventListener('change', nextAppState => {
       if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
-        console.log('App has come to the foreground!');
+        console.log('App Foreground');
+        if (isStarted && isRecoding) {
+          let before = backgroundStartTimeRef.current;
+          before = Math.round(before/1000);
+          let now = new Date().getTime();
+          now = Math.round(now/1000);
+          setTotalTime(prev => prev + ((now * 1000) - (before * 1000)));
+        }
+      } else {
+        console.log('App Backround');
+        if (isStarted && isRecoding) {
+          backgroundStartTimeRef.current = new Date().getTime();
+        }
       }
       appState.current = nextAppState;
     });
@@ -358,7 +373,7 @@ function Home({ navigation }) {
         subscription.remove();
       }
     };
-  }, []);
+  }, [isStarted, isRecoding]);
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(

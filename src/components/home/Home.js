@@ -33,12 +33,12 @@ function Home({
     const nextLevelEx = (( lv - 1 ) * ( lv - 1 )) * ( (lv*lv) - 13*lv + 82 );
     setExCurrent(((user.exPoint/nextLevelEx) * 100).toFixed(2));
     setDisCurrent((user.distance/320)*100);
-  }, []);
+  }, [user]);
 
   return (
     <SafeAreaProvider style={styles.container}>
       <SafeAreaView>
-        <ScrollView>
+        <ScrollView style={styles.contentWrap}>
           <Pressable onPress={() => openURL('https://smartstore.naver.com/xionstore/products/6853375059?NaPm=ct%3Dlh5ls0u8%7Cci%3D0683128f05c1e4d8c73b509545c6713d9da6fa4d%7Ctr%3Dsls%7Csn%3D3186798%7Chk%3Dba46cc1982d38532c1b3049e95605d5e006dd580')} style={styles.imageWrap}>
             <AutoHeightImage width={width} source={require('../../assets/images/x_kit.jpg')} />
           </Pressable>
@@ -61,6 +61,10 @@ function Home({
             <View style={styles.wrap}>
               <Text style={styles.label}>이번 달</Text>
               <Text style={styles.text}>{distanceMonth}km / {calorieMonth}k㎈</Text>
+            </View>
+            <View style={styles.wrap}>
+              <Text style={styles.label}>누적 거리</Text>
+              <Text style={styles.text}>{user.distance}km</Text>
             </View>
           </CustomWrap>
           {/* <CustomWrap>
@@ -102,6 +106,9 @@ function Home({
               </Pressable>
             ))}
           </CustomWrap>
+          <View>
+            <Text></Text>
+          </View>
         </ScrollView>
       </SafeAreaView>
     </SafeAreaProvider>
@@ -111,9 +118,11 @@ function Home({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#f3f3f3',
+  },
+  contentWrap: {
     paddingTop: 15,
     paddingHorizontal: 10,
-    backgroundColor: '#f3f3f3',
   },
   distance: {
     fontFamily: 'Pretendard-Regular',

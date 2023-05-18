@@ -8,6 +8,8 @@ function Feed({ feed }) {
   const navigation = useNavigation();
   const user = useStore((state) => state.user);
   const setFeedDetail = useStore((state) => state.setFeedDetail);
+  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(0);
   const [date, setDate] = useState('');
 
   const onDetail = (id) => {
@@ -25,6 +27,8 @@ function Feed({ feed }) {
     hours = hours < 10 ? '0' + hours : hours;
     min = min < 10 ? '0' + min : min;
     setDate(month + '월 ' + date + '일 ' + hours + ':' + min);
+    setMinutes(Math.floor(feed.totalTime/60));
+    setSeconds((feed.totalTime) - (Math.floor(feed.totalTime/60) * 60));
   }, []);
 
   return (
@@ -34,21 +38,25 @@ function Feed({ feed }) {
           <Image style={styles.avatar} source={{uri: feed.photoURL}} />
           <Text style={styles.text}>{feed.displayName}</Text>
         </View> */}
-        {feed.title &&
-          <View style={styles.wrap}>
-            <Text style={styles.title}>{feed.title}</Text>
-          </View>
-        }
+        <View style={[styles.wrap, styles.top]}>
+          {feed.title
+            ?
+              <>
+                <Text style={styles.title}>{feed.title}</Text>
+                <Text style={styles.date}>{date}</Text>
+              </>
+            :
+              <Text style={styles.title}>{date}</Text>
+          }          
+        </View>
         <View style={styles.wrap}>
-          <Text style={styles.text}>{date}</Text>
-          <Text style={styles.marginRight}></Text>
           <Text style={styles.text}>{feed.areaName}</Text>
         </View>
-        <View style={[styles.wrap, styles.marginTop]}>
-          <Text style={styles.text}>거리 </Text>
+        <View style={styles.wrap}>
           <Text style={styles.text}>{feed.distance}km</Text>
-          <Text style={styles.marginRight}></Text>
-          <Text style={styles.text}>페이스 </Text>
+          <Text style={styles.bar}></Text>
+          <Text style={styles.text}>{minutes}:{seconds}</Text>
+          <Text style={styles.bar}></Text>
           <Text style={styles.text}>{feed.pace}</Text>
         </View>
       </Pressable>
@@ -64,22 +72,32 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 3,
+    paddingVertical: 2,
+  },
+  top: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   title: {
-    marginBottom: 3,
-    fontFamily: 'Pretendard-Medium',
+    marginBottom: 2,
+    fontFamily: 'Pretendard-Bold',
     fontSize: 18,
-    fontWeight: 500,
     color: '#222',
+  },
+  date: {
+    fontFamily: 'Pretendard-Regular',
+    fontSize: 13,
+    color: '#999',
   },
   text: {
     fontFamily: 'Pretendard-Regular',
     fontSize: 15,
     color: '#454545',
   },
-  marginRight: {
-    marginRight: 20,
+  bar: {
+    marginHorizontal: 10,
+    borderRightWidth: 1,
+    borderRightColor: '#ddd',
   }
 });
 

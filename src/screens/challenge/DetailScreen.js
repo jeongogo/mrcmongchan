@@ -1,33 +1,27 @@
-import React, {useState, useEffect} from 'react';
-import { useQueryClient } from 'react-query';
+import React, {useState} from 'react';
+import { useQuery, useQueryClient } from 'react-query';
 import firestore from '@react-native-firebase/firestore';
 import useStore from "../../store/store";
 import { updateUser } from "../../lib/user";
 import {Alert} from 'react-native';
 import Detail from "../../components/challenge/Detail";
+import Loader from "../../components/common/Loader";
 
 function DetailScreen({route, navigation}) {
+  const routeId = route.params.id;
   const queryClient = useQueryClient();
   const [challenge, setChallenge] = useState('');
-  const [totalDistance, setTotalDistance] = useState(0);
-  const [goalCurrent, setGoalCurrent] = useState(0);
   const user = useStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
-  const docRef = firestore().collection('Challenges').doc(route.params.id);
+  const docRef = firestore().collection('Challenges').doc(routeId);
 
   /** 챌린지 가져오기 */
   const getChallenge = async () => {
-    try {
-      const res = await docRef.get();
-      setChallenge(res.data());
-      const total = res.data().entry.reduce((accumulator, current, index, array) => {
-        return accumulator + current.distance;
-      }, 0);
-      setTotalDistance(total);
-    } catch (e) {
-      console.log(e);
-    }
+    const res = await docRef.get();
+    return res.data();
   }
+
+  const challengeQuery = useQuery('challenge', getChallenge, {refetchOnMount: "always"});
 
   /** 참가 신청하기 */
   const handleAttend = async () => {
@@ -43,8 +37,8 @@ function DetailScreen({route, navigation}) {
       setChallenge({...challenge, entry: [...challenge.entry, newEntry]});
       
       // 유저에 챌린지 추가
-      await updateUser(user.uid, {challenge: route.params.id});
-      setUser({...user, challenge: route.params.id});
+      await updateUser(user.uid, {challenge: routeId});
+      setUser({...user, challenge: routeId});
 
       Alert.alert("", "참가 완료되었습니다.", [
         {
@@ -80,23 +74,17 @@ function DetailScreen({route, navigation}) {
     navigation.navigate('ChallengeHome');
   }
 
-  useEffect(() => {
-    getChallenge();
-  }, []);
-
-  useEffect(() => {
-    setGoalCurrent((totalDistance/challenge.goal)*100);
-  }, [totalDistance]);
+  if (!challengeQuery.data) {
+    return <Loader />
+  }
 
   return (
     <Detail
-      route={route}
-      challenge={challenge}
-      goalCurrent={goalCurrent}
+      routeId={routeId}
+      challenge={challengeQuery.data}
       handleAttend={handleAttend}
       handleLeave={handleLeave}
       handleDelete={handleDelete}
-      totalDistance={totalDistance}
     />
   )
 };

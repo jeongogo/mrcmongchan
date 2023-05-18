@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    marginBottom: 2,
+    marginBottom: 1,
     fontFamily: 'Pretendard-Bold',
     fontSize: 18,
     color: '#222',

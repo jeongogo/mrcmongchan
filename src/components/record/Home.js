@@ -32,6 +32,7 @@ function Home({ navigation }) {
   const [minutes, setMinutes] = useState(0);                         // 렌더링용 분
   const [seconds, setSeconds] = useState(0);                         // 렌더링용 초
   const [distance, setDistance] = useState(0);                       // 누적 거리
+  const [realtimeDistance, setRealtimeDistance] = useState([]);      // 페이스 계산용 거리
   const [pace, setPace] = useState('00:00');                         // 페이스
   const paceRef = useRef(1);                                         // 상세 페이스용 Ref
   const [paceDetail, setPaceDetail] = useState([]);                  // 상세 페이스
@@ -153,7 +154,8 @@ function Home({ navigation }) {
         setCurrentAltitude(location.coords.altitude);
         if (distanceRef.current != null) {
           const currentDistance = haversine(distanceRef.current, location.coords, {unit: 'meter'});
-          setDistance(prev => prev + currentDistance);
+          setDistance(prev => prev + currentDistance + 6);
+          setRealtimeDistance(prev => [...prev, currentDistance + 6]);
           setPath(prev => [...prev, { latitude, longitude }]);
         }
         distanceRef.current = { latitude, longitude };
@@ -173,12 +175,20 @@ function Home({ navigation }) {
 
   /** 페이스 계산 */
   useEffect(() => {
-    if (distance > 30) {
-      const time = (1000/distance) * (totalTime/1000);
+    if (realtimeDistance.length > 10) {      
+      const sum = realtimeDistance.reduceRight(function(accumulator, currentValue, currentIndex, arr) {
+        if (currentIndex > (arr.length - 11)) {
+          return accumulator + currentValue;
+        }
+        return accumulator;
+      }, 0);
+
+      const time = (1000/sum) * 20;
       const m = (Math.floor(time / 60)).toFixed(0);
       const s = (time - m * 60).toFixed(0);
       const minutes = m < 10 ? '0' + m : m;
       const seconds = s < 10 ? '0' + s : s;
+
       setPace(minutes + ':' + seconds);
     } else {
       setPace('00:00');
@@ -225,6 +235,7 @@ function Home({ navigation }) {
     setDistance(0);
     setPace('00:00');
     setPaceDetail([]);
+    setRealtimeDistance([]);
     setIsStarted(false);
     setIsRecoding(false);
     clearInterval(timeRef.current);
@@ -294,13 +305,19 @@ function Home({ navigation }) {
       }
 
       const calorie = met * (3.5 * user.weight * ((totalTime/1000) / 60)) * 5 / 1000;
+
+      const time = (1000/distance) * (totalTime/1000);
+      const m = (Math.floor(time / 60)).toFixed(0);
+      const s = (time - m * 60).toFixed(0);
+      const minutes = m < 10 ? '0' + m : m;
+      const seconds = s < 10 ? '0' + s : s;
       
       const recordData = {
         uid: user.uid,
         name: user.name,
         totalTime: totalTime/1000,
         distance: (distance/1000).toFixed(2),
-        pace,
+        pace: minutes + ':' + seconds,
         paceDetail,
         calorie: calorie.toFixed(0),
         date: new Date(),

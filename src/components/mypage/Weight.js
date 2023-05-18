@@ -13,7 +13,7 @@ const chartConfig = {
   backgroundGradientTo: "white",
   backgroundGradientToOpacity: 1,
   color: (opacity = 1) => `rgba(55, 55, 55, ${opacity})`,
-  strokeWidth: 3,
+  strokeWidth: 2,
   barPercentage: 11,
   useShadowColorFromDataset: true,
 };
@@ -118,6 +118,14 @@ function Weight() {
                     {
                       data: weightData,
                       color: () => `rgba(249, 161, 74)`,
+                    },
+                    {
+                      data: [weightData[weightData.length-1] - 10],
+                      withDots: false,
+                    },
+                    {
+                      data: [weightData[weightData.length-1] + 10],
+                      withDots: false,
                     },
                   ],
                 }

@@ -96,7 +96,7 @@ function Detail() {
         </View>
         <View style={styles.hr}></View>
         <View style={styles.altitudeWrap}>
-          <Text style={[styles.title, styles.margin, styles.altitude]}>고도</Text>
+          <Text style={[styles.title, styles.margin, styles.altitudeTitle]}>고도</Text>
           {feedDetail.altitude.length > 0 &&
             <LineChart
               data={
@@ -107,16 +107,23 @@ function Detail() {
                       data: feedDetail.altitude,
                       color: () => '#30A9DE',
                     },
+                    {
+                      data: [feedDetail.altitude[feedDetail.altitude.length-1] - 20],
+                      withDots: false,
+                    },
+                    {
+                      data: [feedDetail.altitude[feedDetail.altitude.length-1] + 20],
+                      withDots: false,
+                    },
                   ],
                 }
               }
-              width={width-40}
+              width={width-45}
               height={220}
               chartConfig={chartConfig}
               withDots={false}
               withInnerLines={false}
               yAxisSuffix="m"
-              fromZero={true}
             />
           }
         </View>
@@ -169,7 +176,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
   },
   altitudeWrap: {
-    paddingLeft: 10,
+    paddingLeft: 20,
     paddingVertical: 30,
   },
   title: {
@@ -178,8 +185,8 @@ const styles = StyleSheet.create({
     fontWeight: 700,
     color: '#454545',
   },
-  altitude: {
-    paddingLeft: 20,
+  altitudeTitle: {
+    paddingLeft: 10,
     marginBottom: 20,
   },
   margin: {

@@ -3,7 +3,7 @@ import firestore from '@react-native-firebase/firestore';
 import { useMutation, useQueryClient } from 'react-query';
 import storage from '@react-native-firebase/storage';
 import useStore from "../../store/store";
-import { getUser, updateUser } from "../../lib/user";
+import { updateUser } from "../../lib/user";
 import {Alert} from 'react-native';
 import Write from "../../components/record/Write";
 
@@ -30,9 +30,10 @@ function WriteScreen({navigation}) {
         title,
         captureURL: url,
       }
-      const data = await firestore().collection('Records').add(recordData);
+      await firestore().collection('Records').add(recordData);
       
       // 챌린지 중일 경우
+      let challengeData = {};
       if (user.challenge !== '') {
         const curr = new Date().getTime();
         const res = await firestore().collection('Challenges').doc(user.challenge).get();
@@ -58,28 +59,31 @@ function WriteScreen({navigation}) {
         }
   
         if (kr_curr > res.endDate) {
-          await updateUser(user.uid, {challenge: ''});
+          challengeData = {
+            challenge: ''
+          }
         }
       }
       
       // 레벨업 체크
+      let levelupData = {};
       const distanceExp = ((record.distance*10) * 0.6).toFixed(0);
       const currentExp = +user.exPoint + +missionExp + +distanceExp;
       const lv = user.level + 1;
-      const nextLvExp = ((lv-1) * (lv-1)) * ((lv * lv) - (13 * lv) + 82);
-
+      const nextLvExp = ((lv-1) * (lv-1)) * ((lv * lv) - (13 * lv) + 82);      
       if (currentExp >= nextLvExp) {
-        await updateUser(user.uid, {
+        levelupData = {
           level: +user.level + 1,
           exPoint: currentExp - nextLvExp,
           distance: +user.distance + +record.distance,
-        });
+        }
       } else {
-        await updateUser(user.uid, {
+        levelupData = {
           exPoint: currentExp,
           distance: +user.distance + +record.distance,
-        });
-      }
+        }
+      }      
+      await updateUser(user.uid, {...challengeData, ...levelupData});
 
       // New Record
       // if (새로운 기록 달성하면) {
@@ -87,10 +91,9 @@ function WriteScreen({navigation}) {
       //   ex += 보너스 경험치 (레벨*10)
       // }
       
-      // 유저 상태 업데이트
-      const u = await getUser(user.uid);
-      setUser(u);
+      setUser({...user, ...challengeData, ...levelupData});
 
+      queryClient.invalidateQueries('myrecord');
       queryClient.invalidateQueries('feed');
 
       navigation.navigate('FeedStack');

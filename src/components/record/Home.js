@@ -142,8 +142,9 @@ function Home({ navigation }) {
   /** 시간 계산 */
   const recordTime = () => {
     timeRef.current = setInterval(() => {
-      setTotalTime(prev => prev + 1000);
-    }, 1000);
+      backgroundStartTimeRef.current = new Date().getTime();
+      setTotalTime(prev => prev + 500);
+    }, 500);
   }
 
   /** 위치 추적 + 기록 */
@@ -154,11 +155,20 @@ function Home({ navigation }) {
         setCurrentAltitude(location.coords.altitude);
         if (distanceRef.current != null) {
           const currentDistance = haversine(distanceRef.current, location.coords, {unit: 'meter'});
-          setDistance(prev => prev + currentDistance + 6);
-          setRealtimeDistance(prev => [...prev, currentDistance + 6]);
+          setDistance(prev => prev + currentDistance);
+          setRealtimeDistance(prev => [...prev, currentDistance]);
           setPath(prev => [...prev, { latitude, longitude }]);
         }
         distanceRef.current = { latitude, longitude };
+
+        if (appState.current !== 'active') {
+          let before = backgroundStartTimeRef.current;
+          before = Math.round(before/1000);
+          let now = new Date().getTime();
+          now = Math.round(now/1000);
+          setTotalTime(prev => prev + ((now * 1000) - (before * 1000)));
+          backgroundStartTimeRef.current = new Date().getTime();          
+        }
       }, (e) => {
         console.log(e);
       }, {
@@ -190,13 +200,13 @@ function Home({ navigation }) {
       const seconds = s < 10 ? '0' + s : s;
 
       setPace(minutes + ':' + seconds);
-    } else {
-      setPace('00:00');
     }
+
     if (distance > paceRef.current * 1000) {
       paceRef.current++;
       setPaceDetail(prev => [...prev, totalTime/1000]);
     }
+
     if (distance > altitudeRef.current * 100) {
       altitudeRef.current++;
       setAltitude(prev => [...prev, currentAltitude]);
@@ -206,7 +216,7 @@ function Home({ navigation }) {
   /** 누적 분:초 */
   useEffect(() => {
     setMinutes(Math.floor(totalTime/1000/60));
-    setSeconds((totalTime/1000) - (Math.floor(totalTime/1000/60) * 60));
+    setSeconds(((totalTime/1000) - (Math.floor(totalTime/1000/60) * 60)).toFixed(0));
   }, [totalTime]);
 
   /** 시작하기 */
@@ -315,7 +325,7 @@ function Home({ navigation }) {
       const recordData = {
         uid: user.uid,
         name: user.name,
-        totalTime: totalTime/1000,
+        totalTime: (totalTime/1000).toFixed(0),
         distance: (distance/1000).toFixed(2),
         pace: minutes + ':' + seconds,
         paceDetail,
@@ -370,18 +380,8 @@ function Home({ navigation }) {
     subscription = AppState.addEventListener('change', nextAppState => {
       if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
         console.log('App Foreground');
-        if (isStarted && isRecoding) {
-          let before = backgroundStartTimeRef.current;
-          before = Math.round(before/1000);
-          let now = new Date().getTime();
-          now = Math.round(now/1000);
-          setTotalTime(prev => prev + ((now * 1000) - (before * 1000)));
-        }
       } else {
         console.log('App Backround');
-        if (isStarted && isRecoding) {
-          backgroundStartTimeRef.current = new Date().getTime();
-        }
       }
       appState.current = nextAppState;
     });

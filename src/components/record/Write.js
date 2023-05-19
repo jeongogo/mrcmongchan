@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import useStore from "../../store/store";
-import {View, Text, TextInput, Image, StyleSheet, Alert, Pressable, useWindowDimensions} from 'react-native';
+import {View, Text, TextInput, Image, StyleSheet, Alert, BackHandler, Pressable, useWindowDimensions} from 'react-native';
 import Loader from "../../components/common/Loader";
 
 function Write({navigation, isLoading, handleSubmit}) {
@@ -35,6 +35,13 @@ function Write({navigation, isLoading, handleSubmit}) {
   useEffect(() => {
     setMinutes(Math.floor(record.totalTime/60));
     setSeconds(record.totalTime - (Math.floor(record.totalTime/60) * 60));
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {return true;}
+    );
+    return () => {
+      backHandler.remove();
+    }
   }, []);
 
   return (
@@ -50,11 +57,11 @@ function Write({navigation, isLoading, handleSubmit}) {
           <TextInput value={title} style={styles.input} onChangeText={setTitle} placeholder="달리기 제목" placeholderTextColor='#aaa' />
         </View>
         <View style={styles.wrap}>
-          <Text style={styles.text}>이동 거리</Text>
+          <Text style={styles.text}>거리</Text>
           <Text style={styles.text}>{record.distance}km</Text>
         </View>
         <View style={styles.wrap}>
-          <Text style={styles.text}>이동 시간</Text>
+          <Text style={styles.text}>시간</Text>
           <Text style={styles.text}>{minutes < 10 ? '0' + minutes : minutes}:{seconds < 10 ? '0' + seconds : seconds}</Text>
         </View>
         <View style={styles.wrap}>

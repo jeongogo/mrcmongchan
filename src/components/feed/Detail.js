@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {LineChart} from "react-native-chart-kit";
 import useStore from "../../store/store";
 import {SafeAreaView, ScrollView, View, Text, Image, StyleSheet, useWindowDimensions} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const chartConfig = {
   backgroundGradientFrom: "white",
@@ -21,10 +22,14 @@ function Detail() {
   const [seconds, setSeconds] = useState(0);
   const [paceDetail, setPaceDetail] = useState([]);
   const [altitude, setAltitude] = useState([]);
+  const [weather, setWeather] = useState('');
 
   useEffect(() => {
-    setMinutes(Math.floor(feedDetail.totalTime/60));
-    setSeconds(feedDetail.totalTime - (Math.floor(feedDetail.totalTime/60) * 60));
+    const recordMinutes = Math.floor(feedDetail.totalTime/60);
+    const recordSeconds = (feedDetail.totalTime) - (Math.floor(feedDetail.totalTime/60) * 60);
+    setMinutes(recordMinutes < 10 ? '0' + recordMinutes : recordMinutes);
+    setSeconds(recordSeconds < 10 ? '0' + recordSeconds : recordSeconds);
+
     if (feedDetail.paceDetail.length > 0) {
       const filterData = feedDetail.paceDetail.map((item, index) => {
         if (index === 0) {
@@ -53,6 +58,29 @@ function Detail() {
       currentCount.push(i);
     }
     setAltitude(currentCount);
+
+    switch (feedDetail.weather) {
+      case 'Clouds':
+        setWeather('weather-partly-cloudy');
+        break;
+      case 'Clear':
+        setWeather('weather-sunny');
+        break;
+      case 'Snow':
+        setWeather('weather-snowy-heavy');
+        break;
+      case 'Rain':
+        setWeather('weather-pouring');
+        break;
+      case 'Drizzle':
+        setWeather('weather-partly-rainy');
+        break;
+      case 'Thunderstorm':
+        setWeather('weather-lightning-rainy');
+        break;
+      default:
+        setWeather('weather-fog');
+    }
   }, []);
 
   return (
@@ -61,6 +89,7 @@ function Detail() {
         <View style={styles.titleWrap}>
           <Text style={styles.title}>{feedDetail.title}</Text>
           <Text style={styles.area}>{feedDetail.areaName}</Text>
+          <Icon name={weather} color='#666' size={20} />
         </View>
         <View style={styles.imageWrap}>
           <Image style={styles.image} width={width - 30} source={{uri: feedDetail.captureURL}} />
@@ -71,7 +100,7 @@ function Detail() {
             <Text style={styles.label}>거리</Text>
           </View>
           <View style={styles.wrap}>
-            <Text style={styles.text}>{minutes < 10 ? '0' + minutes : minutes}:{seconds < 10 ? '0' + seconds : seconds}</Text>
+            <Text style={styles.text}>{minutes}:{seconds}</Text>
             <Text style={styles.label}>시간</Text>
           </View>
           <View style={styles.wrap}>
@@ -193,7 +222,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   area: {
-
+    marginLeft: 'auto',
+    marginRight: 10,
+    fontFamily: 'Pretendard-Regular',
+    fontSize: 15,
+    color: '#666',
   },
   text: {
     fontFamily: 'Pretendard-Medium',

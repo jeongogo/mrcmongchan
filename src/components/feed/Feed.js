@@ -27,8 +27,11 @@ function Feed({ feed }) {
     hours = hours < 10 ? '0' + hours : hours;
     min = min < 10 ? '0' + min : min;
     setDate(month + '월 ' + date + '일 ' + hours + ':' + min);
-    setMinutes(Math.floor(feed.totalTime/60));
-    setSeconds((feed.totalTime) - (Math.floor(feed.totalTime/60) * 60));
+
+    const recordMinutes = Math.floor(feed.totalTime/60);
+    const recordSeconds = (feed.totalTime) - (Math.floor(feed.totalTime/60) * 60);
+    setMinutes(recordMinutes < 10 ? '0' + recordMinutes : recordMinutes);
+    setSeconds(recordSeconds < 10 ? '0' + recordSeconds : recordSeconds);
   }, []);
 
   return (

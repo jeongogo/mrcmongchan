@@ -39,7 +39,6 @@ function WelcomeScreen({route}) {
       }
       createUser(newUser)
       setUser(newUser);
-      navigation.navigate('Home');
     } catch (e) {
       console.log(e);
     } finally {

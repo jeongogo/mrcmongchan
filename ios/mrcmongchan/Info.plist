@@ -9,7 +9,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>mrcmongchan</string>
+	<string>모두의 러닝 코치</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -41,6 +41,8 @@
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict/>
+	<key>NSCameraUsageDescription</key>
+	<string>${PRODUCT_NAME} would like to use your camera</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Program requires GPS to track cars and job orders</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -49,6 +51,10 @@
 	<string>Program requires GPS to track cars and job orders</string>
 	<key>NSMotionUsageDescription</key>
 	<string>CHANGEME: Motion permission helps detect when device in in-motion</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>${PRODUCT_NAME} would like to save photos to your photo gallery</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>${PRODUCT_NAME} would like access to your photo gallery</string>
 	<key>Privacy - Location Always and When in Use Usage Description</key>
 	<string>CHANGEME: Location required in background</string>
 	<key>Privacy - Location When in Use Usage Description</key>
@@ -77,7 +83,6 @@
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>audio</string>
 		<string>fetch</string>
 		<string>location</string>
 		<string>processing</string>
@@ -96,11 +101,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>${PRODUCT_NAME} would like access to your photo gallery</string>
-	<key>NSCameraUsageDescription</key>
-	<string>${PRODUCT_NAME} would like to use your camera</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>${PRODUCT_NAME} would like to save photos to your photo gallery</string>
 </dict>
 </plist>

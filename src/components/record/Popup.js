@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, Pressable} from 'react-native';
+import {View, Text, StyleSheet, Pressable, Platform} from 'react-native';
 
 function Popup({navigation, requestBackgroundPermission}) {
   return (
@@ -10,9 +10,11 @@ function Popup({navigation, requestBackgroundPermission}) {
           <Text style={styles.permissionContentText}>
             - 모두의 러닝 코치 앱은 앱이 종료되었거나 사용 중이 아닐 때도 위치 데이터를 수집하여 러닝 추적 기능을 지원합니다.
           </Text>
-          <Text style={styles.permissionContentText}>
-            - 상세한 러닝 트래킹 정보를 추적하기 위해 백그라운드 모드 권한, 신체활동 정보 권한이 필요합니다.
-          </Text>
+          {(Platform.OS === 'android') && 
+            <Text style={styles.permissionContentText}>
+              - 상세한 러닝 트래킹 정보를 추적하기 위해 백그라운드 모드 권한, 신체활동 정보 권한이 필요합니다.
+            </Text>
+          }
         </View>
         <View style={styles.permissionBtns}>
           <Pressable style={styles.permissionBtnCancel} onPress={() => navigation.navigate('HomeStack')}>

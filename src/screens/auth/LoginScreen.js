@@ -94,9 +94,9 @@ function LoginScreen({route, navigation}) {
         <View style={styles.form}>
           <Login isSignUp={isSignUp} handleLogin={handleLogin} />
         </View>
-        <View style={styles.google}>
+        {/* <View style={styles.google}>
           <GoogleSigninButton onPress={() => onGoogleButtonPress()} style={styles.googleBtn} />
-        </View>
+        </View> */}
       </SafeAreaView>
     </KeyboardAvoidingView>
   );

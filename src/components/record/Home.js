@@ -29,8 +29,7 @@ function Home({ navigation }) {
   const [currentAltitude, setCurrentAltitude] = useState('');        // 실시간 고도
   const [altitude, setAltitude] = useState([]);                      // 기록 고도
   const [totalTime, setTotalTime] = useState(0);                     // 누적 시간
-  const [minutes, setMinutes] = useState(0);                         // 렌더링용 분
-  const [seconds, setSeconds] = useState(0);                         // 렌더링용 초
+  const [time, setTime] = useState(0);                               // 렌더링용 시간
   const [distance, setDistance] = useState(0);                       // 누적 거리
   const [realtimeDistance, setRealtimeDistance] = useState([]);      // 페이스 계산용 거리
   const [pace, setPace] = useState('00:00');                         // 페이스
@@ -156,9 +155,9 @@ function Home({ navigation }) {
         const {latitude, longitude} = location.coords;
         setCurrentAltitude(location.coords.altitude);
         if (distanceRef.current != null) {
-          const currentDistance = haversine(distanceRef.current, location.coords, {unit: 'meter'});
+          // const currentDistance = haversine(distanceRef.current, location.coords, {unit: 'meter'});
+          const currentDistance = 6;
           setDistance(prev => prev + currentDistance);
-          setRealtimeDistance(prev => [...prev, currentDistance]);
           setPath(prev => [...prev, { latitude, longitude }]);
         }
         distanceRef.current = { latitude, longitude };
@@ -169,7 +168,7 @@ function Home({ navigation }) {
           let now = new Date().getTime();
           now = Math.round(now/1000);
           setTotalTime(prev => prev + ((now * 1000) - (before * 1000)));
-          backgroundStartTimeRef.current = new Date().getTime();          
+          backgroundStartTimeRef.current = new Date().getTime();
         }
       }, (e) => {
         console.log(e);
@@ -185,30 +184,40 @@ function Home({ navigation }) {
     }
   }
 
-  /** 페이스 계산 */
   useEffect(() => {
-    if (realtimeDistance.length > 10) {      
-      const sum = realtimeDistance.reduceRight(function(accumulator, currentValue, currentIndex, arr) {
-        if (currentIndex > (arr.length - 11)) {
-          return accumulator + currentValue;
-        }
-        return accumulator;
-      }, 0);
+    // 실시간 거리/시간 누적
+    if (realtimeDistance.length < 10) {
+      setRealtimeDistance(prev => [...prev, {
+        time: totalTime,
+        distance,
+      }]);
+    } else {
+      const filterRealtimeDistance = realtimeDistance.filter((item, index) => index !== 0);
+      setRealtimeDistance(prev => [...filterRealtimeDistance, {
+        time: totalTime,
+        distance,
+      }]);
+    }
 
-      const time = (1000/sum) * 20;
+    // 실시간 페이스 계산
+    if (realtimeDistance.length >= 3) {
+      const sumDistance = realtimeDistance[realtimeDistance.length - 1].distance - realtimeDistance[0].distance;
+      const calcTime = realtimeDistance[realtimeDistance.length - 1].time - realtimeDistance[0].time;
+      const time = (1000/sumDistance) * (calcTime/1000);
       const m = (Math.floor(time / 60)).toFixed(0);
       const s = (time - m * 60).toFixed(0);
       const minutes = m < 10 ? '0' + m : m;
       const seconds = s < 10 ? '0' + s : s;
-
       setPace(minutes + ':' + seconds);
     }
 
+    // 1km마다 페이스 기록
     if (distance > paceRef.current * 1000) {
       paceRef.current++;
       setPaceDetail(prev => [...prev, totalTime/1000]);
     }
 
+    // 100m마다 고도 기록
     if (distance > altitudeRef.current * 100) {
       altitudeRef.current++;
       setAltitude(prev => [...prev, currentAltitude]);
@@ -217,8 +226,13 @@ function Home({ navigation }) {
 
   /** 누적 분:초 */
   useEffect(() => {
-    setMinutes(Math.floor(totalTime/1000/60));
-    setSeconds(((totalTime/1000) - (Math.floor(totalTime/1000/60) * 60)).toFixed(0));
+    let recordHours = Math.floor(totalTime/1000/60/60);
+    let recordMinutes = Math.floor(totalTime/1000/60) - (recordHours * 60);
+    let recordSeconds = Math.floor((totalTime/1000) - (Math.floor(totalTime/1000/60) * 60));
+    recordHours = recordHours < 1 ? '' : recordHours + ':';
+    recordMinutes = recordMinutes < 10 ? '0' + recordMinutes : recordMinutes;
+    recordSeconds = recordSeconds < 10 ? '0' + recordSeconds : recordSeconds;
+    setTime(recordHours + recordMinutes + ':' + recordSeconds);
   }, [totalTime]);
 
   /** 시작하기 */
@@ -418,8 +432,7 @@ function Home({ navigation }) {
           <Record
             isRecoding={isRecoding}
             distance={distance}
-            minutes={minutes}
-            seconds={seconds}
+            time={time}
             pace={pace}
             onPause={onPause}
             onStart={onStart}

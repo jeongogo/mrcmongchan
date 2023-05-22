@@ -18,17 +18,19 @@ const chartConfig = {
 function Detail() {
   const width = useWindowDimensions().width;
   const feedDetail = useStore((state) => state.feedDetail);
-  const [minutes, setMinutes] = useState(0);
-  const [seconds, setSeconds] = useState(0);
+  const [time, setTime] = useState('');
   const [paceDetail, setPaceDetail] = useState([]);
   const [altitude, setAltitude] = useState([]);
   const [weather, setWeather] = useState('');
 
   useEffect(() => {
-    const recordMinutes = Math.floor(feedDetail.totalTime/60);
-    const recordSeconds = (feedDetail.totalTime) - (Math.floor(feedDetail.totalTime/60) * 60);
-    setMinutes(recordMinutes < 10 ? '0' + recordMinutes : recordMinutes);
-    setSeconds(recordSeconds < 10 ? '0' + recordSeconds : recordSeconds);
+    let recordHours = Math.floor(feedDetail.totalTime/60/60);
+    let recordMinutes = Math.floor(feedDetail.totalTime/60) - (recordHours * 60);
+    let recordSeconds = (feedDetail.totalTime) - (Math.floor(feedDetail.totalTime/60) * 60);
+    recordHours = recordHours < 1 ? '' : recordHours + ':';
+    recordMinutes = recordMinutes < 10 ? '0' + recordMinutes : recordMinutes;
+    recordSeconds = recordSeconds < 10 ? '0' + recordSeconds : recordSeconds;
+    setTime(recordHours + recordMinutes + ':' + recordSeconds);
 
     if (feedDetail.paceDetail.length > 0) {
       const filterData = feedDetail.paceDetail.map((item, index) => {
@@ -100,7 +102,7 @@ function Detail() {
             <Text style={styles.label}>거리</Text>
           </View>
           <View style={styles.wrap}>
-            <Text style={styles.text}>{minutes}:{seconds}</Text>
+            <Text style={styles.text}>{time}</Text>
             <Text style={styles.label}>시간</Text>
           </View>
           <View style={styles.wrap}>

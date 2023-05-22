@@ -8,9 +8,8 @@ function Feed({ feed }) {
   const navigation = useNavigation();
   const user = useStore((state) => state.user);
   const setFeedDetail = useStore((state) => state.setFeedDetail);
-  const [minutes, setMinutes] = useState(0);
-  const [seconds, setSeconds] = useState(0);
   const [date, setDate] = useState('');
+  const [time, setTime] = useState('');
 
   const onDetail = (id) => {
     setFeedDetail(feed);
@@ -19,7 +18,6 @@ function Feed({ feed }) {
 
   useEffect(() => {
     const current = new Date(feed.date.toDate());
-    const year = current.getFullYear();
     const month = current.getMonth() + 1;
     const date = current.getDate();
     let hours = current.getHours();
@@ -28,10 +26,13 @@ function Feed({ feed }) {
     min = min < 10 ? '0' + min : min;
     setDate(month + '월 ' + date + '일 ' + hours + ':' + min);
 
-    const recordMinutes = Math.floor(feed.totalTime/60);
-    const recordSeconds = (feed.totalTime) - (Math.floor(feed.totalTime/60) * 60);
-    setMinutes(recordMinutes < 10 ? '0' + recordMinutes : recordMinutes);
-    setSeconds(recordSeconds < 10 ? '0' + recordSeconds : recordSeconds);
+    let recordHours = Math.floor(feed.totalTime/60/60);
+    let recordMinutes = Math.floor(feed.totalTime/60) - (recordHours * 60);
+    let recordSeconds = (feed.totalTime) - (Math.floor(feed.totalTime/60) * 60);
+    recordHours = recordHours < 1 ? '' : recordHours + ':';
+    recordMinutes = recordMinutes < 10 ? '0' + recordMinutes : recordMinutes;
+    recordSeconds = recordSeconds < 10 ? '0' + recordSeconds : recordSeconds;
+    setTime(recordHours + recordMinutes + ':' + recordSeconds);
   }, []);
 
   return (
@@ -58,7 +59,7 @@ function Feed({ feed }) {
         <View style={styles.wrap}>
           <Text style={styles.text}>{feed.distance}km</Text>
           <Text style={styles.bar}></Text>
-          <Text style={styles.text}>{minutes}:{seconds}</Text>
+          <Text style={styles.text}>{time}</Text>
           <Text style={styles.bar}></Text>
           <Text style={styles.text}>{feed.pace}</Text>
         </View>

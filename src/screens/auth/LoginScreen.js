@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { GoogleSignin, GoogleSigninButton } from '@react-native-google-signin/google-signin';
+import { AppleButton, appleAuth } from '@invertase/react-native-apple-authentication';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import auth from '@react-native-firebase/auth';
 import crashlytics from '@react-native-firebase/crashlytics';
@@ -81,6 +82,26 @@ function LoginScreen({route, navigation}) {
     }
   }
 
+  const onAppleButtonPress = async () => {
+    // Start the sign-in request
+    const appleAuthRequestResponse = await appleAuth.performRequest({
+      requestedOperation: appleAuth.Operation.LOGIN,
+      requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+    });
+  
+    // Ensure Apple returned a user identityToken
+    if (!appleAuthRequestResponse.identityToken) {
+      throw 'Apple Sign-In failed - no identify token returned';
+    }
+  
+    // Create a Firebase credential from the response
+    const { identityToken, nonce } = appleAuthRequestResponse;
+    const appleCredential = auth.AppleAuthProvider.credential(identityToken, nonce);
+  
+    // Sign the user in with the credential
+    return auth().signInWithCredential(appleCredential);
+  }
+
   useEffect(() => {
     googleSigninConfigure();
   }, []);
@@ -94,9 +115,20 @@ function LoginScreen({route, navigation}) {
         <View style={styles.form}>
           <Login isSignUp={isSignUp} handleLogin={handleLogin} />
         </View>
-        {/* <View style={styles.google}>
+        <View style={styles.google}>
           <GoogleSigninButton onPress={() => onGoogleButtonPress()} style={styles.googleBtn} />
-        </View> */}
+        </View>
+        <View style={styles.apple}>
+          <AppleButton
+            buttonStyle={AppleButton.Style.WHITE}
+            buttonType={AppleButton.Type.SIGN_IN}
+            style={{
+              width: '100%',
+              height: 45,
+            }}
+            onPress={() => onAppleButtonPress().then(() => console.log('Apple sign-in complete!'))}
+          />
+        </View>
       </SafeAreaView>
     </KeyboardAvoidingView>
   );
@@ -116,6 +148,9 @@ const styles = StyleSheet.create({
   googleBtn: {
     width: '100%',
   },
+  apple: {
+    marginTop: 15,
+  }
 });
 
 export default LoginScreen;

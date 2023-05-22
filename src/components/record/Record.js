@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, Pressable, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-function Record({isRecoding, distance, minutes, seconds, pace, onStart, onPause, onComplete}) {
+function Record({isRecoding, distance, time, pace, onStart, onPause, onComplete}) {
   return (
     <View style={styles.record_wrap}>
       <View style={styles.record_el}>
@@ -10,7 +10,7 @@ function Record({isRecoding, distance, minutes, seconds, pace, onStart, onPause,
         <Text style={styles.record_title}>거리</Text>
       </View>
       <View style={styles.record_el}>
-        <Text style={styles.record_current}>{minutes < 10 ? '0' + minutes : minutes}:{seconds < 10 ? '0' + seconds : seconds}</Text>
+        <Text style={styles.record_current}>{time}</Text>
         <Text style={styles.record_title}>시간</Text>
       </View>
       <View style={styles.record_el}>

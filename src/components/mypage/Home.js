@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   btnText: {
-    marginRight: 10,
+    marginRight: 20,
     fontSize: 16,
     color: '#666',
     textDecorationLine: 'underline',

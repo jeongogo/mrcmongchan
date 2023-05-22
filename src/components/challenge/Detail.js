@@ -75,8 +75,8 @@ function Challenge({
       </View>
       <View style={styles.entry}>
         {(challenge.entry?.length > 0) && 
-          challenge.entry.map((i) => (
-            <Entry key={i.uid} entry={i} />
+          challenge.entry.map((entry, index) => (
+            <Entry key={entry.uid} entry={entry} index={index} />
         ))}
       </View>
       <View style={styles.btnWrap}>

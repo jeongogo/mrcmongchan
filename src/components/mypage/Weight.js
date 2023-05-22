@@ -91,15 +91,23 @@ function Weight() {
   }, []);
 
   useEffect(() => {
-    const list = [...user.weightList];
+    let list = [...user.weightList];
+    list = list.filter((item, index) => {
+      const count = list.length - index;
+      if (count < 11) {
+        return item;
+      }
+    });
     setRenderList(list.reverse());
 
-    const d = user.weightList.map((i) => {
+    let reverseList = [...list];
+    reverseList = reverseList.reverse();
+    const d = reverseList.map((i) => {
       const date = new Date(i.date.toDate());
       return date.getMonth() + 1 + '.' + date.getDate();
     });
     setDateData(d);
-    const w = user.weightList.map((i) => {
+    const w = reverseList.map((i) => {
       return +i.weight;
     });
     setWeightData(w);
@@ -130,12 +138,17 @@ function Weight() {
                   ],
                 }
               }
-              width={screenWidth-60}
+              width={screenWidth-40}
               height={220}
               chartConfig={chartConfig}
             />
           }
         </View>
+        {showAddBtn &&
+          <Pressable style={styles.addBtn} onPress={onWrite}>
+            <Text style={styles.addBtnText}>오늘 체중 입력하기</Text>
+          </Pressable>
+        }
         <CustomWrap>
           {renderList.map((item, index) => (
             <View key={index} style={styles.itemWrap}>
@@ -147,11 +160,6 @@ function Weight() {
             </View>
           ))}
         </CustomWrap>
-        {showAddBtn &&
-          <Pressable style={styles.addBtn} onPress={onWrite}>
-            <Text style={styles.addBtnText}>오늘 체중 입력하기</Text>
-          </Pressable>
-        }
       </ScrollView>
       {showEditForm &&
         <View style={styles.editForm}>
@@ -207,6 +215,7 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
   },
   addBtn: {
+    marginBottom: 10,
     width: '100%',
     paddingVertical: 17,
     backgroundColor: '#30A9DE',
@@ -214,8 +223,7 @@ const styles = StyleSheet.create({
   },
   addBtnText: {
     fontFamily: 'Pretendard-Medium',
-    fontSize: 15,
-    fontWeight: 500,
+    fontSize: 18,
     textAlign: 'center',
     color: '#fff',
   },

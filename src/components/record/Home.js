@@ -107,7 +107,8 @@ function Home({ navigation }) {
   /** 백그라운드 서비스 권한 */
   const requestBackgroundPermission = () => {
     BackgroundGeolocation.ready({
-      locationAuthorizationRequest: Platform.OS === 'android' ? 'Always' : 'WhenInUse',
+      // locationAuthorizationRequest: Platform.OS === 'android' ? 'Always' : 'WhenInUse',
+      locationAuthorizationRequest: 'Always',
       backgroundPermissionRationale: {
         title: "위치 권한 사용 설정 안내",
         message: "러닝 추적을 위해 위치 서비스에서 '항상 허용'을 사용하도록 설정해야 합니다.",
@@ -120,8 +121,8 @@ function Home({ navigation }) {
         cancelButton: "취소",
         settingsButton: "'항상 허용' 설정"
       },
-      disableMotionActivityUpdates: (Platform.OS === 'android') ? false : true,
-      disableLocationAuthorizationAlert: (Platform.OS === 'android') ? false : true,
+      // disableMotionActivityUpdates: (Platform.OS === 'android') ? false : true,
+      // disableLocationAuthorizationAlert: (Platform.OS === 'android') ? false : true,
       notification: {
         title: "모두의 러닝 코치",
         text: "앱이 실행중입니다."

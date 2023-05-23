@@ -3,7 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 import auth from "@react-native-firebase/auth";
 import firestore from '@react-native-firebase/firestore';
 import { signOut } from '../../lib/auth';
-import {StyleSheet, SafeAreaView, ScrollView, StatusBar, Image, View, Text, Pressable, Alert, TextInput} from 'react-native';
+import {StyleSheet, SafeAreaView, ScrollView, Image, View, Text, Pressable, Alert, TextInput, Vibration} from 'react-native';
 import useStore from "../../store/store";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 

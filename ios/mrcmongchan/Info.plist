@@ -45,8 +45,8 @@
 	<string>${PRODUCT_NAME} would like to use your camera</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>정확한 러닝 트래킹을 위해 위치 정보 권한이 필요합니다.</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>정확한 러닝 트래킹을 위해 위치 정보 권한이 필요합니다.</string>
+	<!-- <key>NSLocationAlwaysUsageDescription</key>
+	<string>정확한 러닝 트래킹을 위해 위치 정보 권한이 필요합니다.</string> -->
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>정확한 러닝 트래킹을 위해 위치 정보 권한이 필요합니다.</string>
 	<key>NSMotionUsageDescription</key>

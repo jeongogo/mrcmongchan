@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import {LineChart} from "react-native-chart-kit";
 import useStore from "../../store/store";
-import {SafeAreaView, ScrollView, View, Text, Image, StyleSheet, useWindowDimensions} from 'react-native';
+import {
+  SafeAreaView,
+  ScrollView,
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  useWindowDimensions,
+  ActivityIndicator
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const chartConfig = {
@@ -18,6 +27,7 @@ const chartConfig = {
 function Detail() {
   const width = useWindowDimensions().width;
   const feedDetail = useStore((state) => state.feedDetail);
+  const [isImageLoading, setIsImageLoading] = useState(false);
   const [time, setTime] = useState('');
   const [paceDetail, setPaceDetail] = useState([]);
   const [altitude, setAltitude] = useState([]);
@@ -94,7 +104,18 @@ function Detail() {
           <Icon name={weather} color='#666' size={20} />
         </View>
         <View style={styles.imageWrap}>
-          <Image style={styles.image} width={width - 30} source={{uri: feedDetail.captureURL}} />
+          <Image
+            style={styles.image}
+            source={{uri: feedDetail.captureURL}}
+            width={width - 30}
+            onLoadStart={() => setIsImageLoading(true)}
+            onLoadEnd={() => setIsImageLoading(false)}
+          />
+          {isImageLoading && (
+            <View style={styles.loaderWrap}>
+              <ActivityIndicator size='large' color="#E53A40" />
+            </View>
+          )}
         </View>
         <View style={styles.infoWrap}>
           <View style={styles.wrap}>
@@ -183,10 +204,24 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   imageWrap: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignContent: 'center',
     paddingHorizontal: 15,
   },
   image: {
     aspectRatio: 1,
+  },
+  loaderWrap: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 2,
   },
   infoWrap: {
     paddingVertical: 10,

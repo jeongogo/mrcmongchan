@@ -58,7 +58,7 @@ function Profile() {
         photoURL,
       }
   
-      await updateUser(user.uid, {data});
+      await updateUser(user.uid, data);
       setUser({...user, ...data});
 
       navigation.navigate('MypageHome');

@@ -9,6 +9,7 @@ import {
   Alert,
   AppState,
   Pressable,
+  Vibration,
 } from 'react-native';
 import BackgroundGeolocation from "react-native-background-geolocation";
 import Geolocation from 'react-native-geolocation-service';
@@ -223,6 +224,7 @@ function Home({ navigation }) {
 
     // 1km마다 페이스 기록
     if (distance > paceRef.current * 1000) {
+      Vibration.vibrate();
       paceRef.current++;
       setPaceDetail(prev => [...prev, totalTime/1000]);
     }

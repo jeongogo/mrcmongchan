@@ -29,6 +29,7 @@ function DetailScreen({route, navigation}) {
       const newEntry = {
         uid: user.uid,
         name: user.name,
+        photoURL: user.photoURL,
         distance: 0,
       }
 

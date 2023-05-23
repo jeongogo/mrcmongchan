@@ -1,14 +1,16 @@
-import React, {useEffect} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React from 'react';
+import {View, Text, Image, StyleSheet} from 'react-native';
 
 function Challenge({ index, entry }) {
-  useEffect(() => {
-    // 거리 정렬 후 렌더링
-  }, []);
-
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{index+1}. {entry.name}</Text>
+      <View style={styles.avatar}>
+        <Image
+          style={styles.circle}
+          source={entry.photoURL ? {uri: entry.photoURL} : require('../../assets/images/user.png')}
+        />
+      </View>
+      <Text style={styles.name}>{entry.name}</Text>
       <Text style={styles.text}>{entry.distance}km</Text>
     </View>
   )
@@ -22,7 +24,19 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 7,
   },
-  label: {
+  avatar: {
+    marginRight: 10,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    overflow: 'hidden',
+  },
+  circle: {
+    width: 30,
+    height: 30,
+  },
+  name: {
+    marginRight: 'auto',
     fontFamily: 'Pretendard-Medium',
     fontSize: 15,
     fontWeight: 500,

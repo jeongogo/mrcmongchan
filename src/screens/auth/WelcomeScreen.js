@@ -21,6 +21,7 @@ function WelcomeScreen({route}) {
       const newUser = {
         uid,
         name,
+        photoURL: '',
         weight,
         weightList: [{
           weight,

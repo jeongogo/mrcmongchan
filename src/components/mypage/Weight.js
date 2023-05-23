@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     width: '100%',
     paddingVertical: 17,
-    backgroundColor: '#30A9DE',
+    backgroundColor: '#E53A40',
     borderRadius: 10,
   },
   addBtnText: {
@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: 15,
     paddingVertical: 17,
-    backgroundColor: '#30A9DE',
+    backgroundColor: '#E53A40',
     borderRadius: 10,
   },
   confirmText: {

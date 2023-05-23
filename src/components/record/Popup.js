@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
     color: '#454545',
   },
   permissionBtns: {
+    marginTop: 5,
     display: 'flex',
     flexDirection: 'row',
   },

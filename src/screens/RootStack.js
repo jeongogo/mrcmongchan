@@ -9,6 +9,7 @@ import FindPasswordScreen from './auth/FindPasswordScreen';
 import WelcomeScreen from './auth/WelcomeScreen';
 import RecordHomeScreen from "./record/HomeScreen";
 import RecordWriteScreen from "./record/WriteScreen";
+import ProfileScreen from "./mypage/ProfileScreen";
 import WeightScreen from "./mypage/WeightScreen";
 import PaceScreen from "./mypage/PaceScreen";
 
@@ -58,6 +59,13 @@ function RootStack() {
               options={{
                 headerShown: false,
               }}
+            />
+            <Stack.Screen
+              name='Profile'
+              options={() => ({
+                title: '프로필 수정',
+              })}
+              component={ProfileScreen}
             />
             <Stack.Screen
               name='WeightManage'

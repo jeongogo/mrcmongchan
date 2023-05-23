@@ -3,7 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 import auth from "@react-native-firebase/auth";
 import firestore from '@react-native-firebase/firestore';
 import { signOut } from '../../lib/auth';
-import {StyleSheet, SafeAreaView, ScrollView, StatusBar, View, Text, Pressable, Alert, TextInput} from 'react-native';
+import {StyleSheet, SafeAreaView, ScrollView, StatusBar, Image, View, Text, Pressable, Alert, TextInput} from 'react-native';
 import useStore from "../../store/store";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -50,8 +50,19 @@ function Home() {
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <View style={styles.wrap}>
-          <Text style={styles.title}>프로필</Text>
-          <Text style={styles.name}>{user.name}</Text>
+          <Pressable onPress={() => navigation.navigate('Profile')}>
+            <Text style={styles.title}>프로필</Text>
+            <View style={styles.profile}>
+              <View style={styles.avatar}>
+                <Image
+                  style={styles.circle}
+                  source={user.photoURL ? {uri: user.photoURL} : require('../../assets/images/user.png')}
+                />
+              </View>
+              <Text style={styles.name}>{user.name}</Text>
+              <Icon name='chevron-right' color='#222' size={24} />
+            </View>
+          </Pressable>
         </View>
         <View style={styles.hr}></View>
         <View style={styles.menuWrap}>
@@ -105,6 +116,37 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  profile: {
+    marginTop: 5,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  avatar: {
+    marginRight: 10,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    overflow: 'hidden',
+  },
+  circle: {
+    width: 50,
+    height: 50,
+  },
+  title: {
+    marginBottom: 10,
+    fontFamily: 'Pretendard-Medium',
+    fontSize: 20,
+    fontWeight: 500,
+    color: '#222',
+  },
+  name: {
+    marginRight: 'auto',
+    fontFamily: 'Pretendard-Regular',
+    fontSize: 16,
+    color: '#222',
   },
   form: {
     position: 'absolute',
@@ -182,18 +224,6 @@ const styles = StyleSheet.create({
     borderTopColor: '#ededed',
     borderBottomWidth: 10,
     borderBottomColor: '#f3f3f3',
-  },
-  title: {
-    marginBottom: 10,
-    fontFamily: 'Pretendard-Medium',
-    fontSize: 20,
-    fontWeight: 500,
-    color: '#222',
-  },
-  name: {
-    fontFamily: 'Pretendard-Regular',
-    fontSize: 18,
-    color: '#222',
   },
   menuWrap: {
     paddingVertical: 5,

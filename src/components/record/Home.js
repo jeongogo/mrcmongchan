@@ -1,5 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {Platform, PermissionsAndroid, View, Text, StyleSheet, BackHandler, Alert, AppState, Pressable} from 'react-native';
+import {
+  Platform,
+  PermissionsAndroid,
+  View,
+  Text,
+  StyleSheet,
+  BackHandler,
+  Alert,
+  AppState,
+  Pressable,
+} from 'react-native';
 import BackgroundGeolocation from "react-native-background-geolocation";
 import Geolocation from 'react-native-geolocation-service';
 import haversine from 'haversine';
@@ -156,8 +166,7 @@ function Home({ navigation }) {
         const {latitude, longitude} = location.coords;
         setCurrentAltitude(location.coords.altitude);
         if (distanceRef.current != null) {
-          // const currentDistance = haversine(distanceRef.current, location.coords, {unit: 'meter'});
-          const currentDistance = 6;
+          const currentDistance = haversine(distanceRef.current, location.coords, {unit: 'meter'});
           setDistance(prev => prev + currentDistance);
           setPath(prev => [...prev, { latitude, longitude }]);
         }
@@ -194,7 +203,7 @@ function Home({ navigation }) {
       }]);
     } else {
       const filterRealtimeDistance = realtimeDistance.filter((item, index) => index !== 0);
-      setRealtimeDistance(prev => [...filterRealtimeDistance, {
+      setRealtimeDistance([...filterRealtimeDistance, {
         time: totalTime,
         distance,
       }]);
@@ -440,7 +449,7 @@ function Home({ navigation }) {
             onComplete={onComplete}
           />
         :
-          <Pressable style={styles.start} activeOpacity={0.5} onPress={onStart}>
+          <Pressable style={styles.start} onPress={onStart}>
             <Text style={styles.startText}>시작</Text>
           </Pressable>
       }
@@ -457,35 +466,6 @@ const styles = StyleSheet.create({
     top: 10,
     right: 10,
   },
-  mission: {
-    position: 'absolute',
-    bottom: 180,
-    left: '50%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignContent: 'center',
-    width: 300,
-    paddingHorizontal: 10,
-    paddingVertical: 20,
-    backgroundColor: 'rgba(255,255,255,0.9)',
-    borderRadius: 10,
-    transform: [{ translateX: -150 }],
-    zIndex: 9,
-  },
-  missionTitle: {
-    fontFamily: 'Pretendard-Medium',
-    fontSize: 16,
-    fontWeight: 500,
-    color: '#000',
-    textAlign: 'center',
-  },
-  missionContent: {
-    marginTop: 10,
-    fontFamily: 'Pretendard-Regular',
-    fontSize: 15,
-    color: '#333',
-    textAlign: 'center',
-  },
   start: {
     position: 'absolute',
     bottom: 55,
@@ -495,7 +475,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     width: 110,
     height: 110,
-    backgroundColor: '#000',
+    backgroundColor: '#222',
     transform: [{ translateX: -55 }],
     borderRadius: 55,
     zIndex: 10,

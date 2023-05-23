@@ -21,9 +21,9 @@ function WriteScreen({navigation}) {
     setIsLoading(true);
     try {
       const filename = 'record' + new Date().getTime() + (Math.random()*1000).toFixed(0);
-      const reference = storage().ref(filename);
+      const reference = storage().ref(`/record/${filename}`);
       await reference.putFile(captureURL);
-      const url = await storage().ref(filename).getDownloadURL();
+      const url = await reference.getDownloadURL();
 
       const recordData = {
         ...record,

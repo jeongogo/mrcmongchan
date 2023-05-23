@@ -13,6 +13,7 @@ function Challenge({
   const user = useStore((state) => state.user);
   const [totalDistance, setTotalDistance] = useState(0);
   const [goalCurrent, setGoalCurrent] = useState(0);
+  const [entryList, setEntryList] = useState([]);
 
   /** 참가 취소 Alert */
   const onLeave = () => {
@@ -52,6 +53,12 @@ function Challenge({
     }, 0);
     setTotalDistance(total);
     setGoalCurrent((total/challenge.goal)*100);
+
+    const entry = [...challenge.entry];
+    entry.sort((a, b) => {
+      return b.distance - a.distance;
+    });
+    setEntryList(entry);
   }, []);
 
   return (
@@ -74,8 +81,8 @@ function Challenge({
         <View></View>
       </View>
       <View style={styles.entry}>
-        {(challenge.entry?.length > 0) && 
-          challenge.entry.map((entry, index) => (
+        {entryList && 
+          entryList.map((entry, index) => (
             <Entry key={entry.uid} entry={entry} index={index} />
         ))}
       </View>
@@ -181,21 +188,20 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   btnWrap: {
-    marginTop: 10,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
   },
   btn: {
     paddingVertical: 15,
-    paddingHorizontal: 30,
-    marginHorizontal: 5,
+    marginHorizontal: 10,
     fontFamily: 'Pretendard-Regular',
     fontSize: 16,
     textAlign: 'center',
     borderRadius: 5,
   },
   submit: {
+    paddingHorizontal: 30,
     color: '#fff',
     backgroundColor: '#E53A40',
   },
@@ -204,8 +210,8 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   entry: {
-    paddingVertical: 30,
-    paddingHorizontal: 30,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
   },
 });
 

@@ -168,6 +168,7 @@ function Home({ navigation }) {
     try {
       backgroundRef.current = BackgroundGeolocation.watchPosition((location) => {
         const {latitude, longitude} = location.coords;
+        console.log(latitude, longitude);
         setCurrentAltitude(location.coords.altitude);
         if (distanceRef.current != null) {
           const currentDistance = haversine(distanceRef.current, location.coords, {unit: 'meter'});

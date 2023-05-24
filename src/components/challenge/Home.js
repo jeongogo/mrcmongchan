@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   create: {
     width: '100%',
     paddingVertical: 17,
-    backgroundColor: '#E53A40',
+    backgroundColor: '#30A9DE',
     borderRadius: 10,
   },
   createText: {

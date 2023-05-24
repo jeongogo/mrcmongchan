@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import { useNavigation } from '@react-navigation/native';
 import storage from '@react-native-firebase/storage';
-import useStore from '../../store/store';
 import { launchImageLibrary } from 'react-native-image-picker';
+import useStore from '../../store/store';
 import { updateUser } from '../../lib/user';
 import { StyleSheet, Text, View, Pressable, Image, ActivityIndicator, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';

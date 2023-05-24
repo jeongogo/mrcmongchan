@@ -132,7 +132,7 @@ function Home({
                   <Text style={styles.label}>{item.title}</Text>
                   <Text style={styles.location}>{item.location}</Text>
                 </View>
-                <Text style={[styles.text, styles.date]}>{format(new Date(item.date.toDate()), 'yyyy.MM.dd')}</Text>
+                <Text style={[styles.text, styles.date]}>{format(new Date(item.date.toDate()), 'yy.MM.dd')}</Text>
               </Pressable>
             ))}
           </CustomWrap>

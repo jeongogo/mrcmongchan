@@ -104,13 +104,24 @@ function Detail() {
           {weather && <Icon name={weather} color='#666' size={20} />}
         </View>
         <View style={styles.imageWrap}>
-          <Image
-            style={styles.image}
-            source={{uri: feedDetail.captureURL}}
-            width={width - 30}
-            onLoadStart={() => setIsImageLoading(true)}
-            onLoadEnd={() => setIsImageLoading(false)}
-          />
+          {feedDetail.photoURL
+            ?
+              <Image
+                style={styles.image}
+                source={{uri: feedDetail.photoURL}}
+                width={width - 30}
+                onLoadStart={() => setIsImageLoading(true)}
+                onLoadEnd={() => setIsImageLoading(false)}
+              />
+            :
+              <Image
+                style={styles.image}
+                source={{uri: feedDetail.captureURL}}
+                width={width - 30}
+                onLoadStart={() => setIsImageLoading(true)}
+                onLoadEnd={() => setIsImageLoading(false)}
+              />
+          }
           {isImageLoading && (
             <View style={styles.loaderWrap}>
               <ActivityIndicator size='large' color="#E53A40" />

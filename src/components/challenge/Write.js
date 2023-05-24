@@ -1,7 +1,10 @@
 import React, {useState} from 'react';
+import storage from '@react-native-firebase/storage';
+import { launchImageLibrary } from 'react-native-image-picker';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import useStore from "../../store/store";
-import {View, Text, Pressable, TextInput, StyleSheet, Keyboard} from 'react-native';
+import {SafeAreaView, ScrollView, View, Text, Pressable, TextInput, StyleSheet, Keyboard, Image} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 function Write({ challengeMutation }) {
   const [title, setTitle] = useState('');
@@ -10,6 +13,7 @@ function Write({ challengeMutation }) {
   const [endDate, setEndDate] = useState('');
   const [visibleStartPic, setVisibleStartPic] = useState(false);
   const [visibleEndPic, setVisibleEndPic] = useState(false);
+  const [response, setResponse] = useState(null);
   const user = useStore((state) => state.user);
 
   const showStartPicker = () => {
@@ -42,79 +46,136 @@ function Write({ challengeMutation }) {
     hideEndPicker();
   };
 
-  const onSubmit = () => {
-    if (title === '' || startDate === '' || endDate === '') {
-      return;
-    }
+  const onSelectImage = () => {
+    launchImageLibrary(
+      {
+        mediaType: 'photo',
+        maxWidth: 512,
+        maxHeight: 512,
+        includeBase64: Platform.OS === 'android',
+      },
+      (res) => {
+        if (res.didCancel) {
+          return;
+        }
+        setResponse(res);
+      },
+    );
+  };
 
-    const challenge = {
-      title,
-      creator: user.uid,
-      goal,
-      startDate: new Date(startDate),
-      endDate: new Date(endDate),
-      entry: [],
-    };
-    challengeMutation.mutate(challenge);
+  const onSubmit = async () => {
+    try {
+      if (title === '' || startDate === '' || endDate === '') {
+        return;
+      }
+
+      let photoURL = '';
+  
+      if (response) {
+        const asset = response.assets[0];
+        const extension = asset.fileName.split('.').pop();
+        const reference = storage().ref(`/challenge/${new Date().getTime()}.${extension}`);
+  
+        if (Platform.OS === 'android') {
+          await reference.putString(asset.base64, 'base64', {
+            contentType: asset.type,
+          });
+        } else {
+          await reference.putFile(asset.uri);
+        }
+  
+        photoURL = response ? await reference.getDownloadURL() : null;
+      }
+
+      const challenge = {
+        title,
+        creator: user.uid,
+        goal,
+        startDate: new Date(startDate),
+        endDate: new Date(endDate),
+        entry: [],
+        photoURL,
+      };
+      challengeMutation.mutate(challenge);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.wrap}>
-        <Text style={styles.title}>챌린지명</Text>
-        <TextInput value={title} style={styles.input} onChangeText={setTitle} />
-      </View>
-      <View style={styles.wrap}>
-        <Text style={styles.title}>목표 거리</Text>
-        <TextInput value={goal} style={styles.input} onChangeText={setGoal} placeholder="km" placeholderTextColor='#aaa' />
-      </View>
-      <View style={styles.wrap}>
-        <Text style={styles.title}>기간</Text>
-        <View style={styles.dateWrap}>
-          <Pressable style={styles.grow} onPress={showStartPicker}>
-            <View style={styles.input}>
-              <Text style={styles.text}>{startDate ? startDate : '시작'}</Text>
-            </View>
-          </Pressable>
-          <Text style={styles.text}> ~ </Text>
-          <Pressable style={styles.grow} onPress={showEndPicker}>
-            <View style={styles.input}>
-              <Text style={styles.text}>{endDate ? endDate : '종료'}</Text>
-            </View>
-          </Pressable>
-          <DateTimePickerModal
-            isVisible={visibleStartPic}
-            mode="date"
-            onConfirm={onStartDate}
-            onCancel={hideStartPicker}
-          />
-          <DateTimePickerModal
-            isVisible={visibleEndPic}
-            mode="date"
-            onConfirm={onEndDate}
-            onCancel={hideEndPicker}
-          />
+    <SafeAreaView style={styles.container}>
+      <ScrollView>
+        <View style={styles.wrap}>
+          <Text style={styles.title}>챌린지명</Text>
+          <TextInput value={title} style={styles.input} onChangeText={setTitle} />
         </View>
-      </View>
-      <View style={styles.btnWrap}>
-        <Pressable style={styles.btn} onPress={onSubmit}>
-          <Text style={styles.btnText}>만들기</Text>
-        </Pressable>
-      </View>
-    </View>
+        <View style={styles.wrap}>
+          <Text style={styles.title}>목표 거리</Text>
+          <TextInput value={goal} style={styles.input} onChangeText={setGoal} placeholder="km" placeholderTextColor='#aaa' />
+        </View>
+        <View style={styles.wrap}>
+          <Text style={styles.title}>기간</Text>
+          <View style={styles.dateWrap}>
+            <Pressable style={styles.grow} onPress={showStartPicker}>
+              <View style={styles.input}>
+                <Text style={styles.text}>{startDate ? startDate : '시작'}</Text>
+              </View>
+            </Pressable>
+            <Text style={styles.text}> ~ </Text>
+            <Pressable style={styles.grow} onPress={showEndPicker}>
+              <View style={styles.input}>
+                <Text style={styles.text}>{endDate ? endDate : '종료'}</Text>
+              </View>
+            </Pressable>
+            <DateTimePickerModal
+              isVisible={visibleStartPic}
+              mode="date"
+              onConfirm={onStartDate}
+              onCancel={hideStartPicker}
+            />
+            <DateTimePickerModal
+              isVisible={visibleEndPic}
+              mode="date"
+              onConfirm={onEndDate}
+              onCancel={hideEndPicker}
+            />
+          </View>
+        </View>
+        <View style={[styles.wrap, styles.imageWrap]}>
+          <Text style={styles.title}>포스터</Text>
+          {response
+            ?
+              <Image
+                style={styles.image}
+                source={{uri: response?.assets[0]?.uri}}
+              />
+            :
+              <Pressable onPress={onSelectImage} style={styles.imagePick}>
+                <Icon name='camera-plus-outline' color='#999' size={32} />
+              </Pressable>
+          }
+        </View>
+        <View style={styles.btnWrap}>
+          <Pressable style={styles.btn} onPress={onSubmit}>
+            <Text style={styles.btnText}>만들기</Text>
+          </Pressable>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   )
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 15,
+    paddingHorizontal: 15,
     backgroundColor: '#fff',
   },
   wrap: {
-    marginBottom: 20,
+    
   },
   title: {
+    marginTop: 20,
     fontFamily: 'Pretendard-Medium',
     fontSize: 16,
     fontWeight: 500,
@@ -146,8 +207,20 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     width: '40%',
   },
-  btnWrap: {
+  imageWrap: {
     
+  },
+  image: {
+    marginTop: 10,
+    width: '100%',
+    aspectRatio: 1,
+  },
+  imagePick: {
+    marginTop: 10,
+  },
+  btnWrap: {
+    marginTop: 20,
+    marginBottom: 20,
   },
   btn: {
     paddingVertical: 15,

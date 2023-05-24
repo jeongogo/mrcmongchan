@@ -1,5 +1,15 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, SafeAreaView, ScrollView, StatusBar, TextInput, View, Text, Pressable, useWindowDimensions} from 'react-native';
+import {
+  StyleSheet,
+  SafeAreaView,
+  ScrollView,
+  TextInput,
+  View,
+  Text,
+  Pressable,
+  useWindowDimensions
+} from 'react-native';
+import { format } from 'date-fns';
 import {LineChart} from "react-native-chart-kit";
 import useStore from "../../store/store";
 import { updateUser } from "../../lib/user";
@@ -152,10 +162,10 @@ function Weight() {
         <CustomWrap>
           {renderList.map((item, index) => (
             <View key={index} style={styles.itemWrap}>
-              <Text style={styles.text}>{getDate(item.date)}</Text>
+              <Text style={[styles.text, styles.date]}>{format(new Date(item.date.toDate()), 'yy.MM.dd')}</Text>
               <Text style={[styles.text, styles.weight]}>{item.weight}</Text>
               <Pressable onPress={() => onEdit(item.date)}>
-                <Icon name='pencil-outline' color='#666' size={20} />
+                <Icon name='pencil-outline' color='#999' size={20} />
               </Pressable>
             </View>
           ))}
@@ -210,6 +220,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#222',
   },
+  date: {
+    fontSize: 14,
+    color: '#999',
+  },
   weight: {
     marginLeft: 15,
     marginRight: 'auto',
@@ -247,7 +261,6 @@ const styles = StyleSheet.create({
     top: 15,
   },
   editDate: {
-    marginTop: 15,
     fontFamily: 'Pretendard-Regular',
     fontSize: 20,
     color: '#222',

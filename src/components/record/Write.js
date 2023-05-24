@@ -1,14 +1,24 @@
 import React, {useEffect, useState} from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import storage from '@react-native-firebase/storage';
+import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 import useStore from "../../store/store";
-import {View, Text, TextInput, Image, StyleSheet, Alert, BackHandler, Pressable, useWindowDimensions} from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  Image,
+  StyleSheet,
+  Alert,
+  BackHandler,
+  Pressable,
+} from 'react-native';
 import Loader from "../../components/common/Loader";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-function Write({navigation, isLoading, handleSubmit}) {
-  const [minutes, setMinutes] = useState(0);
-  const [seconds, setSeconds] = useState(0);
+function Write({navigation, isLoading, response, setResponse, handleSubmit}) {
+  const [time, setTime] = useState('');
   const [title, setTitle] = useState('');
-  const width = useWindowDimensions().width;
   const record = useStore((state) => state.record);
   const captureURL = useStore((state) => state.captureURL);
 
@@ -28,13 +38,53 @@ function Write({navigation, isLoading, handleSubmit}) {
     ]);
   }
 
+  const onSelectImage = () => {
+    launchImageLibrary(
+      {
+        mediaType: 'photo',
+        maxWidth: 512,
+        maxHeight: 512,
+        includeBase64: Platform.OS === 'android',
+      },
+      (res) => {
+        if (res.didCancel) {
+          return;
+        }
+        setResponse(res);
+      },
+    );
+  };
+
+  const onTakeCamera = () => {
+    launchCamera(
+      {
+        mediaType: 'photo',
+        maxWidth: 512,
+        maxHeight: 512,
+        includeBase64: Platform.OS === 'android',
+      },
+      (res) => {
+        if (res.didCancel) {
+          return;
+        }
+        setResponse(res);
+      },
+    );
+  };
+
   const onSubmit = () => {
     handleSubmit(title);
   }
 
   useEffect(() => {
-    setMinutes(Math.floor(record.totalTime/60));
-    setSeconds(record.totalTime - (Math.floor(record.totalTime/60) * 60));
+    let recordHours = Math.floor(record.totalTime/1000/60/60);
+    let recordMinutes = Math.floor(record.totalTime/1000/60) - (recordHours * 60);
+    let recordSeconds = Math.floor((record.totalTime/1000) - (Math.floor(record.totalTime/1000/60) * 60));
+    recordHours = recordHours < 1 ? '' : recordHours + ':';
+    recordMinutes = recordMinutes < 10 ? '0' + recordMinutes : recordMinutes;
+    recordSeconds = recordSeconds < 10 ? '0' + recordSeconds : recordSeconds;
+    setTime(recordHours + recordMinutes + ':' + recordSeconds);
+
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
       () => {return true;}
@@ -48,13 +98,24 @@ function Write({navigation, isLoading, handleSubmit}) {
     <SafeAreaProvider style={styles.container}>
       <SafeAreaView>
         {isLoading && <Loader />}
-        <View style={styles.imageWrap}>
-          {captureURL &&
-            <Image style={styles.image} width={width} source={{uri: captureURL}} />
-          }
-        </View>
         <View style={styles.wrap}>
           <TextInput value={title} style={styles.input} onChangeText={setTitle} placeholder="달리기 제목" placeholderTextColor='#aaa' />
+        </View>
+        <View style={styles.imageWrap}>
+          {captureURL &&
+            <Image style={styles.image} source={{uri: captureURL}} />
+          }
+          {response
+            ?
+              <Image
+                style={styles.image}
+                source={{uri: response?.assets[0]?.uri}}
+              />
+            :
+              <Pressable onPress={onTakeCamera} style={styles.addImage}>
+                <Icon name='camera-plus-outline' color='#999' size={32} />
+              </Pressable>
+          }
         </View>
         <View style={styles.wrap}>
           <Text style={styles.text}>거리</Text>
@@ -62,7 +123,7 @@ function Write({navigation, isLoading, handleSubmit}) {
         </View>
         <View style={styles.wrap}>
           <Text style={styles.text}>시간</Text>
-          <Text style={styles.text}>{minutes < 10 ? '0' + minutes : minutes}:{seconds < 10 ? '0' + seconds : seconds}</Text>
+          <Text style={styles.text}>{time}</Text>
         </View>
         <View style={styles.wrap}>
           <Text style={styles.text}>페이스</Text>
@@ -95,14 +156,24 @@ const styles = StyleSheet.create({
   imageWrap: {
     display: 'flex',
     flexDirection: 'row',
-    alignContent: 'center',
-    justifyContent: 'center',
-    marginTop: 10,
+    marginTop: 15,
+    marginBottom: 10,
     borderRadius: 10,
     overflow: 'hidden',
   },
   image: {
-    height: 200,
+    marginRight: 10,
+    width: 100,
+    height: 100,
+  },
+  addImage: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 100,
+    height: 100,
+    borderWidth: 1,
+    borderColor: '#ededed',
   },
   input: {
     marginBottom: 5,

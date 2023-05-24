@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import useStore from "../../store/store";
-import {View, Pressable, Text, StyleSheet, Alert} from 'react-native';
+import {SafeAreaView, ScrollView, View, Pressable, Text, StyleSheet, Alert, Image} from 'react-native';
 import Entry from './Entry';
 
 function Challenge({
@@ -63,53 +63,62 @@ function Challenge({
   }, []);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.info}>
-        <Text style={styles.title}>{challenge.title}</Text>
-        <View style={styles.dateWrap}>
-          <Text style={styles.dateText}>{format(new Date(challenge.startDate.toDate()), 'yyyy.MM.dd')}</Text>
-          <Text style={styles.dateText}> ~ </Text>
-          <Text style={styles.dateText}>{format(new Date(challenge.endDate.toDate()), 'yyyy.MM.dd')}</Text>
-        </View>
-        <View style={styles.goalTitleWrap}>
-          <Text style={styles.goalCurrentText}>{totalDistance}km</Text>
-          <Text style={styles.goalText}>{challenge.goal}km</Text>
-        </View>
-        <View style={styles.goalBarWrap}>
-          <View style={[styles.goalCurrent, {width: goalCurrent + '%'}]}></View>
-          <View style={styles.goalTotal}></View>
-        </View>
-        {goalCurrent >= 100 &&
-          <View style={styles.goalIn}>
-            <Text style={styles.goalInText}>축하합니다! 목표 거리에 도달했습니다.😃</Text>
+    <SafeAreaView style={styles.container}>
+      <ScrollView>
+        <View>
+          <Image source={{uri: challenge.photoURL}} style={styles.image} />
+          <View style={styles.infoWrap}>
+            <View style={styles.top}>
+              <Text style={styles.title}>{challenge.title}</Text>
+              <View style={styles.dateWrap}>
+                <Text style={styles.dateText}>{format(new Date(challenge.startDate.toDate()), 'yy.MM.dd')}</Text>
+                <Text style={styles.dateText}> ~ </Text>
+                <Text style={styles.dateText}>{format(new Date(challenge.endDate.toDate()), 'yy.MM.dd')}</Text>
+              </View>
+            </View>
+            <View style={styles.info}>
+              <View style={styles.goalBarWrap}>
+                <View style={[styles.goalCurrent, {width: goalCurrent + '%'}]}></View>
+                <View style={styles.goalTotal}></View>
+              </View>
+              <View style={styles.goalTitleWrap}>
+                <Text style={styles.goalCurrentText}>{totalDistance}km</Text>
+                <Text style={styles.goalText}>{challenge.goal}km</Text>
+              </View>
+              {goalCurrent >= 100 &&
+                <View style={styles.goalIn}>
+                  <Text style={styles.goalInText}>축하합니다! 목표 거리에 도달했습니다.😃</Text>
+                </View>
+              }
+              <View></View>
+            </View>
           </View>
-        }
-        <View></View>
-      </View>
-      <View style={styles.entry}>
-        {entryList && 
-          entryList.map((entry, index) => (
-            <Entry key={entry.uid} entry={entry} index={index} />
-        ))}
-      </View>
-      <View style={styles.btnWrap}>
-        {user.challenge === '' &&
-          <Pressable onPress={handleAttend}>
-            <Text style={[styles.btn, styles.submit]}>참가하기</Text>
-          </Pressable>
-        }
-        {user.challenge === routeId &&
-          <Pressable onPress={onLeave}>
-            <Text style={[styles.btn, styles.cancel]}>챌린지 나가기</Text>
-          </Pressable>
-        }
-        {(user.isAdmin || user.uid === challenge.creator) &&
-          <Pressable onPress={onDelete}>
-            <Text style={[styles.btn, styles.cancel]}>챌린지 삭제하기</Text>
-          </Pressable>
-        }
-      </View>
-    </View>
+        </View>
+        <View style={styles.entry}>
+          {entryList && 
+            entryList.map((entry, index) => (
+              <Entry key={entry.uid} entry={entry} index={index} />
+          ))}
+        </View>
+        <View style={styles.btnWrap}>
+          {user.challenge === '' &&
+            <Pressable onPress={handleAttend}>
+              <Text style={[styles.btn, styles.submit]}>참가하기</Text>
+            </Pressable>
+          }
+          {user.challenge === routeId &&
+            <Pressable onPress={onLeave}>
+              <Text style={[styles.btn, styles.cancel]}>챌린지 나가기</Text>
+            </Pressable>
+          }
+          {(user.isAdmin || user.uid === challenge.creator) &&
+            <Pressable onPress={onDelete}>
+              <Text style={[styles.btn, styles.cancel]}>챌린지 삭제하기</Text>
+            </Pressable>
+          }
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   )
 };
 
@@ -118,33 +127,47 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  info: {
-    paddingHorizontal: 30,
-    paddingVertical: 40,
+  image: {
+    width: '100%',
+    aspectRatio: 1,
+  },
+  infoWrap: {
+    position: 'absolute',
+    left: 0,
+    bottom: 0,
+    width: '100%',
+    paddingVertical: 25,
+    paddingHorizontal: 20,
+    backgroundColor: 'rgba(255,255,255,0.9)',
+  },
+  top: {
     display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     alignItems: 'center',
-    backgroundColor: '#f6f6f6',
+    justifyContent: 'space-between',    
   },
   title: {
-    fontFamily: 'Pretendard-Medium',
+    fontFamily: 'Pretendard-Bold',
     fontSize: 20,
     color: '#222',
-    textAlign: 'center',
   },
   dateWrap: {
-    marginTop: 10,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
   dateText: {
-    fontFamily: 'Pretendard-Medium',
-    fontSize: 14,
-    color: '#999',
+    fontFamily: 'Pretendard-Regular',
+    fontSize: 13,
+    color: '#666',
+  },
+  info: {
+    marginTop: 20,
   },
   goalTitleWrap: {
-    marginTop: 30,
+    marginTop: 5,
     width: '100%',
     display: 'flex',
     flexDirection: 'row',
@@ -153,18 +176,17 @@ const styles = StyleSheet.create({
   },
   goalCurrentText: {
     fontFamily: 'Pretendard-Medium',
-    fontSize: 18,
+    fontSize: 16,
     color: '#E53A40',
     textAlign: 'center',
   },
   goalText: {
     fontFamily: 'Pretendard-Regular',
-    fontSize: 18,
+    fontSize: 16,
     color: '#454545',
     textAlign: 'center',
   },
   goalBarWrap: {
-    marginTop: 10,
     position: 'relative',
     width: '100%',
     height: 10,
@@ -206,13 +228,13 @@ const styles = StyleSheet.create({
   btnWrap: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center',
+    paddingHorizontal: 10,
   },
   btn: {
     paddingVertical: 15,
     marginHorizontal: 10,
     fontFamily: 'Pretendard-Regular',
-    fontSize: 16,
+    fontSize: 14,
     textAlign: 'center',
     borderRadius: 5,
   },
@@ -228,6 +250,8 @@ const styles = StyleSheet.create({
   entry: {
     paddingVertical: 20,
     paddingHorizontal: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#ededed',
   },
 });
 

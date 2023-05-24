@@ -10,23 +10,41 @@ import Write from "../../components/record/Write";
 function WriteScreen({navigation}) {
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState('');
+  const [response, setResponse] = useState(null);
   const record = useStore((state) => state.record);
   const user = useStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
   const captureURL = useStore((state) => state.captureURL);
 
   /** 저장하기 */
-  const handleSubmit = async (title) => {
+  const handleSubmit = async () => {
     setIsLoading(true);
     try {
+      // 캡쳐 이미지
       const filename = 'record' + new Date().getTime() + (Math.random()*1000).toFixed(0);
       const reference = storage().ref(`/record/${filename}`);
       await reference.putFile(captureURL);
       const url = await reference.getDownloadURL();
 
+      // 포토 이미지
+      let photoURL = '';    
+      if (response) {
+        const asset = response.assets[0];
+        const extension = asset.fileName.split('.').pop();
+        const reference = storage().ref(`/challenge/${new Date().getTime()}.${extension}`);
+        if (Platform.OS === 'android') {
+          await reference.putString(asset.base64, 'base64', {
+            contentType: asset.type,
+          });
+        } else {
+          await reference.putFile(asset.uri);
+        }
+        photoURL = response ? await reference.getDownloadURL() : null;
+      }
+
       const recordData = {
         ...record,
-        title,
+        photoURL,
         captureURL: url,
       }
       await firestore().collection('Records').add(recordData);
@@ -152,6 +170,8 @@ function WriteScreen({navigation}) {
     <Write
       navigation={navigation}
       isLoading={isLoading}
+      response={response}
+      setResponse={setResponse}
       handleSubmit={handleSubmit}
     />
   );

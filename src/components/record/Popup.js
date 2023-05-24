@@ -1,14 +1,14 @@
 import React from 'react';
 import {View, Text, StyleSheet, Pressable, Platform} from 'react-native';
 
-function Popup({navigation, requestBackgroundPermission}) {
+function Popup({navigation, requestPermissions}) {
   return (
     <View style={styles.permission}>
       <View style={styles.permissionWrap}>
         <Text style={styles.permissionTitle}>권한 안내</Text>
         <View style={styles.permissionContent}>
           <Text style={styles.permissionContentText}>
-            - 모두의 러닝 코치 앱은 앱이 종료되었거나 사용 중이 아닐 때도 위치 데이터를 수집하여 러닝 추적 기능을 지원합니다.
+            - 모두의 러닝 코치 앱은 앱은 러닝 추적, 경로 매핑, 기록 공유 등을 위해 위치 정보를 사용합니다. (백그라운드 실행 중일 경우 포함)
           </Text>
           {(Platform.OS === 'android') && 
             <Text style={styles.permissionContentText}>
@@ -20,7 +20,7 @@ function Popup({navigation, requestBackgroundPermission}) {
           <Pressable style={styles.permissionBtnCancel} onPress={() => navigation.navigate('HomeStack')}>
             <Text style={styles.permissionBtnTextCancel}>취소</Text>
           </Pressable>
-          <Pressable style={styles.permissionBtn} onPress={requestBackgroundPermission}>
+          <Pressable style={styles.permissionBtn} onPress={requestPermissions}>
             <Text style={styles.permissionBtnText}>확인</Text>
           </Pressable>
         </View>
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     color: '#454545',
   },
   permissionBtns: {
-    marginTop: 5,
+    marginTop: 10,
     display: 'flex',
     flexDirection: 'row',
   },

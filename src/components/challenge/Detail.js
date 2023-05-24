@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { format } from 'date-fns';
 import useStore from "../../store/store";
 import {View, Pressable, Text, StyleSheet, Alert} from 'react-native';
 import Entry from './Entry';
@@ -65,6 +66,11 @@ function Challenge({
     <View style={styles.container}>
       <View style={styles.info}>
         <Text style={styles.title}>{challenge.title}</Text>
+        <View style={styles.dateWrap}>
+          <Text style={styles.dateText}>{format(new Date(challenge.startDate.toDate()), 'yyyy.MM.dd')}</Text>
+          <Text style={styles.dateText}> ~ </Text>
+          <Text style={styles.dateText}>{format(new Date(challenge.endDate.toDate()), 'yyyy.MM.dd')}</Text>
+        </View>
         <View style={styles.goalTitleWrap}>
           <Text style={styles.goalCurrentText}>{totalDistance}km</Text>
           <Text style={styles.goalText}>{challenge.goal}km</Text>
@@ -122,9 +128,20 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Pretendard-Medium',
     fontSize: 20,
-    fontWeight: 500,
     color: '#222',
     textAlign: 'center',
+  },
+  dateWrap: {
+    marginTop: 10,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dateText: {
+    fontFamily: 'Pretendard-Medium',
+    fontSize: 14,
+    color: '#999',
   },
   goalTitleWrap: {
     marginTop: 30,
@@ -138,7 +155,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Pretendard-Medium',
     fontSize: 18,
     color: '#E53A40',
-    fontWeight: 500,
     textAlign: 'center',
   },
   goalText: {

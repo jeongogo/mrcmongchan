@@ -23,6 +23,7 @@ import Loader from "../../components/common/Loader";
 function Home({ navigation }) {
   const user = useStore((state) => state.user);
   const permission = useStore((state) => state.permission);
+  const setting = useStore((state) => state.setting);
   const setPermission = useStore((state) => state.setPermission);
   const setRecord = useStore((state) => state.setRecord);
   const setCaptureURL = useStore((state) => state.setCaptureURL);
@@ -101,7 +102,8 @@ function Home({ navigation }) {
         );
         
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          initGeo(); 
+          initGeo();
+          requestBackgroundPermission();
         } else {
           navigation.navigate('HomeStack');          
         }
@@ -109,6 +111,7 @@ function Home({ navigation }) {
       if (Platform.OS === 'ios') {
         Geolocation.requestAuthorization('always');
         initGeo();
+        requestBackgroundPermission();
       }
     } catch (e) {
       console.log(e);
@@ -119,20 +122,20 @@ function Home({ navigation }) {
   const requestBackgroundPermission = () => {
     BackgroundGeolocation.ready({
       // locationAuthorizationRequest: Platform.OS === 'android' ? 'Always' : 'WhenInUse',
-      locationAuthorizationRequest: 'Always',
-      backgroundPermissionRationale: {
-        title: "위치 권한 사용 설정 안내",
-        message: "러닝 추적을 위해 위치 서비스에서 '항상 허용'을 사용하도록 설정해야 합니다.",
-        positiveAction: "'항상 허용' 설정"
-      },
-      locationAuthorizationAlert: {
-        titleWhenNotEnabled: "위치 권한 사용 설정 안내",
-        titleWhenOff: "위치 권한 사용 설정 안내",
-        instructions: "러닝 추적을 위해 위치 서비스에서 '항상 허용'을 사용하도록 설정해야 합니다.",
-        cancelButton: "취소",
-        settingsButton: "'항상 허용' 설정"
-      },
-      // disableMotionActivityUpdates: (Platform.OS === 'android') ? false : true,
+      locationAuthorizationRequest: 'WhenInUse',
+      // backgroundPermissionRationale: {
+      //   title: "위치 권한 사용 설정 안내",
+      //   message: "러닝 추적을 위해 위치 서비스에서 '항상 허용'을 사용하도록 설정해야 합니다.",
+      //   positiveAction: "'항상 허용' 설정"
+      // },
+      // locationAuthorizationAlert: {
+      //   titleWhenNotEnabled: "위치 권한 사용 설정 안내",
+      //   titleWhenOff: "위치 권한 사용 설정 안내",
+      //   instructions: "러닝 추적을 위해 위치 서비스에서 '항상 허용'을 사용하도록 설정해야 합니다.",
+      //   cancelButton: "취소",
+      //   settingsButton: "'항상 허용' 설정"
+      // },
+      disableMotionActivityUpdates: (Platform.OS === 'android') ? false : true,
       // disableLocationAuthorizationAlert: (Platform.OS === 'android') ? false : true,
       notification: {
         title: "모두의 러닝 코치",
@@ -224,7 +227,9 @@ function Home({ navigation }) {
 
     // 1km마다 페이스 기록
     if (distance > paceRef.current * 1000) {
-      Vibration.vibrate();
+      if (setting.recordVaibration) {
+        Vibration.vibrate();
+      }
       paceRef.current++;
       setPaceDetail(prev => [...prev, totalTime/1000]);
     }
@@ -400,7 +405,9 @@ function Home({ navigation }) {
     onClear();
     setRecord('');
     setCaptureURL('');
-    requestPermissions();    
+    if (permission) {
+      initGeo();
+    }
   }, []);
 
   useEffect(() => {
@@ -434,7 +441,7 @@ function Home({ navigation }) {
     <View style={styles.container}>
       {isLoading && <Loader />}
       {!permission &&
-        <Popup navigation={navigation} requestBackgroundPermission={requestBackgroundPermission} />
+        <Popup navigation={navigation} requestPermissions={requestPermissions} />
       }
       {initLocation &&
         <Map captureRef={captureRef} initLocation={initLocation} path={path} />

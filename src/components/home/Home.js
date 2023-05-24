@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { format } from 'date-fns';
 import useStore from "../../store/store";
 import {ScrollView, View, Text, StyleSheet, Linking, useWindowDimensions, Pressable, Alert} from 'react-native';
 import AutoHeightImage from "react-native-auto-height-image";
@@ -26,6 +27,16 @@ function Home({
     } else {
       console.log("Don't know how to open this URL");
     }
+  }
+
+  const getTime = (time) => {
+    let recordHours = Math.floor(time/60/60);
+    let recordMinutes = Math.floor(time/60) - (recordHours * 60);
+    let recordSeconds = Math.floor((time) - (Math.floor(time/60) * 60));
+    recordHours = recordHours < 1 ? '' : recordHours + ':';
+    recordMinutes = recordMinutes < 10 ? '0' + recordMinutes : recordMinutes;
+    recordSeconds = recordSeconds < 10 ? '0' + recordSeconds : recordSeconds;
+    return recordHours + recordMinutes + ':' + recordSeconds;
   }
 
   useEffect(() => {
@@ -63,8 +74,8 @@ function Home({
               <Text style={styles.text}>{distanceMonth}km / {calorieMonth.toLocaleString('ko-KR')}k㎈</Text>
             </View>
             <View style={styles.wrap}>
-              <Text style={styles.label}>누적 거리</Text>
-              <Text style={styles.text}>{user.distance}km</Text>
+              <Text style={styles.label}>총 거리</Text>
+              <Text style={styles.text}>{user.distance.toFixed(2)}km</Text>
             </View>
           </CustomWrap>
           {/* <CustomWrap>
@@ -95,6 +106,25 @@ function Home({
             </View>
           </CustomWrap>
           <CustomWrap>
+            <Text style={styles.title}>최고 기록</Text>
+            <View style={styles.wrap}>
+              <Text style={styles.label}>5K</Text>
+              <Text style={styles.text}>{user.record.five === 0 ? '00:00' : getTime(user.record.five)}</Text>
+            </View>
+            <View style={styles.wrap}>
+              <Text style={styles.label}>10K</Text>
+              <Text style={styles.text}>{user.record.ten === 0 ? '00:00' : getTime(user.record.ten)}</Text>
+            </View>
+            <View style={styles.wrap}>
+              <Text style={styles.label}>Half</Text>
+              <Text style={styles.text}>{user.record.half === 0 ? '00:00' : getTime(user.record.half)}</Text>
+            </View>
+            <View style={styles.wrap}>
+              <Text style={styles.label}>Full</Text>
+              <Text style={styles.text}>{user.record.full === 0 ? '00:00' : getTime(user.record.full)}</Text>
+            </View>
+          </CustomWrap>
+          <CustomWrap>
             <Text style={styles.title}>대회정보</Text>
             {competition.map((item) => (
               <Pressable key={item.url} style={styles.competitionWrap} onPress={() => openURL(item.url)}>
@@ -102,7 +132,7 @@ function Home({
                   <Text style={styles.label}>{item.title}</Text>
                   <Text style={styles.location}>{item.location}</Text>
                 </View>
-                <Text style={[styles.text, styles.date]}>{item.date}</Text>
+                <Text style={[styles.text, styles.date]}>{format(new Date(item.date.toDate()), 'yyyy.MM.dd')}</Text>
               </Pressable>
             ))}
           </CustomWrap>
@@ -229,16 +259,18 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
   },
   title: {
-    marginVertical: 5,
+    marginVertical: 7,
     fontFamily: 'Pretendard-Bold',
     fontSize: 20,
     color: '#222',
   },
   label: {
-    fontFamily: 'Pretendard-Regular',
+    minWidth: 35,
+    marginRight: 20,
+    fontFamily: 'Pretendard-Medium',
     fontSize: 15,
     color: '#222',
   },
@@ -251,13 +283,13 @@ const styles = StyleSheet.create({
   location: {
     marginTop: 3,
     fontFamily: 'Pretendard-Regular',
-    fontSize: 12,
-    color: '#999'
+    fontSize: 13,
+    color: '#666'
   },
   date: {
     fontFamily: 'Pretendard-Regular',
-    fontSize: 14,
-    color: '#454545',
+    fontSize: 13,
+    color: '#999',
   },
   competitionWrap: {
     paddingVertical: 15,

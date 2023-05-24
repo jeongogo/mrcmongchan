@@ -19,6 +19,12 @@ let state = (set) => ({
   record: '',
   setRecord: (data) => set(() => ({ record: data })),
 
+  /** 세팅 */
+  setting: {
+    recordVaibration: true,
+  },
+  setSetting: (data) => set(() => ({ setting: data })),
+
   /** 권한 */
   permission: false,
   setPermission: (data) => set(() => ({ permission: data })),

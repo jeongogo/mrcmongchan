@@ -101,7 +101,7 @@ function Detail() {
         <View style={styles.titleWrap}>
           <Text style={styles.title}>{feedDetail.title}</Text>
           <Text style={styles.area}>{feedDetail.areaName}</Text>
-          <Icon name={weather} color='#666' size={20} />
+          {weather && <Icon name={weather} color='#666' size={20} />}
         </View>
         <View style={styles.imageWrap}>
           <Image

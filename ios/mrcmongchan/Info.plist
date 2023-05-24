@@ -43,22 +43,22 @@
 	<dict/>
 	<key>NSCameraUsageDescription</key>
 	<string>${PRODUCT_NAME} would like to use your camera</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>정확한 러닝 트래킹을 위해 위치 정보 권한이 필요합니다.</string>
+	<!-- <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>정확한 러닝 트래킹을 위해 위치 정보 권한이 필요합니다.</string> -->
 	<!-- <key>NSLocationAlwaysUsageDescription</key>
 	<string>정확한 러닝 트래킹을 위해 위치 정보 권한이 필요합니다.</string> -->
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>정확한 러닝 트래킹을 위해 위치 정보 권한이 필요합니다.</string>
-	<key>NSMotionUsageDescription</key>
-	<string>정확한 러닝 트래킹을 위해 모션/피트니스 활동 정보 권한이 필요합니다.</string>
+	<string>정확한 러닝 트래킹을 위해 위치 정보 권한이 필요합니다. (백그라운드 실행 포함)</string>
+	<!-- <key>NSMotionUsageDescription</key>
+	<string>정확한 러닝 트래킹을 위해 모션/피트니스 활동 정보 권한이 필요합니다.</string> -->
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>${PRODUCT_NAME} would like to save photos to your photo gallery</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>${PRODUCT_NAME} would like access to your photo gallery</string>
 	<key>Privacy - Location Always and When in Use Usage Description</key>
-	<string>CHANGEME: Location required in background</string>
+	<string>정확한 러닝 트래킹을 위해 위치 정보 권한이 필요합니다. (백그라운드 실행 포함)</string>
 	<key>Privacy - Location When in Use Usage Description</key>
-	<string>CHANGEME: Location required when app is in use</string>
+	<string>정확한 러닝 트래킹을 위해 위치 정보 권한이 필요합니다. (백그라운드 실행 포함)</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

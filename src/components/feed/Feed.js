@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { format } from 'date-fns';
 import { useNavigation } from "@react-navigation/native";
 import useStore from "../../store/store";
 import {View, Image, Text, StyleSheet, Pressable} from 'react-native';
@@ -47,7 +48,7 @@ function Feed({ feed }) {
             ?
               <>
                 <Text style={styles.title}>{feed.title}</Text>
-                <Text style={styles.date}>{date}</Text>
+                <Text style={styles.date}>{format(new Date(feed.date.toDate()), 'yyyy.MM.dd HH:mm')}</Text>
               </>
             :
               <Text style={styles.title}>{date}</Text>

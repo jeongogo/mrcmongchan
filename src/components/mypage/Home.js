@@ -81,6 +81,11 @@ function Home() {
             <Text style={styles.menuText}>페이스 계산</Text>
             <Icon name='chevron-right' color='#222' size={24} />
           </Pressable>
+          <Pressable style={styles.menu} onPress={() => navigation.navigate('Setting')}>
+            <Icon name='cog-outline' color='#222' size={18} />
+            <Text style={styles.menuText}>설정</Text>
+            <Icon name='chevron-right' color='#222' size={24} />
+          </Pressable>
         </View>
         <View style={styles.btn}>
           <Pressable onPress={() => setVisibleForm(true)}>
@@ -246,14 +251,15 @@ const styles = StyleSheet.create({
     color: '#222',
   },
   btn: {
+    marginTop: 10,
     display: 'flex',
     flexDirection: 'row',
-    paddingVertical: 15,
+    paddingVertical: 10,
     paddingHorizontal: 20,
   },
   btnText: {
     marginRight: 20,
-    fontSize: 16,
+    fontSize: 14,
     color: '#666',
     textDecorationLine: 'underline',
   },

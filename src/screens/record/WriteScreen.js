@@ -14,7 +14,6 @@ function WriteScreen({navigation}) {
   const user = useStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
   const captureURL = useStore((state) => state.captureURL);
-  let missionExp = 0;
 
   /** 저장하기 */
   const handleSubmit = async (title) => {
@@ -32,8 +31,12 @@ function WriteScreen({navigation}) {
       }
       await firestore().collection('Records').add(recordData);
       
-      // 챌린지 중일 경우
+      // 업데이트용
       let challengeData = {};
+      let levelupData = {};
+      let bestRecordData = {};
+
+      // 챌린지 중일 경우
       if (user.challenge !== '') {
         const curr = new Date().getTime();
         const res = await firestore().collection('Challenges').doc(user.challenge).get();
@@ -65,10 +68,52 @@ function WriteScreen({navigation}) {
         }
       }
       
-      // 레벨업 체크
-      let levelupData = {};
+      // 최고기록 체크
+      let recordFive = user.record.five;
+      let recordTen = user.record.ten;
+      let recordHalf = user.record.half;
+      let recordFull = user.record.full;
+      let bonusPoint = 0;
+      const five = user.record.five === 0 ? 30000 : user.record.five;
+      const ten = user.record.ten === 0 ? 30000 : user.record.ten;
+      const half = user.record.half === 0 ? 30000 : user.record.half;
+      const full = user.record.full === 0 ? 30000 : user.record.full;
+      if (recordData.distance >= 5) {
+        if (recordData.paceDetail[4] < five) {
+          bonusPoint = 50;
+          recordFive = recordData.paceDetail[4];
+        }
+      }
+      if (recordData.distance >= 10) {
+        if (recordData.paceDetail[9] < ten) {
+          bonusPoint = 100;
+          recordTen = recordData.paceDetail[9];
+        }
+      }
+      if (recordData.distance >= 21) {
+        if (recordData.paceDetail[20] < half) {
+          bonusPoint = 210;
+          recordHalf = recordData.paceDetail[20];
+        }
+      }
+      if (recordData.distance >= 42) {
+        if (recordData.paceDetail[41] < full) {
+          bonusPoint = 42;
+          recordFull = recordData.paceDetail[41];
+        }
+      }
+      bestRecordData = {
+        record: {
+          five: recordFive,
+          ten: recordTen,
+          half: recordHalf,
+          full: recordFull,
+        }
+      }
+
+      // 레벨업 체크      
       const distanceExp = ((record.distance*10) * 0.6).toFixed(0);
-      const currentExp = +user.exPoint + +missionExp + +distanceExp;
+      const currentExp = +user.exPoint + +distanceExp + bonusPoint;
       const lv = user.level + 1;
       const nextLvExp = ((lv-1) * (lv-1)) * ((lv * lv) - (13 * lv) + 82);      
       if (currentExp >= nextLvExp) {
@@ -83,15 +128,9 @@ function WriteScreen({navigation}) {
           distance: +user.distance + +record.distance,
         }
       }      
-      await updateUser(user.uid, {...challengeData, ...levelupData});
-
-      // New Record
-      // if (새로운 기록 달성하면) {
-      // 축하 Alert
-      //   ex += 보너스 경험치 (레벨*10)
-      // }
-      
-      setUser({...user, ...challengeData, ...levelupData});
+        
+      await updateUser(user.uid, {...challengeData, ...levelupData, ...bestRecordData});
+      setUser({...user, ...challengeData, ...levelupData, ...bestRecordData});
 
       queryClient.invalidateQueries('myrecord');
       queryClient.invalidateQueries('feed');

@@ -68,13 +68,8 @@ function HomeScreen() {
     const snapshot = await firestore().collection('Competitions').orderBy('date').get();
     let data = [];
     snapshot.forEach(doc => {
-      const current = new Date(doc.data().date.toDate());
-      const year = current.getFullYear();
-      const month = current.getMonth() + 1;
-      const date = current.getDate();
       const item = {
         ...doc.data(),
-        date: year + '.' + month + '.' + date
       };
       data.push(item);
     });

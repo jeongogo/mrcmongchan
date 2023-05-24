@@ -12,6 +12,7 @@ import RecordWriteScreen from "./record/WriteScreen";
 import ProfileScreen from "./mypage/ProfileScreen";
 import WeightScreen from "./mypage/WeightScreen";
 import PaceScreen from "./mypage/PaceScreen";
+import SettingScreen from "./mypage/SettingScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -79,6 +80,13 @@ function RootStack() {
               component={PaceScreen}
               options={{
                 title: '페이스 계산'
+              }}
+            />
+            <Stack.Screen
+              name='Setting'
+              component={SettingScreen}
+              options={{
+                title: '설정'
               }}
             />
           </>

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { format } from 'date-fns';
 import useStore from "../../store/store";
 import {View, Text, StyleSheet, Pressable} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -6,25 +7,10 @@ import CustomWrap from '../common/CustomWrap';
 
 function Challenge({ challenge, navigation }) {
   const user = useStore((state) => state.user);
-  const [start, setStart] = useState('');
-  const [end, setEnd] = useState('');
 
   const onDetail = (id) => {
     navigation.navigate('ChallengeDetail', {id});
   }
-
-  useEffect(() => {
-    const currentStart = new Date(challenge.startDate.toDate());
-    const currentEnd = new Date(challenge.endDate.toDate());
-    const startYear = currentStart.getFullYear();
-    const startMonth = currentStart.getMonth() + 1;
-    const startDate = currentStart.getDate();
-    const endYear = currentEnd.getFullYear();
-    const endMonth = currentEnd.getMonth() + 1;
-    const endDate = currentEnd.getDate();
-    setStart(startYear + '.' + startMonth + '.' + startDate);
-    setEnd(endYear + '.' + endMonth + '.' + endDate);
-  }, []);
 
   return (
     <CustomWrap>
@@ -33,9 +19,9 @@ function Challenge({ challenge, navigation }) {
           <Text style={styles.title}>{challenge.title}</Text>
         </View>
         <View style={styles.wrap}>
-          <Text style={styles.text}>{start}</Text>
+          <Text style={styles.text}>{format(new Date(challenge.startDate.toDate()), 'yyyy.MM.dd')}</Text>
           <Text style={styles.text}> ~ </Text>
-          <Text style={styles.text}>{end}</Text>
+          <Text style={styles.text}>{format(new Date(challenge.endDate.toDate()), 'yyyy.MM.dd')}</Text>
         </View>
         <View style={styles.wrap}>
           <Text style={styles.text}>

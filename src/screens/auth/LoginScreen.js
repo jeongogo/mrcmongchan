@@ -3,7 +3,6 @@ import { GoogleSignin, GoogleSigninButton } from '@react-native-google-signin/go
 import { AppleButton, appleAuth } from '@invertase/react-native-apple-authentication';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import auth from '@react-native-firebase/auth';
-import crashlytics from '@react-native-firebase/crashlytics';
 import useStore from "../../store/store";
 import { getUser } from '../../lib/user';
 import { signIn, signUp } from '../../lib/auth';
@@ -115,18 +114,13 @@ function LoginScreen({route, navigation}) {
         <View style={styles.form}>
           <Login isSignUp={isSignUp} handleLogin={handleLogin} />
         </View>
-        <View style={styles.google}>
-          <GoogleSigninButton onPress={() => onGoogleButtonPress()} style={styles.googleBtn} />
-        </View>
-        <View style={styles.apple}>
+        <View style={styles.sns}>
+          <GoogleSigninButton onPress={() => onGoogleButtonPress()} style={styles.google} />
           <AppleButton
-            buttonStyle={AppleButton.Style.WHITE}
+            buttonStyle={AppleButton.Style.BLACK}
             buttonType={AppleButton.Type.SIGN_IN}
-            style={{
-              width: '100%',
-              height: 45,
-            }}
             onPress={() => onAppleButtonPress().then(() => console.log('Apple sign-in complete!'))}
+            style={styles.apple}
           />
         </View>
       </SafeAreaView>
@@ -139,17 +133,22 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignContent: 'center',
-    paddingHorizontal: 30,
+    paddingHorizontal: 25,
     backgroundColor: '#f3f3f3',
   },
-  google: {
-    
+  sns: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  googleBtn: {
-    width: '100%',
+  google: {
+    flex: 1,
+    height: 48,
   },
   apple: {
-    marginTop: 15,
+    height: 40,
+    flex: 1,
+    marginLeft: 7,
   }
 });
 

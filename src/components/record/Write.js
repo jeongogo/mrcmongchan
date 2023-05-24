@@ -117,28 +117,29 @@ function Write({navigation, isLoading, response, setResponse, handleSubmit}) {
               </Pressable>
           }
         </View>
+        <View style={styles.hr}></View>
         <View style={styles.wrap}>
-          <Text style={styles.text}>거리</Text>
+          <Text style={styles.label}>거리</Text>
           <Text style={styles.text}>{record.distance}km</Text>
         </View>
         <View style={styles.wrap}>
-          <Text style={styles.text}>시간</Text>
+          <Text style={styles.label}>시간</Text>
           <Text style={styles.text}>{time}</Text>
         </View>
         <View style={styles.wrap}>
-          <Text style={styles.text}>페이스</Text>
+          <Text style={styles.label}>페이스</Text>
           <Text style={styles.text}>{record.pace}</Text>
         </View>
         <View style={styles.wrap}>
-          <Text style={styles.text}>소모 칼로리</Text>
+          <Text style={styles.label}>소모 칼로리</Text>
           <Text style={styles.text}>{record.calorie}k㎈</Text>
         </View>
         <View style={styles.btnWrap}>
-          <Pressable style={styles.btn} onPress={onDelete}>
-            <Text style={[styles.btnText, styles.cancel]}>삭제하기</Text>
+          <Pressable style={[styles.btn, styles.cancel]} onPress={onDelete}>
+            <Text style={[styles.btnText, styles.cancelText]}>삭제하기</Text>
           </Pressable>
-          <Pressable style={styles.btn} onPress={onSubmit}>
-            <Text style={[styles.btnText, styles.submit]}>저장하기</Text>
+          <Pressable style={[styles.btn, styles.submit]} onPress={onSubmit}>
+            <Text style={[styles.btnText, styles.submitText]}>저장하기</Text>
           </Pressable>
         </View>
       </SafeAreaView>
@@ -150,53 +151,61 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingVertical: 10,
-    paddingHorizontal: 15,
     backgroundColor: '#fff',
   },
-  imageWrap: {
-    display: 'flex',
-    flexDirection: 'row',
-    marginTop: 15,
-    marginBottom: 10,
-    borderRadius: 10,
-    overflow: 'hidden',
-  },
-  image: {
-    marginRight: 10,
-    width: 100,
-    height: 100,
-  },
-  addImage: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 100,
-    height: 100,
-    borderWidth: 1,
-    borderColor: '#ededed',
-  },
   input: {
-    marginBottom: 5,
     width: '100%',
     paddingHorizontal: 10,
     fontFamily: 'Pretendard-Regular',
     fontSize: 15,
     color: '#222',
+    borderBottomWidth: 1,
+    borderBottomColor: '#bdbdbd',
+  },
+  imageWrap: {
+    display: 'flex',
+    flexDirection: 'row',
+    paddingVertical: 20,
+    paddingHorizontal: 15,
+    borderRadius: 10,
+    overflow: 'hidden',
+  },
+  image: {
+    marginRight: 10,
+    width: 120,
+    height: 120,
+  },
+  addImage: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 120,
+    height: 120,
     borderWidth: 1,
-    borderColor: '#999',
-    borderRadius: 5,
+    borderColor: '#ededed',
+  },
+  hr: {
+    marginVertical: 15,
+    borderBottomWidth: 7,
+    borderBottomColor: '#f3f3f3',
   },
   wrap: {
-    marginTop: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignContent: 'center',
   },
+  label: {
+    fontFamily: 'Pretendard-Medium',
+    fontSize: 15,
+    color: '#222',
+  },
   text: {
     fontFamily: 'Pretendard-Regular',
-    fontSize: 16,
-    color: '#222',
+    fontSize: 15,
+    color: '#454545',
   },
   btnWrap: {
     display: 'flex',
@@ -206,29 +215,33 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   btn: {
-    marginBottom: 15,
-    marginLeft: 5,
-    marginRight: 5,
-  },
-  btnText: {
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    fontFamily: 'Pretendard-Medium',
-    fontSize: 14,
-    fontWeight: 500,
-    textAlign: 'center',
-    borderRadius: 5,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 48,
+    marginHorizontal: 5,
+    paddingHorizontal: 40,
     borderWidth: 1,
+    borderRadius: 24,
   },
   cancel: {
-    color: '#E53A40',
     backgroundColor: '#fff',
     borderColor: '#E53A40',
   },
   submit: {
-    color: 'white',
     backgroundColor: '#E53A40',
     borderColor: '#E53A40',
+  },
+  btnText: {
+    fontFamily: 'Pretendard-Medium',
+    fontSize: 14,
+  },
+  cancelText: {
+    color: '#E53A40',
+  },
+  submitText: {
+    color: '#fff',
   },
 });
 

@@ -5,6 +5,7 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import useStore from '../../store/store';
 import { updateUser } from '../../lib/user';
 import { StyleSheet, Text, View, Pressable, Image, ActivityIndicator, TextInput } from 'react-native';
+import CustomButton from "../common/CustomButton";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 function Profile() {
@@ -100,9 +101,7 @@ function Profile() {
         ?
           <ActivityIndicator size={32} color='#ff4250' style={styles.spinner} />
         :
-          <Pressable style={styles.btn} onPress={onSubmit}>
-            <Text style={styles.btnText}>저장</Text>
-          </Pressable>
+          <CustomButton title='저장' onPress={onSubmit} />
       }
     </View>
   )
@@ -112,7 +111,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingVertical: 40,
-    paddingHorizontal: 15,
+    paddingHorizontal: 40,
     backgroundColor: '#fff',
   },
   photo: {
@@ -132,7 +131,7 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   info: {
-    marginTop: 32,
+    marginVertical: 32,
   },
   spinner: {
     display: 'flex',
@@ -142,28 +141,15 @@ const styles = StyleSheet.create({
   input: {
     display: 'flex',
     justifyContent: 'center',
-    marginTop: 10,
     width: '100%',
-    height: 46,
+    height: 48,
     paddingHorizontal: 10,
     fontFamily: 'Pretendard-Regular',
-    fontSize: 15,
+    fontSize: 16,
     color: '#222',
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: '#bdbdbd',
   },
-  btn: {
-    paddingVertical: 15,
-    marginTop: 16,
-    backgroundColor: '#E53A40',
-    borderRadius: 5,
-  },
-  btnText: {
-    fontSize: 15,
-    color: '#fff',
-    textAlign: 'center',
-  }
 })
 
 export default Profile

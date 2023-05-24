@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 import useStore from "../../store/store";
 import {SafeAreaView, ScrollView, View, Pressable, Text, StyleSheet, Alert, Image} from 'react-native';
 import Entry from './Entry';
+import CustomButton from "../common/CustomButton";
 
 function Challenge({
   routeId,
@@ -65,35 +66,33 @@ function Challenge({
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <View>
-          <Image source={{uri: challenge.photoURL}} style={styles.image} />
-          <View style={styles.infoWrap}>
-            <View style={styles.top}>
-              <Text style={styles.title}>{challenge.title}</Text>
-              <View style={styles.dateWrap}>
-                <Text style={styles.dateText}>{format(new Date(challenge.startDate.toDate()), 'yy.MM.dd')}</Text>
-                <Text style={styles.dateText}> ~ </Text>
-                <Text style={styles.dateText}>{format(new Date(challenge.endDate.toDate()), 'yy.MM.dd')}</Text>
-              </View>
-            </View>
-            <View style={styles.info}>
-              <View style={styles.goalBarWrap}>
-                <View style={[styles.goalCurrent, {width: goalCurrent + '%'}]}></View>
-                <View style={styles.goalTotal}></View>
-              </View>
-              <View style={styles.goalTitleWrap}>
-                <Text style={styles.goalCurrentText}>{totalDistance}km</Text>
-                <Text style={styles.goalText}>{challenge.goal}km</Text>
-              </View>
-              {goalCurrent >= 100 &&
-                <View style={styles.goalIn}>
-                  <Text style={styles.goalInText}>축하합니다! 목표 거리에 도달했습니다.😃</Text>
-                </View>
-              }
-              <View></View>
+        <Image source={{uri: challenge.photoURL}} style={styles.image} />
+        <View style={styles.infoWrap}>
+          <View style={styles.top}>
+            <Text style={styles.title}>{challenge.title}</Text>
+            <View style={styles.dateWrap}>
+              <Text style={styles.dateText}>{format(new Date(challenge.startDate.toDate()), 'yy.MM.dd')}</Text>
+              <Text style={styles.dateText}> ~ </Text>
+              <Text style={styles.dateText}>{format(new Date(challenge.endDate.toDate()), 'yy.MM.dd')}</Text>
             </View>
           </View>
+          <View style={styles.info}>
+            <View style={styles.goalBarWrap}>
+              <View style={[styles.goalCurrent, {width: goalCurrent + '%'}]}></View>
+              <View style={styles.goalTotal}></View>
+            </View>
+            <View style={styles.goalTitleWrap}>
+              <Text style={styles.goalCurrentText}>{totalDistance}km</Text>
+              <Text style={styles.goalText}>{challenge.goal}km</Text>
+            </View>
+            {goalCurrent >= 100 &&
+              <View style={styles.goalIn}>
+                <Text style={styles.goalInText}>축하합니다! 목표 거리에 도달했습니다.😃</Text>
+              </View>
+            }
+          </View>
         </View>
+        <View style={styles.hr}></View>
         <View style={styles.entry}>
           {entryList && 
             entryList.map((entry, index) => (
@@ -102,18 +101,16 @@ function Challenge({
         </View>
         <View style={styles.btnWrap}>
           {user.challenge === '' &&
-            <Pressable onPress={handleAttend}>
-              <Text style={[styles.btn, styles.submit]}>참가하기</Text>
-            </Pressable>
+            <CustomButton title='참가하기' onPress={handleAttend} />
           }
           {user.challenge === routeId &&
-            <Pressable onPress={onLeave}>
-              <Text style={[styles.btn, styles.cancel]}>챌린지 나가기</Text>
+            <Pressable onPress={onLeave} style={styles.btn}>
+              <Text style={[styles.btnText, styles.gray]}>챌린지 나가기</Text>
             </Pressable>
           }
           {(user.isAdmin || user.uid === challenge.creator) &&
-            <Pressable onPress={onDelete}>
-              <Text style={[styles.btn, styles.cancel]}>챌린지 삭제하기</Text>
+            <Pressable onPress={onDelete} style={styles.btn}>
+              <Text style={[styles.btnText, styles.gray]}>챌린지 삭제하기</Text>
             </Pressable>
           }
         </View>
@@ -132,13 +129,11 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
   },
   infoWrap: {
-    position: 'absolute',
-    left: 0,
-    bottom: 0,
-    width: '100%',
     paddingVertical: 25,
     paddingHorizontal: 20,
     backgroundColor: 'rgba(255,255,255,0.9)',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ededed',
   },
   top: {
     display: 'flex',
@@ -229,29 +224,35 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     paddingHorizontal: 10,
+    marginTop: 10,
+    marginBottom: 40,
   },
   btn: {
     paddingVertical: 15,
     marginHorizontal: 10,
-    fontFamily: 'Pretendard-Regular',
+  },
+  submit: {
+    flexGrow: 1,
+    backgroundColor: '#E53A40',
+  },
+  btnText: {
+    fontFamily: 'Pretendard-Medium',
     fontSize: 14,
+    color: '#fff',
     textAlign: 'center',
     borderRadius: 5,
   },
-  submit: {
-    paddingHorizontal: 30,
-    color: '#fff',
-    backgroundColor: '#E53A40',
-  },
-  cancel: {
+  gray: {
     color: '#666',
     textDecorationLine: 'underline',
+  },
+  hr: {
+    borderBottomWidth: 7,
+    borderBottomColor: '#f3f3f3',
   },
   entry: {
     paddingVertical: 20,
     paddingHorizontal: 20,
-    borderTopWidth: 1,
-    borderTopColor: '#ededed',
   },
 });
 

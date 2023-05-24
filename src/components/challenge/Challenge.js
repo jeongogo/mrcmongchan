@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   title: {
-    fontFamily: 'Pretendard-Bold',
+    fontFamily: 'Pretendard-Medium',
     fontSize: 18,
     color: '#222',
   },

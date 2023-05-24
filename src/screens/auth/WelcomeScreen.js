@@ -38,6 +38,7 @@ function WelcomeScreen({route}) {
         },
         challenge: '',
         created: new Date(),
+        recordColor: 'f8ca00',
       }
       createUser(newUser)
       setUser(newUser);
@@ -50,29 +51,25 @@ function WelcomeScreen({route}) {
 
   return (
     <View style={styles.container}>
-      <CustomWrap>
-        <View style={styles.wrap}>
-          {isLoading && <Loader />}
-          <Text style={styles.title}>환영합니다.</Text>
-          <TextInput
-            style={styles.input}
-            value={name}
-            onChangeText={setName}
-            placeholder="이름"
-            placeholderTextColor='black'
-          />
-          <TextInput
-            style={styles.input}
-            value={weight}
-            onChangeText={setWeight}
-            placeholder="몸무게(kg)"
-            placeholderTextColor='black'
-          />
-          <Pressable style={styles.btn} onPress={onSubmit}>
-            <Text style={styles.btnText}>저장</Text>
-          </Pressable>
-        </View>
-      </CustomWrap>
+      {isLoading && <Loader />}
+      <Text style={styles.title}>추가 정보 입력</Text>
+      <TextInput
+        style={styles.input}
+        value={name}
+        onChangeText={setName}
+        placeholder="이름"
+        placeholderTextColor='black'
+      />
+      <TextInput
+        style={styles.input}
+        value={weight}
+        onChangeText={setWeight}
+        placeholder="몸무게(kg)"
+        placeholderTextColor='black'
+      />
+      <Pressable style={styles.btn} onPress={onSubmit}>
+        <Text style={styles.btnText}>저장</Text>
+      </Pressable>
     </View>
   )
 }
@@ -82,32 +79,39 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignContent: 'center',
-    padding: 30,
+    paddingHorizontal: 50,
+    backgroundColor: '#f3f3f3'
   },
   wrap: {
     padding: 10,
   },
   title: {
-    fontFamily: 'Pretendard-Medium',
-    fontSize: 20,
+    fontFamily: 'Pretendard-Bold',
+    fontSize: 24,
+    color: '#222',
     textAlign: 'center',
     marginBottom: 20,
   },
   input: {
-    marginBottom: 10,
-    padding: 10,
-    fontFamily: 'Pretendard-Medium',
-    fontSize: 15,
-    color: 'black',
-    borderWidth: 1,
-    borderColor: '#ddd',
-    backgroundColor: '#fff',
-    borderRadius: 5,
+    marginTop: 10,
+    paddingHorizontal: 10,
+    height: 48,
+    fontFamily: 'Pretendard-Regular',
+    fontSize: 14,
+    color: '#000',
+    borderBottomWidth: 1,
+    borderBottomColor: '#bdbdbd',
   },
   btn: {
-    padding: 15,
+    marginTop: 48,
+    height: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderColor: '#E53A40',
+    borderWidth: 1,
+    backgroundColor: '#fff',
+    borderRadius: 24,
     backgroundColor: '#E53A40',
-    borderRadius: 5,
   },
   btnText: {
     fontFamily: 'Pretendard-Medium',

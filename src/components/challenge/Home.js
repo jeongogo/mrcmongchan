@@ -11,13 +11,13 @@ function Home({challenges}) {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.full}>
-      <View style={styles.btnWrap}>
         {user?.isAdmin &&
-          <Pressable style={styles.create} onPress={() => navigation.navigate('ChallengeWrite')}>
-            <Text style={styles.createText}>챌린지 만들기</Text>
-          </Pressable>
+          <View style={styles.btnWrap}>
+              <Pressable style={styles.create} onPress={() => navigation.navigate('ChallengeWrite')}>
+                <Text style={styles.createText}>챌린지 만들기</Text>
+              </Pressable>
+          </View>
         }
-      </View>
         {(challenges.length > 0) && 
           challenges.map((challenge) => (
             <Challenge key={challenge.id} challenge={challenge} navigation={navigation} />

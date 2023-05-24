@@ -28,12 +28,12 @@ function Record({isRecoding, distance, time, pace, onStart, onPause, onComplete}
       </Pressable>
       {visibleColors &&
         <View style={styles.record_colors}>
+          <Pressable style={[styles.record_color, {backgroundColor: '#f8ca00'}]} onPress={() => onSelectColor('f8ca00')} />
           <Pressable style={[styles.record_color, {backgroundColor: '#A593E0'}]} onPress={() => onSelectColor('A593E0')} />
           <Pressable style={[styles.record_color, {backgroundColor: '#6AAFE6'}]} onPress={() => onSelectColor('6AAFE6')} />
           <Pressable style={[styles.record_color, {backgroundColor: '#9baec8'}]} onPress={() => onSelectColor('9baec8')} />
           <Pressable style={[styles.record_color, {backgroundColor: '#fd999a'}]} onPress={() => onSelectColor('fd999a')} />
           <Pressable style={[styles.record_color, {backgroundColor: '#79bd9a'}]} onPress={() => onSelectColor('79bd9a')} />
-          <Pressable style={[styles.record_color, {backgroundColor: '#f8ca00'}]} onPress={() => onSelectColor('f8ca00')} />
           <Pressable style={[styles.record_color, {backgroundColor: '#f3f3f3'}]} onPress={() => onSelectColor('f3f3f3')} />
         </View>
       }

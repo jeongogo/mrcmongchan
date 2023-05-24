@@ -1,8 +1,6 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef} from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, View, Text, TextInput, Pressable } from 'react-native';
-import useStore from "../../store/store";
-import Terms from "./Terms";
 
 function Login({isSignUp, handleLogin}) {
   const navigation = useNavigation();
@@ -13,7 +11,6 @@ function Login({isSignUp, handleLogin}) {
   });
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
-  const terms = useStore((state) => state.terms);
 
   const createChangeTextHandler = (name) => (value) => {
     setForm({...form, [name]: value});
@@ -34,17 +31,9 @@ function Login({isSignUp, handleLogin}) {
     handleLogin(form);
   }
 
-  useEffect(() => {
-    if (!terms.service) {
-      console.log('약관 동의 받자');
-    }
-  }, []);
-
   return (
     <View style={styles.container}>
-      {!terms.service &&
-        <Terms />
-      }
+      <Text style={styles.title}>환영합니다.</Text>
       <TextInput
         style={styles.input}
         value={form.email}
@@ -59,7 +48,7 @@ function Login({isSignUp, handleLogin}) {
         placeholderTextColor='black'
       />
       <TextInput
-        style={[styles.input, styles.margin]}
+        style={styles.input}
         value={form.password}
         onChangeText={createChangeTextHandler('password')}
         secureTextEntry
@@ -76,46 +65,54 @@ function Login({isSignUp, handleLogin}) {
         placeholderTextColor='black'
       />
       {isSignUp && (
-        <TextInput
-          style={[styles.input, styles.margin]}
-          value={form.confirmPassword}
-          onChangeText={createChangeTextHandler('confirmPassword')}
-          secureTextEntry
-          ref={confirmPasswordRef}
-          returnKeyType='done'
-          onSubmitEditing={onSubmit}
-          placeholder='비밀번호 확인'
-          placeholderTextColor='black'
-        />
+        <>
+          <TextInput
+            style={styles.input}
+            value={form.confirmPassword}
+            onChangeText={createChangeTextHandler('confirmPassword')}
+            secureTextEntry
+            ref={confirmPasswordRef}
+            returnKeyType='done'
+            onSubmitEditing={onSubmit}
+            placeholder='비밀번호 확인'
+            placeholderTextColor='black'
+          />
+          {/* <View style={styles.policyCheck}>
+            <Text style={styles.policyText}>(필수) 서비스 이용약관에 동의합니다.</Text>
+            <Text style={styles.policyText}>(필수) 개인정보처리방침에 동의합니다.</Text>
+          </View> */}
+        </>
       )}
-      <Pressable
-        onPress={onSubmit}
-        style={({pressed}) => [
-          styles.wrapper,
-          styles.primaryWrapper,
-          Platform.OS === 'ios' && pressed && {opacity: 0.5},
-        ]}
-        android_ripple={{
-          color: '#ffffff',
-        }}
-      >
-        <Text style={[styles.text, styles.primaryText]}>{isSignUp ? '회원가입' : '로그인'}</Text>
-      </Pressable>
-      <Pressable
-        onPress={onSecondaryButtonPress}
-        style={({pressed}) => [
-          styles.wrapper,
-          Platform.OS === 'ios' && pressed && {opacity: 0.5},
-        ]}
-        android_ripple={{
-          color: '#ffffff',
-        }}
-      >
-        <Text style={[styles.text]}>{isSignUp ? '로그인' : '회원가입'}</Text>
-      </Pressable>
-      <Pressable style={styles.find} onPress={() => navigation.navigate('FindPassword')}>
-        <Text style={styles.findText}>비밀번호 찾기</Text>
-      </Pressable>
+      <View style={styles.btnWrap}>
+        <Pressable
+          onPress={onSubmit}
+          style={({pressed}) => [
+            styles.btn,
+            styles.primaryBtn,
+            Platform.OS === 'ios' && pressed && {opacity: 0.5},
+          ]}
+          android_ripple={{
+            color: '#ffffff',
+          }}
+        >
+          <Text style={[styles.text, styles.primaryText]}>{isSignUp ? '회원가입' : '로그인'}</Text>
+        </Pressable>
+        <Pressable
+          onPress={onSecondaryButtonPress}
+          style={({pressed}) => [
+            styles.btn,
+            Platform.OS === 'ios' && pressed && {opacity: 0.5},
+          ]}
+          android_ripple={{
+            color: '#ffffff',
+          }}
+        >
+          <Text style={[styles.text]}>{isSignUp ? '로그인' : '회원가입'}</Text>
+        </Pressable>
+        <Pressable style={styles.find} onPress={() => navigation.navigate('FindPassword')}>
+          <Text style={styles.findText}>비밀번호 찾기</Text>
+        </Pressable>
+      </View>
       <View style={styles.hr}></View>
     </View>
   )
@@ -126,28 +123,46 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 10,
   },
+  title: {
+    marginBottom: 16,
+    fontSize: 24,
+    fontFamily: 'Pretendard-Bold',
+    color: '#222',
+    textAlign: 'center',
+  },
   input: {
-    paddingHorizontal: 16,
-    borderRadius: 4,
+    marginTop: 10,
+    paddingHorizontal: 10,
     height: 48,
     fontFamily: 'Pretendard-Regular',
     fontSize: 14,
-    color: '#000',
-    backgroundColor: 'white',
-    borderWidth: 1,
-    borderColor: '#bdbdbd',
+    color: '#222',
+    borderBottomWidth: 1,
+    borderBottomColor: '#bdbdbd',
   },
-  wrapper: {
-    marginTop: 10,
+  policyCheck: {
+    marginTop: 20,
+  },
+  policyText: {
+    marginTop: 5,
+    fontFamily: 'Pretendard-Regular',
+    fontSize: 14,
+    color: '#222',
+  },
+  btnWrap: {
+    marginTop: 16,
+  },
+  btn: {
+    marginTop: 15,
     height: 48,
     alignItems: 'center',
     justifyContent: 'center',
     borderColor: '#E53A40',
     borderWidth: 1,
     backgroundColor: '#fff',
-    borderRadius: 4,
+    borderRadius: 24,
   },
-  primaryWrapper: {
+  primaryBtn: {
     backgroundColor: '#E53A40',
   },
   text: {
@@ -159,14 +174,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Pretendard-Medium',
     color: 'white',
   },
-  margin: {
-    marginTop: 10,
-  },
   hr: {
-    marginTop: 30,
-    marginBottom: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
+    marginTop: 35,
+    marginBottom: 30,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
   },
   find: {
     marginTop: 16,

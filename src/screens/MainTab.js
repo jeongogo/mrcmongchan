@@ -21,6 +21,8 @@ const MainTab = ({navigation}) => {
       inactiveColor="#999"
       activeColor="#000"
       barStyle={{
+        borderTopWidth: 1,
+        borderTopColor: '#ededed',
         backgroundColor: '#fff',
       }}
     >

@@ -3,7 +3,6 @@ import {View, Text, TextInput, StyleSheet, Pressable} from 'react-native';
 import Loader from "../../components/common/Loader";
 import useStore from "../../store/store";
 import { createUser } from "../../lib/user";
-import CustomWrap from "../../components/common/CustomWrap";
 
 function WelcomeScreen({route}) {
   const {uid} = route.params ?? {};
@@ -20,6 +19,7 @@ function WelcomeScreen({route}) {
     try {
       const newUser = {
         uid,
+        // snsType
         name,
         photoURL: '',
         weight,

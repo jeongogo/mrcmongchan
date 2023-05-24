@@ -15,6 +15,7 @@ function LoginScreen({route, navigation}) {
   const {isSignUp} = route.params ?? {};
   const [isLoading, setIsLoading] = useState(false);
   const setUser = useStore((state) => state.setUser);
+  const setSnsType = useStore((state) => state.setSnsType);
 
   /** 로그인 */
   const handleLogin = async (form) => {
@@ -33,6 +34,7 @@ function LoginScreen({route, navigation}) {
       const {user} = isSignUp ? await signUp(info) : await signIn(info);
       const profile = await getUser(user.uid);
       if (!profile) {
+        // setSnsType();
         navigation.navigate('Welcome', {uid: user.uid});
       } else {
         setUser(profile);

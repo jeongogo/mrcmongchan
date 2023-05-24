@@ -7,6 +7,10 @@ let state = (set) => ({
   user: '',
   setUser: (data) => set(() => ({ user: data })),
 
+  /** sns 회원가입 */
+  snsType: '',
+  setSnsType: (data) => set(() => ({ snsType: data })),
+
   /** 기록 측정 */
   record: '',
   setRecord: (data) => set(() => ({ record: data })),

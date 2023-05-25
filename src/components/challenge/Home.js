@@ -11,18 +11,16 @@ function Home({challenges}) {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.full}>
-        {user?.isAdmin &&
-          <View style={styles.btnWrap}>
-              <Pressable style={styles.create} onPress={() => navigation.navigate('ChallengeWrite')}>
-                <Text style={styles.createText}>챌린지 만들기</Text>
-              </Pressable>
-          </View>
-        }
         {(challenges.length > 0) && 
           challenges.map((challenge) => (
             <Challenge key={challenge.id} challenge={challenge} navigation={navigation} />
-        ))}
+            ))}
       </ScrollView>
+      {user?.isAdmin &&
+        <Pressable style={styles.create} onPress={() => navigation.navigate('ChallengeWrite')}>
+          <Text style={styles.createText}>챌린지 만들기</Text>
+        </Pressable>
+      }
     </SafeAreaView>
   )
 };
@@ -31,23 +29,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingVertical: 15,
-    paddingHorizontal: 10,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f3f3f3',
   },
-  btnWrap: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    width: '100%',
-    marginBottom: 15,
-  },
   create: {
+    position: 'absolute',
+    left: 0,
+    bottom: 0,
     width: '100%',
     paddingVertical: 17,
-    backgroundColor: '#30A9DE',
-    borderRadius: 10,
+    backgroundColor: '#E53A40',
+    zIndex: 2,
   },
   createText: {
     fontFamily: 'Pretendard-Medium',
@@ -58,6 +51,8 @@ const styles = StyleSheet.create({
   },
   full: {
     width: '100%',
+    paddingHorizontal: 10,
+    paddingBottom: 50,
   }
 });
 

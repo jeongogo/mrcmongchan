@@ -13,6 +13,7 @@ import ProfileScreen from "./mypage/ProfileScreen";
 import WeightScreen from "./mypage/WeightScreen";
 import PaceScreen from "./mypage/PaceScreen";
 import SettingScreen from "./mypage/SettingScreen";
+import VDOTScreen from "./mypage/VDOTScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -80,6 +81,13 @@ function RootStack() {
               component={PaceScreen}
               options={{
                 title: '페이스 계산'
+              }}
+            />
+            <Stack.Screen
+              name='VDOT'
+              component={VDOTScreen}
+              options={{
+                title: '예상 기록 테스트'
               }}
             />
             <Stack.Screen

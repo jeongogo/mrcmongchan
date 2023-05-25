@@ -221,11 +221,9 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   btnWrap: {
-    display: 'flex',
-    flexDirection: 'row',
-    paddingHorizontal: 10,
     marginTop: 10,
     marginBottom: 40,
+    paddingHorizontal: 20,
   },
   btn: {
     paddingVertical: 15,
@@ -239,7 +237,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Pretendard-Medium',
     fontSize: 14,
     color: '#fff',
-    textAlign: 'center',
     borderRadius: 5,
   },
   gray: {

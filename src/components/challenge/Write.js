@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
   input: {
     display: 'flex',
     justifyContent: 'center',
-    marginTop: 10,
+    marginTop: 5,
     width: '100%',
     height: 42,
     paddingHorizontal: 10,
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
   btn: {
     paddingVertical: 15,
     backgroundColor: '#E53A40',
-    borderRadius: 5,
+    borderRadius: 30,
   },
   btnText: {
     fontFamily: 'Pretendard-Medium',

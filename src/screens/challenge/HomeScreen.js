@@ -1,4 +1,5 @@
 import React, {useEffect} from 'react';
+import { useIsFocused } from '@react-navigation/native';
 import { useQuery } from 'react-query';
 import firestore from '@react-native-firebase/firestore';
 import useStore from "../../store/store";
@@ -7,6 +8,7 @@ import Home from "../../components/challenge/Home";
 import Loader from "../../components/common/Loader";
 
 function HomeScreen() {
+  const isFocused = useIsFocused();
   const user = useStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
 
@@ -29,7 +31,7 @@ function HomeScreen() {
 
   const checkChallenge = async () => {
     const filterData = challengesQuery.data.filter((i) => i.id === user.challenge);
-
+    
     if (filterData.length < 1) {
       setUser({...user, challenge: ''});
       await updateUser(user.uid, {challenge: ''});
@@ -37,10 +39,10 @@ function HomeScreen() {
   }
 
   useEffect(() => {
-    if (challengesQuery.data) {
+    if (challengesQuery.data && user.challenge !== '') {
       checkChallenge();
     }
-  }, []);
+  }, [isFocused]);
 
   if (!challengesQuery.data) {
     return <Loader />

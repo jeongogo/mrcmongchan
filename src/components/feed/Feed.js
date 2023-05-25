@@ -7,29 +7,18 @@ import CustomWrap from '../common/CustomWrap';
 
 function Feed({ feed }) {
   const navigation = useNavigation();
-  const user = useStore((state) => state.user);
   const setFeedDetail = useStore((state) => state.setFeedDetail);
-  const [date, setDate] = useState('');
   const [time, setTime] = useState('');
 
   const onDetail = (id) => {
-    setFeedDetail(feed);
+    setFeedDetail(feed._data);
     navigation.push('FeedDetail', {id});
   }
 
   useEffect(() => {
-    const current = new Date(feed.date.toDate());
-    const month = current.getMonth() + 1;
-    const date = current.getDate();
-    let hours = current.getHours();
-    let min = current.getMinutes();
-    hours = hours < 10 ? '0' + hours : hours;
-    min = min < 10 ? '0' + min : min;
-    setDate(month + '월 ' + date + '일 ' + hours + ':' + min);
-
-    let recordHours = Math.floor(feed.totalTime/60/60);
-    let recordMinutes = Math.floor(feed.totalTime/60) - (recordHours * 60);
-    let recordSeconds = (feed.totalTime) - (Math.floor(feed.totalTime/60) * 60);
+    let recordHours = Math.floor(feed._data.totalTime/60/60);
+    let recordMinutes = Math.floor(feed._data.totalTime/60) - (recordHours * 60);
+    let recordSeconds = (feed._data.totalTime) - (Math.floor(feed._data.totalTime/60) * 60);
     recordHours = recordHours < 1 ? '' : recordHours + ':';
     recordMinutes = recordMinutes < 10 ? '0' + recordMinutes : recordMinutes;
     recordSeconds = recordSeconds < 10 ? '0' + recordSeconds : recordSeconds;
@@ -39,30 +28,26 @@ function Feed({ feed }) {
   return (
     <CustomWrap>
       <Pressable onPress={() => onDetail(feed.id)}>
-        {/* <View style={styles.wrap}>
-          <Image style={styles.avatar} source={{uri: feed.photoURL}} />
-          <Text style={styles.text}>{feed.displayName}</Text>
-        </View> */}
         <View style={[styles.wrap, styles.top]}>
-          {feed.title
+          {feed._data.title
             ?
               <>
-                <Text style={styles.title}>{feed.title}</Text>
-                <Text style={styles.date}>{format(new Date(feed.date.toDate()), 'yyyy.MM.dd HH:mm')}</Text>
+                <Text style={styles.title}>{feed._data.title}</Text>
+                <Text style={styles.date}>{format(new Date(feed._data.date.toDate()), 'M.dd HH:mm')}</Text>
               </>
             :
-              <Text style={styles.title}>{date}</Text>
+              <Text style={styles.title}>{format(new Date(feed._data.date.toDate()), 'M.dd HH:mm')}</Text>
           }          
         </View>
         <View style={styles.wrap}>
-          <Text style={styles.text}>{feed.areaName}</Text>
+          <Text style={styles.text}>{feed._data.areaName}</Text>
         </View>
         <View style={styles.wrap}>
-          <Text style={styles.text}>{feed.distance}km</Text>
+          <Text style={styles.text}>{feed._data.distance}km</Text>
           <Text style={styles.bar}></Text>
           <Text style={styles.text}>{time}</Text>
           <Text style={styles.bar}></Text>
-          <Text style={styles.text}>{feed.pace}</Text>
+          <Text style={styles.text}>{feed._data.pace}</Text>
         </View>
       </Pressable>
     </CustomWrap>

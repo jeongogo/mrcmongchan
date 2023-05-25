@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { format } from 'date-fns';
 import {LineChart} from "react-native-chart-kit";
 import useStore from "../../store/store";
 import {
@@ -99,7 +100,12 @@ function Detail() {
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <View style={styles.titleWrap}>
-          <Text style={styles.title}>{feedDetail.title}</Text>
+          <Text style={styles.title}>
+            {feedDetail.title
+              ? feedDetail.title
+              : format(new Date(feedDetail.date.toDate()), 'M.dd HH:mm')
+            }
+          </Text>
           <Text style={styles.area}>{feedDetail.areaName}</Text>
           {weather && <Icon name={weather} color='#666' size={20} />}
         </View>

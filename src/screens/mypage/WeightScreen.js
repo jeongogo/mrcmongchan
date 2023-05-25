@@ -1,11 +1,11 @@
 import React from 'react';
 import Weight from "../../components/mypage/Weight";
 
-function WriteScreen() {
+function WeightScreen() {
 
   return (
     <Weight />
   )
 }
 
-export default WriteScreen;
+export default WeightScreen;

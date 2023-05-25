@@ -78,7 +78,12 @@ function Home() {
           </Pressable>
           <Pressable style={styles.menu} onPress={() => navigation.navigate('PaceCalc')}>
             <Icon name='alarm-check' color='#222' size={18} />
-            <Text style={styles.menuText}>페이스 계산</Text>
+            <Text style={styles.menuText}>페이스 계산기</Text>
+            <Icon name='chevron-right' color='#222' size={24} />
+          </Pressable>
+          <Pressable style={styles.menu} onPress={() => navigation.navigate('VDOT')}>
+            <Icon name='help-circle-outline' color='#222' size={18} />
+            <Text style={styles.menuText}>예상 기록 테스트</Text>
             <Icon name='chevron-right' color='#222' size={24} />
           </Pressable>
           <Pressable style={styles.menu} onPress={() => navigation.navigate('Setting')}>

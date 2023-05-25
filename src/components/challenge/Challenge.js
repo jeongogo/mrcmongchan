@@ -1,7 +1,7 @@
 import React from 'react';
 import { format } from 'date-fns';
 import useStore from "../../store/store";
-import {View, Text, StyleSheet, Pressable} from 'react-native';
+import {View, Text, StyleSheet, Pressable, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import CustomWrap from '../common/CustomWrap';
 
@@ -14,26 +14,29 @@ function Challenge({ challenge, navigation }) {
 
   return (
     <CustomWrap>
-      <Pressable onPress={() => onDetail(challenge.id)}>
-        <View style={styles.wrap}>
+      <Pressable onPress={() => onDetail(challenge.id)} style={styles.block}>
+        <View style={styles.imageWrap}>
+          <Image source={{uri: challenge.photoURL}} style={styles.image} />
+        </View>
+        <View style={styles.contentWrap}>
           <Text style={styles.title}>{challenge.title}</Text>
+          <View style={styles.wrap}>
+            <Text style={styles.date}>{format(new Date(challenge.startDate.toDate()), 'yyyy.MM.dd')}</Text>
+            <Text style={styles.date}> ~ </Text>
+            <Text style={styles.date}>{format(new Date(challenge.endDate.toDate()), 'yyyy.MM.dd')}</Text>
+          </View>
+          <View style={styles.wrap}>
+            <Text style={styles.text}>
+              <Icon name={'flag'} color={'#222'} size={16} /> {challenge.goal}km
+            </Text>
+            <Text style={styles.margin}></Text>
+            <Text style={styles.text}>
+              <Icon name={'account-multiple'} color={'#222'} size={16} /> {challenge.entry.length}
+            </Text>
+            {user.challenge === challenge.id &&
+              <Text style={styles.hasAttend}>참가중</Text>
+            }
         </View>
-        <View style={styles.wrap}>
-          <Text style={styles.text}>{format(new Date(challenge.startDate.toDate()), 'yyyy.MM.dd')}</Text>
-          <Text style={styles.text}> ~ </Text>
-          <Text style={styles.text}>{format(new Date(challenge.endDate.toDate()), 'yyyy.MM.dd')}</Text>
-        </View>
-        <View style={styles.wrap}>
-          <Text style={styles.text}>
-            <Icon name={'flag'} color={'#222'} size={16} /> {challenge.goal}km
-          </Text>
-          <Text style={styles.margin}></Text>
-          <Text style={styles.text}>
-            <Icon name={'account-multiple'} color={'#222'} size={16} /> {challenge.entry.length}
-          </Text>
-          {user.challenge === challenge.id &&
-            <Text style={styles.hasAttend}>참가중</Text>
-          }
         </View>
       </Pressable>
     </CustomWrap>
@@ -41,11 +44,28 @@ function Challenge({ challenge, navigation }) {
 };
 
 const styles = StyleSheet.create({
+  block: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   wrap: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 5,
+  },
+  imageWrap: {
+    width: 100,
+    height: 100,
+  },
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 5,
+  },
+  contentWrap: {
+    marginLeft: 15,
   },
   title: {
     fontFamily: 'Pretendard-Medium',
@@ -56,6 +76,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Pretendard-Regular',
     fontSize: 15,
     color: '#454545',
+  },
+  date: {
+    fontFamily: 'Pretendard-Regular',
+    fontSize: 15,
+    color: '#666',
   },
   margin: {
     marginHorizontal: 10,

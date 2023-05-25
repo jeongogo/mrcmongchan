@@ -1,25 +1,42 @@
-import React from 'react';
-import {StyleSheet, SafeAreaView, ScrollView, View, Text} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { FlatList,StyleSheet, View } from 'react-native';
 import Feed from "./Feed";
 
-function Home({feeds}) {
+function Home({data, onMore}) {
+  const [list, setList] = useState([]);
+
+  useEffect(() => {
+    let filterData = [];
+    data.pages.map((i) => {
+      filterData.push(i._docs);
+      return i._docs
+    });
+    setList(filterData[0]);
+  }, []);
+
   return (
-    <SafeAreaView style={styles.container}>
-      {(feeds.length > 0) 
+    <>
+      {data.pages.length > 0
         ?
-          <ScrollView>
-            {feeds.map((feed) => (
-              <Feed key={feed.id} feed={feed} />
-            ))}
-          </ScrollView>
+          <FlatList
+            data={list}
+            renderItem={renderItem}
+            keyExtractor={(feed) => feed.id}
+            style={styles.container}
+            onEndReached={onMore}
+          />
         :
           <View style={styles.empty}>
             <Text style={styles.emptyText}>아직 활동 기록이 없습니다.</Text>
           </View>
-      }      
-    </SafeAreaView>
+    }
+    </>
   )
 }
+
+const renderItem = ({item}) => (
+  <Feed feed={item} />
+)
 
 const styles = StyleSheet.create({
   container: {

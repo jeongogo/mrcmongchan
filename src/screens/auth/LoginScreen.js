@@ -7,13 +7,14 @@ import useStore from "../../store/store";
 import { getUser } from '../../lib/user';
 import { signIn, signUp } from '../../lib/auth';
 //import { GOOGLE_API_KEY } from "@env";
+import { Alert, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, View, ActivityIndicator } from 'react-native';
 import Login from "../../components/auth/Login";
 import Loader from "../../components/common/Loader";
-import { Alert, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 
 function LoginScreen({route, navigation}) {
   const {isSignUp} = route.params ?? {};
   const [isLoading, setIsLoading] = useState(false);
+  const [isSnsLoading, setIsSnsLoading] = useState(false);
   const setUser = useStore((state) => state.setUser);
   const setSnsType = useStore((state) => state.setSnsType);
 
@@ -63,7 +64,7 @@ function LoginScreen({route, navigation}) {
   
   /** 구글 로그인 */
   const onGoogleButtonPress = async () => {
-    setIsLoading(true);
+    setIsSnsLoading(true);
     try {
       const { idToken } = await GoogleSignin.signIn();
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
@@ -79,7 +80,7 @@ function LoginScreen({route, navigation}) {
     } catch (e) {
       console.log('에러', e);
     } finally {
-      setIsLoading(false);
+      setIsSnsLoading(false);
     }
   }
 
@@ -117,13 +118,20 @@ function LoginScreen({route, navigation}) {
           <Login isSignUp={isSignUp} handleLogin={handleLogin} />
         </View>
         <View style={styles.sns}>
-          <GoogleSigninButton onPress={() => onGoogleButtonPress()} style={styles.google} />
-          <AppleButton
-            buttonStyle={AppleButton.Style.BLACK}
-            buttonType={AppleButton.Type.SIGN_IN}
-            onPress={() => onAppleButtonPress().then(() => console.log('Apple sign-in complete!'))}
-            style={styles.apple}
-          />
+          {isSnsLoading
+            ? 
+              <ActivityIndicator size='large' color="#E53A40" />
+            :
+              <>
+                <GoogleSigninButton onPress={() => onGoogleButtonPress()} style={styles.google} />
+                <AppleButton
+                  buttonStyle={AppleButton.Style.BLACK}
+                  buttonType={AppleButton.Type.SIGN_IN}
+                  onPress={() => onAppleButtonPress().then(() => console.log('Apple sign-in complete!'))}
+                  style={styles.apple}
+                />
+              </>
+          }
         </View>
       </SafeAreaView>
     </KeyboardAvoidingView>
@@ -142,6 +150,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   google: {
     flex: 1,

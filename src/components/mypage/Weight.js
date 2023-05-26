@@ -182,7 +182,13 @@ function Weight() {
           <Pressable style={styles.close} onPress={() => setShowEditForm(false)}>
             <Icon name='close' color='#222' size={30} />
           </Pressable>
-          <TextInput style={styles.input} value={weight} onChangeText={setWeight} keyboardType="numeric" />
+          <TextInput
+            style={styles.input}
+            value={weight}
+            onChangeText={setWeight}
+            keyboardType="numeric"
+            onSubmitEditing={onSubmit}
+          />
           <Pressable style={styles.confirm} onPress={onSubmit}>
             <Text style={styles.confirmText}>확인</Text>
           </Pressable>

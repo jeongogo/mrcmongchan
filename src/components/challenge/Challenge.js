@@ -33,11 +33,11 @@ function Challenge({ challenge, navigation }) {
             <Text style={styles.text}>
               <Icon name={'account-multiple'} color={'#222'} size={16} /> {challenge.entry.length}
             </Text>
-            {user.challenge === challenge.id &&
-              <Text style={styles.hasAttend}>참가중</Text>
-            }
+          </View>
         </View>
-        </View>
+        {user.challenge === challenge.id &&
+          <Text style={styles.hasAttend}>참가중</Text>
+        }
       </Pressable>
     </CustomWrap>
   )
@@ -86,11 +86,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   hasAttend: {
-    marginLeft: 'auto',
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
     fontFamily: 'Pretendard-Medium',
     fontSize: 14,
     color: '#999',
     textDecorationLine: 'underline',
+    zIndex: 2,
   }
 });
 

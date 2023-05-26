@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {SafeAreaView, View, StyleSheet, Text, Pressable, TextInput} from 'react-native';
+import React, {useState} from 'react';
+import {SafeAreaView, View, StyleSheet, Text, TextInput} from 'react-native';
 import CustomButton from "../common/CustomButton";
 
 const vdot = [
@@ -589,6 +589,8 @@ const VDOT = () => {
               onChangeText={setRecord}
               placeholder="mm:ss"
               placeholderTextColor='#aaa'
+							keyboardType="number-pad"
+							onSubmitEditing={onSubmit}
             />
             <CustomButton title='확인' onPress={onSubmit} />
           </View>

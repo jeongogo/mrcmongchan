@@ -25,7 +25,7 @@ function Map({initLocation, captureRef, path}) {
           <Polyline
             coordinates={path}
             strokeColor='red'
-            strokeWidth={3}
+            strokeWidth={2}
           />
         }
       </MapView>

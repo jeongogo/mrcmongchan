@@ -61,7 +61,7 @@ function Challenge({
       return b.distance - a.distance;
     });
     setEntryList(entry);
-  }, []);
+  }, [challenge]);
 
   return (
     <SafeAreaView style={styles.container}>

@@ -19,14 +19,8 @@ function Home({
   const user = useStore((state) => state.user);
   const width = useWindowDimensions().width;
   
-  const openURL = async (url) => {
-    const supported = await Linking.canOpenURL(url);
-
-    if (supported) {
-      await Linking.openURL(url);
-    } else {
-      console.log("Don't know how to open this URL");
-    }
+  const openURL = (url) => {
+    Linking.openURL(url);
   }
 
   const getTime = (time) => {

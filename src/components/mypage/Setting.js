@@ -17,7 +17,7 @@ const Setting = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.wrap}>
         <Text style={styles.label}>러닝 1km마다 진동 울리기</Text>
-        <Switch value={isSwitchOn} color="#E53A40" onValueChange={onToggleSwitch} />
+        <Switch value={isSwitchOn} color="#30A9DE" onValueChange={onToggleSwitch} />
       </View>
     </SafeAreaView>
   )

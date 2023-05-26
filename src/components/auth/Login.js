@@ -1,6 +1,7 @@
 import React, {useState, useRef} from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { StyleSheet, View, Text, TextInput, Pressable } from 'react-native';
+import { Checkbox } from 'react-native-paper';
+import { StyleSheet, View, Text, TextInput, Pressable, Linking, Alert } from 'react-native';
 
 function Login({isSignUp, handleLogin}) {
   const navigation = useNavigation();
@@ -11,6 +12,8 @@ function Login({isSignUp, handleLogin}) {
   });
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
+  const [checkedService, setCheckedService] = React.useState(false);
+  const [checkedPolicy, setCheckedPolicy] = React.useState(false);
 
   const createChangeTextHandler = (name) => (value) => {
     setForm({...form, [name]: value});
@@ -27,6 +30,26 @@ function Login({isSignUp, handleLogin}) {
   const onSubmit = () => {
     if (form.email === '' || form.password === '') {
       return;
+    }
+    if (isSignUp) {
+      if (!checkedService) {
+        Alert.alert("", "서비스 이용약관에 동의해 주세요.", [
+          {
+            text: "확인",
+            onPress: () => null,
+          },
+        ]);
+        return;
+      }
+      if (!checkedPolicy) {
+        Alert.alert("", "개인정보처리방침에 동의해 주세요.", [
+          {
+            text: "확인",
+            onPress: () => null,
+          },
+        ]);
+        return;
+      }
     }
     handleLogin(form);
   }
@@ -77,10 +100,36 @@ function Login({isSignUp, handleLogin}) {
             placeholder='비밀번호 확인'
             placeholderTextColor='black'
           />
-          {/* <View style={styles.policyCheck}>
-            <Text style={styles.policyText}>(필수) 서비스 이용약관에 동의합니다.</Text>
-            <Text style={styles.policyText}>(필수) 개인정보처리방침에 동의합니다.</Text>
-          </View> */}
+          <View style={styles.policyCheck}>
+            <View style={styles.policyWrap}>
+              <Checkbox
+                status={checkedService ? 'checked' : 'unchecked'}
+                color="#E53A40"
+                onPress={() => {
+                  setCheckedService(!checkedService);
+                }}
+              />
+              <Text style={styles.policyText}>(필수) </Text>
+              <Pressable onPress={() => Linking.openURL('http://mongchan.com/service')}>
+                <Text style={[styles.policyText, styles.underline]}>서비스 이용약관</Text>
+              </Pressable>
+              <Text style={styles.policyText}>에 동의합니다.</Text>
+            </View>
+            <View style={styles.policyWrap}>
+              <Checkbox
+                status={checkedPolicy ? 'checked' : 'unchecked'}
+                color="#E53A40"
+                onPress={() => {
+                  setCheckedPolicy(!checkedPolicy);
+                }}
+              />
+              <Text style={styles.policyText}>(필수) </Text>
+              <Pressable onPress={() => Linking.openURL('http://mongchan.com/policy')}>
+                <Text style={[styles.policyText, styles.underline]}>개인정보처리방침</Text>
+              </Pressable>
+              <Text style={styles.policyText}>에 동의합니다.</Text>
+            </View>
+          </View>
         </>
       )}
       <View style={styles.btnWrap}>
@@ -143,11 +192,18 @@ const styles = StyleSheet.create({
   policyCheck: {
     marginTop: 20,
   },
+  policyWrap: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   policyText: {
-    marginTop: 5,
     fontFamily: 'Pretendard-Regular',
     fontSize: 14,
     color: '#222',
+  },
+  underline: {
+    textDecorationLine: 'underline',
   },
   btnWrap: {
     marginTop: 16,

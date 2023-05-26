@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 import firestore from '@react-native-firebase/firestore';
 import useStore from "../../store/store";
@@ -10,7 +10,6 @@ import Loader from "../../components/common/Loader";
 function DetailScreen({route, navigation}) {
   const routeId = route.params.id;
   const queryClient = useQueryClient();
-  const [challenge, setChallenge] = useState('');
   const user = useStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
   const docRef = firestore().collection('Challenges').doc(routeId);
@@ -34,12 +33,14 @@ function DetailScreen({route, navigation}) {
       }
 
       // 챌린지에 참가자 추가
-      await docRef.update({ entry: [...challenge.entry, newEntry] });
-      setChallenge({...challenge, entry: [...challenge.entry, newEntry]});
+      await docRef.update({ entry: [...challengeQuery.data.entry, newEntry] });
       
       // 유저에 챌린지 추가
       await updateUser(user.uid, {challenge: routeId});
       setUser({...user, challenge: routeId});
+
+      queryClient.invalidateQueries('challenge');
+      queryClient.invalidateQueries('challenges');
 
       Alert.alert("", "참가 완료되었습니다.", [
         {
@@ -52,16 +53,16 @@ function DetailScreen({route, navigation}) {
     }
   }
 
-  /** 참가 취소하기 */
+  /** 챌린지 나가기 */
   const handleLeave = async () => {
     try {
-      let filterEntry = challenge.entry.filter((i) => i.uid !== user.uid);
+      let filterEntry = challengeQuery.data.entry.filter((i) => i.uid !== user.uid);
 
       await docRef.update({ entry: filterEntry });
       await updateUser(user.uid, { challenge: '' });
 
       setUser({...user, challenge: ''});
-
+      queryClient.invalidateQueries('challenges');
       navigation.navigate('ChallengeHome');
     } catch (e) {
       console.log(e);

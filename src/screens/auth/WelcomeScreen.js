@@ -10,6 +10,7 @@ function WelcomeScreen({route}) {
   const [name, setName] = useState('');
   const [weight, setWeight] = useState('');
   const setUser = useStore((state) => state.setUser);
+  const snsType = useStore((state) => state.snsType);
 
   const onSubmit = async () => {
     if (name.length < 1 || weight.length < 1) {
@@ -19,7 +20,7 @@ function WelcomeScreen({route}) {
     try {
       const newUser = {
         uid,
-        // snsType
+        snsType,
         name,
         photoURL: '',
         weight,

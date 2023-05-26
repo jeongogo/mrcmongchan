@@ -35,7 +35,6 @@ function LoginScreen({route, navigation}) {
       const {user} = isSignUp ? await signUp(info) : await signIn(info);
       const profile = await getUser(user.uid);
       if (!profile) {
-        // setSnsType();
         navigation.navigate('Welcome', {uid: user.uid});
       } else {
         setUser(profile);
@@ -71,6 +70,7 @@ function LoginScreen({route, navigation}) {
       const { user } = await auth().signInWithCredential(googleCredential);
       
       const profile = await getUser(user.uid);
+      setSnsType('google');
 
       if (!profile) {
         navigation.navigate('Welcome', {uid: user.uid});
@@ -85,23 +85,29 @@ function LoginScreen({route, navigation}) {
   }
 
   const onAppleButtonPress = async () => {
-    // Start the sign-in request
-    const appleAuthRequestResponse = await appleAuth.performRequest({
-      requestedOperation: appleAuth.Operation.LOGIN,
-      requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
-    });
-  
-    // Ensure Apple returned a user identityToken
-    if (!appleAuthRequestResponse.identityToken) {
-      throw 'Apple Sign-In failed - no identify token returned';
+    try {
+      // Start the sign-in request
+      const appleAuthRequestResponse = await appleAuth.performRequest({
+        requestedOperation: appleAuth.Operation.LOGIN,
+        requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+      });
+    
+      // Ensure Apple returned a user identityToken
+      if (!appleAuthRequestResponse.identityToken) {
+        throw 'Apple Sign-In failed - no identify token returned';
+      }
+    
+      // Create a Firebase credential from the response
+      const { identityToken, nonce } = appleAuthRequestResponse;
+      const appleCredential = auth.AppleAuthProvider.credential(identityToken, nonce);
+
+      setSnsType('apple');
+    
+      // Sign the user in with the credential
+      return auth().signInWithCredential(appleCredential);
+    } catch (e) {
+      console.table(e);;
     }
-  
-    // Create a Firebase credential from the response
-    const { identityToken, nonce } = appleAuthRequestResponse;
-    const appleCredential = auth.AppleAuthProvider.credential(identityToken, nonce);
-  
-    // Sign the user in with the credential
-    return auth().signInWithCredential(appleCredential);
   }
 
   useEffect(() => {
@@ -122,15 +128,7 @@ function LoginScreen({route, navigation}) {
             ? 
               <ActivityIndicator size='large' color="#E53A40" />
             :
-              <>
-                <GoogleSigninButton onPress={() => onGoogleButtonPress()} style={styles.google} />
-                <AppleButton
-                  buttonStyle={AppleButton.Style.BLACK}
-                  buttonType={AppleButton.Type.SIGN_IN}
-                  onPress={() => onAppleButtonPress().then(() => console.log('Apple sign-in complete!'))}
-                  style={styles.apple}
-                />
-              </>
+              (Platform.OS === 'android') && <GoogleSigninButton onPress={onGoogleButtonPress} style={styles.google} />
           }
         </View>
       </SafeAreaView>

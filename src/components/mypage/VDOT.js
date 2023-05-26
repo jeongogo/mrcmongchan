@@ -541,8 +541,10 @@ const VDOT = () => {
     return parseInt(str[0] * 60) + parseInt(str[1]);
   };
 
-  const onSubmit = (e) => {
-    e.preventDefault();
+  const onSubmit = () => {
+		if (record === '') {
+			return;
+		}
     const found = vdot.find((v) => {
       const v_str = v.five.split(':');
       const r_str = record.split(':');
@@ -589,7 +591,6 @@ const VDOT = () => {
               onChangeText={setRecord}
               placeholder="mm:ss"
               placeholderTextColor='#aaa'
-							keyboardType="number-pad"
 							onSubmitEditing={onSubmit}
             />
             <CustomButton title='확인' onPress={onSubmit} />

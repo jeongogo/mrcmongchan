@@ -27,27 +27,35 @@ function Feed({ feed }) {
 
   return (
     <CustomWrap>
-      <Pressable onPress={() => onDetail(feed.id)}>
-        <View style={[styles.wrap, styles.top]}>
-          {feed._data.title
-            ?
-              <>
-                <Text style={styles.title}>{feed._data.title}</Text>
-                <Text style={styles.date}>{format(new Date(feed._data.date.toDate()), 'M.dd HH:mm')}</Text>
-              </>
-            :
-              <Text style={styles.title}>{format(new Date(feed._data.date.toDate()), 'M.dd HH:mm')}</Text>
-          }          
+      <Pressable onPress={() => onDetail(feed.id)} style={styles.container}>
+        <View style={styles.imageWrap}>
+          {feed._data.photoURL
+            ? <Image source={{uri: feed._data.photoURL}} style={styles.image} />
+            : <Image source={{uri: feed._data.captureURL}} style={styles.image} />
+          }
         </View>
-        <View style={styles.wrap}>
-          <Text style={styles.text}>{feed._data.areaName}</Text>
-        </View>
-        <View style={styles.wrap}>
-          <Text style={styles.text}>{feed._data.distance}km</Text>
-          <Text style={styles.bar}></Text>
-          <Text style={styles.text}>{time}</Text>
-          <Text style={styles.bar}></Text>
-          <Text style={styles.text}>{feed._data.pace}</Text>
+        <View style={styles.contentWrap}>
+          <View style={styles.wrap}>
+            {feed._data.title
+              ?
+                <>
+                  <Text style={styles.title}>{feed._data.title}</Text>
+                  <Text style={styles.date}>{format(new Date(feed._data.date.toDate()), 'M.dd HH:mm')}</Text>
+                </>
+              :
+                <Text style={styles.title}>{format(new Date(feed._data.date.toDate()), 'M.dd HH:mm')}</Text>
+            }          
+          </View>
+          <View style={styles.wrap}>
+            <Text style={styles.text}>{feed._data.areaName}</Text>
+          </View>
+          <View style={styles.wrap}>
+            <Text style={styles.text}>{feed._data.distance}km</Text>
+            <Text style={styles.bar}></Text>
+            <Text style={styles.text}>{time}</Text>
+            <Text style={styles.bar}></Text>
+            <Text style={styles.text}>{feed._data.pace}</Text>
+          </View>
         </View>
       </Pressable>
     </CustomWrap>
@@ -56,17 +64,30 @@ function Feed({ feed }) {
 
 const styles = StyleSheet.create({
   container: {
-    
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  imageWrap: {
+    width: 80,
+    height: 80,
+    backgroundColor: '#eee',
+    borderRadius: 3,
+    overflow: 'hidden',
+  },
+  image: {
+    width: 80,
+    height: 80,
+  },
+  contentWrap: {
+    marginLeft: 15,
+    flexGrow: 1,
   },
   wrap: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 2,
-  },
-  top: {
-    justifyContent: 'space-between',
-    alignItems: 'center',
   },
   title: {
     marginBottom: 1,
@@ -75,6 +96,7 @@ const styles = StyleSheet.create({
     color: '#222',
   },
   date: {
+    marginLeft: 10,
     fontFamily: 'Pretendard-Regular',
     fontSize: 13,
     color: '#999',

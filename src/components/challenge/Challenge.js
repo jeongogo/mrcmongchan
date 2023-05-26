@@ -14,7 +14,7 @@ function Challenge({ challenge, navigation }) {
 
   return (
     <CustomWrap>
-      <Pressable onPress={() => onDetail(challenge.id)} style={styles.block}>
+      <Pressable onPress={() => onDetail(challenge.id)} style={styles.container}>
         <View style={styles.imageWrap}>
           <Image source={{uri: challenge.photoURL}} style={styles.image} />
         </View>
@@ -44,7 +44,7 @@ function Challenge({ challenge, navigation }) {
 };
 
 const styles = StyleSheet.create({
-  block: {
+  container: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
@@ -56,13 +56,15 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   imageWrap: {
-    width: 100,
-    height: 100,
+    width: 80,
+    height: 80,
+    backgroundColor: '#eee',
+    borderRadius: 3,
+    overflow: 'hidden',
   },
   image: {
-    width: 100,
-    height: 100,
-    borderRadius: 5,
+    width: 80,
+    height: 80,
   },
   contentWrap: {
     marginLeft: 15,

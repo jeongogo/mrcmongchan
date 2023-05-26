@@ -53,6 +53,16 @@ function DetailScreen({route, navigation}) {
     }
   }
 
+  /** 참가자 수정 */
+  const handleUpdateAttend = async (data) => {
+    try {
+      await docRef.update({ entry: data });
+      queryClient.invalidateQueries('challenge');
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   /** 챌린지 나가기 */
   const handleLeave = async () => {
     try {
@@ -85,6 +95,7 @@ function DetailScreen({route, navigation}) {
       routeId={routeId}
       challenge={challengeQuery.data}
       handleAttend={handleAttend}
+      handleUpdateAttend={handleUpdateAttend}
       handleLeave={handleLeave}
       handleDelete={handleDelete}
     />

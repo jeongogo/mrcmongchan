@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
   },
   title: {
     marginBottom: 16,
-    fontSize: 24,
+    fontSize: 28,
     fontFamily: 'Pretendard-Bold',
     color: '#222',
     textAlign: 'center',

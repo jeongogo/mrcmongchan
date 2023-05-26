@@ -29,7 +29,7 @@ function Home({data, onMore}) {
           <View style={styles.empty}>
             <Text style={styles.emptyText}>아직 활동 기록이 없습니다.</Text>
           </View>
-    }
+      }
     </>
   )
 }

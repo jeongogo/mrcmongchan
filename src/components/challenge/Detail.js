@@ -9,6 +9,7 @@ function Challenge({
   routeId,
   challenge,
   handleAttend,
+  handleUpdateAttend,
   handleLeave,
   handleDelete,
 }) {
@@ -50,17 +51,36 @@ function Challenge({
   }
 
   useEffect(() => {
+    /** 누적 거리 계산 */
     const total = challenge.entry.reduce((accumulator, current, index, array) => {
       return accumulator + current.distance;
     }, 0);
     setTotalDistance(total);
     setGoalCurrent((total/challenge.goal)*100);
 
+    /** entry 정렬 */
     const entry = [...challenge.entry];
     entry.sort((a, b) => {
       return b.distance - a.distance;
     });
     setEntryList(entry);
+
+    /** photoURL 동기화 */
+    const myData = entry.filter((i) => i.uid === user.uid);    
+    if (myData.length) {
+      if (myData[0].photoURL !== user.photoURL) {
+        const newEntry = entry.map((i) => {
+          if (i.uid === user.uid) {
+            return {
+              ...i,
+              photoURL: user.photoURL,
+            }
+          }
+          return i;
+        })
+        handleUpdateAttend(newEntry);
+      }
+    }
   }, [challenge]);
 
   return (

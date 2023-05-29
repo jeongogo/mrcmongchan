@@ -77,9 +77,9 @@ function Write({navigation, isLoading, response, setResponse, handleSubmit}) {
   }
 
   useEffect(() => {
-    let recordHours = Math.floor(record.totalTime/1000/60/60);
-    let recordMinutes = Math.floor(record.totalTime/1000/60) - (recordHours * 60);
-    let recordSeconds = Math.floor((record.totalTime/1000) - (Math.floor(record.totalTime/1000/60) * 60));
+    let recordHours = Math.floor(record.totalTime/60/60);
+    let recordMinutes = Math.floor(record.totalTime/60) - (recordHours * 60);
+    let recordSeconds = Math.floor((record.totalTime) - (Math.floor(record.totalTime/60) * 60));
     recordHours = recordHours < 1 ? '' : recordHours + ':';
     recordMinutes = recordMinutes < 10 ? '0' + recordMinutes : recordMinutes;
     recordSeconds = recordSeconds < 10 ? '0' + recordSeconds : recordSeconds;

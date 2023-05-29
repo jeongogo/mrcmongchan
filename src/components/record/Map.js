@@ -15,7 +15,7 @@ function Map({initLocation, captureRef, path}) {
         }}
         showsUserLocation={true}
         followsUserLocation={true}
-        zoomEnabled={true}
+        zoomEnabled={false}
         minZoomLevel={13}
         maxZoomLevel={13}
         rotateEnabled={false}

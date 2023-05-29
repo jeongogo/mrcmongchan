@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import messaging from '@react-native-firebase/messaging';
 import {
   Platform,
   PermissionsAndroid,
@@ -50,6 +51,7 @@ function Home({ navigation }) {
   const [path, setPath] = useState([]);                              // 경로 그리기
   const [areaName, setAreaName] = useState('');                      // 현재 위치 지역 이름
   const [weather, setWeather] = useState('');                        // 현재 위치 날씨
+  const recordRef = useRef();
   
   /** 지도 초기값 세팅 */
   const initGeo = () => {
@@ -61,6 +63,7 @@ function Home({ navigation }) {
     },
     (error) => {
       console.log(error.code, error.message);
+      setIsLoading(false);
     },
       {
         enableHighAccuracy: true,
@@ -103,15 +106,16 @@ function Home({ navigation }) {
         
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
           initGeo();
-          requestBackgroundPermission();
         } else {
           navigation.navigate('HomeStack');          
         }
       }
       if (Platform.OS === 'ios') {
         Geolocation.requestAuthorization('always');
+
+        messaging().requestPermission();
+        
         initGeo();
-        requestBackgroundPermission();
       }
     } catch (e) {
       console.log(e);
@@ -135,7 +139,7 @@ function Home({ navigation }) {
       //   cancelButton: "취소",
       //   settingsButton: "'항상 허용' 설정"
       // },
-      disableMotionActivityUpdates: (Platform.OS === 'android') ? false : true,
+      // disableMotionActivityUpdates: (Platform.OS === 'android') ? false : true,
       // disableLocationAuthorizationAlert: (Platform.OS === 'android') ? false : true,
       notification: {
         title: "모두의 러닝 코치",
@@ -149,8 +153,7 @@ function Home({ navigation }) {
       stopOnTerminate: false,
       startOnBoot: false,
     }).then((state) => {
-      setPermission(true)
-      BackgroundGeolocation.start();
+      setPermission(true);
       console.log("BackgroundGeolocation is configured and ready: ", state.enabled);
     });
   }
@@ -164,7 +167,40 @@ function Home({ navigation }) {
   }
 
   /** 위치 추적 + 기록 */
-  const recordDistance = () => {
+  const recordDistance =  () => {
+    return;
+    recordRef.current = setInterval(() => {
+      BackgroundGeolocation.getCurrentPosition({
+        timeout: 30,
+        maximumAge: 5000,
+        desiredAccuracy: 10,
+        samples: 3,
+      })
+      .then((location) => {
+          const {latitude, longitude} = location.coords;
+          setCurrentAltitude(location.coords.altitude);
+          if (distanceRef.current != null) {
+            const currentDistance = haversine(distanceRef.current, location.coords, {unit: 'meter'});
+            setDistance(prev => prev + currentDistance);
+            setPath(prev => [...prev, { latitude, longitude }]);
+          }
+          distanceRef.current = { latitude, longitude };
+
+          if (appState.current !== 'active') {
+            let before = backgroundStartTimeRef.current;
+            before = Math.round(before/1000);
+            let now = new Date().getTime();
+            now = Math.round(now/1000);
+            setTotalTime(prev => prev + ((now * 1000) - (before * 1000)));
+            backgroundStartTimeRef.current = new Date().getTime();
+          }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+    }, 2000);
+    return;
+
     try {
       backgroundRef.current = BackgroundGeolocation.watchPosition((location) => {
         const {latitude, longitude} = location.coords;
@@ -190,7 +226,7 @@ function Home({ navigation }) {
       }, {
         interval: 2000,
         desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-        persist: false,
+        persist: true,
         extras: {foo: "bar"},
         timeout: 60000
       });
@@ -258,19 +294,25 @@ function Home({ navigation }) {
     setIsStarted(true);
     setIsRecoding(true);
     recordTime();
-    recordDistance();
+    // recordDistance();
+    BackgroundGeolocation.start()
+    .then(() => BackgroundGeolocation.changePace(true))
+    .catch((e) => console.log(e));
   }
 
   /** 일시 정지 */
   const onPause = () => {
     setIsRecoding(false);
     clearInterval(timeRef.current);
+    clearInterval(recordRef.current);
     backgroundStartTimeRef.current = null;
     timeRef.current = null;
     distanceRef.current = null;
     backgroundRef.current = null;
-    BackgroundGeolocation.stopWatchPosition();
-    BackgroundGeolocation.stop();
+    // BackgroundGeolocation.stopWatchPosition();
+    BackgroundGeolocation.stop()
+    .then(() => BackgroundGeolocation.changePace(false))
+    .catch((e) => console.log(e));
   }
 
   /** 측정 초기화 */
@@ -283,14 +325,17 @@ function Home({ navigation }) {
     setIsStarted(false);
     setIsRecoding(false);
     clearInterval(timeRef.current);
+    clearInterval(recordRef.current);
     backgroundStartTimeRef.current = null;
     paceRef.current = 1;
     timeRef.current = null;
     distanceRef.current = null;
     altitudeRef.current = 1;
     backgroundRef.current = null;
-    BackgroundGeolocation.stopWatchPosition();
-    BackgroundGeolocation.stop();
+    // BackgroundGeolocation.stopWatchPosition();
+    BackgroundGeolocation.stop()
+    .then(() => BackgroundGeolocation.changePace(false))
+    .catch((e) => console.log(e));
   }
 
   /** 완료 Alert */
@@ -403,11 +448,58 @@ function Home({ navigation }) {
   };
 
   useEffect(() => {
+    const onLocation = BackgroundGeolocation.onLocation((location) => {
+      if (isRecoding) {
+        const {latitude, longitude} = location.coords;
+        setCurrentAltitude(location.coords.altitude);
+
+        if (distanceRef.current != null) {
+          const currentDistance = haversine(distanceRef.current, location.coords, {unit: 'meter'});
+          setDistance(prev => prev + currentDistance);
+          setPath(prev => [...prev, { latitude, longitude }]);
+        }
+        distanceRef.current = { latitude, longitude };
+
+        if (appState.current !== 'active') {
+          let before = backgroundStartTimeRef.current;
+          before = Math.round(before/1000);
+          let now = new Date().getTime();
+          now = Math.round(now/1000);
+          setTotalTime(prev => prev + ((now * 1000) - (before * 1000)));
+          backgroundStartTimeRef.current = new Date().getTime();
+        }
+      }
+    });
+
+    const onGeofence = BackgroundGeolocation.onGeofence((event) => {
+      console.log("[onGeofence] ", event);
+    });
+
+    return () => {
+      onLocation.remove();
+      onGeofence.remove();
+    }
+  }, [isRecoding]);
+
+  useEffect(() => {
+    if (permission) {
+      initGeo();
+    }
+  }, [permission]);
+
+  useEffect(() => {
     onClear();
     setRecord('');
     setCaptureURL('');
+    
     if (permission) {
-      initGeo();
+      requestBackgroundPermission();
+    } else {
+      requestPermissions();
+    }
+
+    return () => {
+      BackgroundGeolocation.stop();
     }
   }, []);
 
@@ -421,28 +513,25 @@ function Home({ navigation }) {
       }
       appState.current = nextAppState;
     });
-    return () => {
-      if (permission) {
-        subscription.remove();
-      }
-    };
-  }, [isStarted, isRecoding]);
 
-  useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
       onBackAction
     );
+
     return () => {
+      if (permission) {
+        subscription.remove();
+      }
       backHandler.remove();
-    }
-  }, [isStarted]);
+    };
+  }, [isStarted, isRecoding]);
 
   return (
     <View style={styles.container}>
       {isLoading && <Loader />}
       {!permission &&
-        <Popup navigation={navigation} requestPermissions={requestPermissions} />
+        <Popup navigation={navigation} requestBackgroundPermission={requestBackgroundPermission} />
       }
       {initLocation &&
         <Map captureRef={captureRef} initLocation={initLocation} path={path} />

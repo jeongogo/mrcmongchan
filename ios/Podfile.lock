@@ -632,6 +632,9 @@ PODS:
   - Firebase/Firestore (10.7.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 10.7.0)
+  - Firebase/Messaging (10.7.0):
+    - Firebase/CoreOnly
+    - FirebaseMessaging (~> 10.7.0)
   - Firebase/Storage (10.7.0):
     - Firebase/CoreOnly
     - FirebaseStorage (~> 10.7.0)
@@ -676,6 +679,15 @@ PODS:
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
     - PromisesObjC (~> 2.1)
+  - FirebaseMessaging (10.7.0):
+    - FirebaseCore (~> 10.0)
+    - FirebaseInstallations (~> 10.0)
+    - GoogleDataTransport (~> 9.2)
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.8)
+    - GoogleUtilities/Environment (~> 7.8)
+    - GoogleUtilities/Reachability (~> 7.8)
+    - GoogleUtilities/UserDefaults (~> 7.8)
+    - nanopb (< 2.30910.0, >= 2.30908.0)
   - FirebaseSessions (10.8.0):
     - FirebaseCore (~> 10.5)
     - FirebaseCoreExtension (~> 10.0)
@@ -1144,6 +1156,8 @@ PODS:
     - React-perflogger (= 0.71.6)
   - ReactNativeART (1.2.0):
     - React
+  - RNAppleAuthentication (2.2.2):
+    - React-Core
   - RNBackgroundFetch (4.1.10):
     - React-Core
   - RNBackgroundGeolocation (4.12.0):
@@ -1168,6 +1182,11 @@ PODS:
   - RNFBFirestore (17.4.2):
     - Firebase/Firestore (= 10.7.0)
     - nanopb (< 2.30910.0, >= 2.30908.0)
+    - React-Core
+    - RNFBApp
+  - RNFBMessaging (17.5.0):
+    - Firebase/Messaging (= 10.7.0)
+    - FirebaseCoreExtension (= 10.7.0)
     - React-Core
     - RNFBApp
   - RNFBStorage (17.4.2):
@@ -1229,6 +1248,7 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "ReactNativeART (from `../node_modules/@react-native-community/art`)"
+  - "RNAppleAuthentication (from `../node_modules/@invertase/react-native-apple-authentication`)"
   - RNBackgroundFetch (from `../node_modules/react-native-background-fetch`)
   - RNBackgroundGeolocation (from `../node_modules/react-native-background-geolocation`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
@@ -1237,6 +1257,7 @@ DEPENDENCIES:
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
   - "RNFBCrashlytics (from `../node_modules/@react-native-firebase/crashlytics`)"
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
+  - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - "RNFBStorage (from `../node_modules/@react-native-firebase/storage`)"
   - "RNGoogleSignin (from `../node_modules/@react-native-google-signin/google-signin`)"
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -1260,6 +1281,7 @@ SPEC REPOS:
     - FirebaseCrashlytics
     - FirebaseFirestore
     - FirebaseInstallations
+    - FirebaseMessaging
     - FirebaseSessions
     - FirebaseStorage
     - fmt
@@ -1358,6 +1380,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   ReactNativeART:
     :path: "../node_modules/@react-native-community/art"
+  RNAppleAuthentication:
+    :path: "../node_modules/@invertase/react-native-apple-authentication"
   RNBackgroundFetch:
     :path: "../node_modules/react-native-background-fetch"
   RNBackgroundGeolocation:
@@ -1374,6 +1398,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/crashlytics"
   RNFBFirestore:
     :path: "../node_modules/@react-native-firebase/firestore"
+  RNFBMessaging:
+    :path: "../node_modules/@react-native-firebase/messaging"
   RNFBStorage:
     :path: "../node_modules/@react-native-firebase/storage"
   RNGoogleSignin:
@@ -1406,6 +1432,7 @@ SPEC CHECKSUMS:
   FirebaseCrashlytics: 35fdd1a433b31e28adcf5c8933f4c526691a1e0b
   FirebaseFirestore: 3963a6edd1c84b4748dab3e2c62624a29d03eca1
   FirebaseInstallations: b2a05a3fe707df764345d68685534d07d0664af3
+  FirebaseMessaging: ac9062bcc35ed56e15a0241d8fd317022499baf8
   FirebaseSessions: d4e22e13e5523e58fcd625671c59bed7ccee8736
   FirebaseStorage: 4841efa304543e1f9e4ca116c559c7a1ea2a9d0f
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
@@ -1458,6 +1485,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 8692ac548bec648fa121980ccb4304afd136d584
   ReactCommon: 0982e4657e0ecdc3a90858fbb529d54cd0be8fb4
   ReactNativeART: 78edc68dd4a1e675338cd0cd113319cf3a65f2ab
+  RNAppleAuthentication: 0571c08da8c327ae2afc0261b48b4a515b0286a6
   RNBackgroundFetch: 9fcdeee8aa00e1e1b3895ff9bbaaf10275288a87
   RNBackgroundGeolocation: ef78e7fd69eab7b46c54925eb362d73656853a10
   RNCAsyncStorage: b90b71f45b8b97be43bc4284e71a6af48ac9f547
@@ -1466,6 +1494,7 @@ SPEC CHECKSUMS:
   RNFBAuth: 49e57bdf45a19c6bb9102252b5b17e1c985feb95
   RNFBCrashlytics: 4bdee3fc9d2e8e051e68ae97784d2ec7221dd745
   RNFBFirestore: a782f9e265cf715c4058d44923b2017269a1381d
+  RNFBMessaging: 4b8cb1215465bacca36d0fcfc2f51e7e2aa1bc91
   RNFBStorage: 9b2b51a94ca6d400e93135e34d615ddc89dfc039
   RNGoogleSignin: 22e468a9474dbcb8618d8847205ad4f0b2575d13
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f

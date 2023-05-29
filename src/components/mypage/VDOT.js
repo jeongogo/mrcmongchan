@@ -528,74 +528,84 @@ const vdot = [
 ]
 
 const VDOT = () => {
-  const [record, setRecord] = useState('');
+	const [minutes, setMinutes] = useState();
+	const [seconds, setSeconds] = useState();
   const [result, setResult] = useState('');
   const [isResult, setIsResult] = useState(false);
 
   const onRestart = () => {
-    setRecord('');
+    setMinutes('');
+		setSeconds('');
     setIsResult(false);
   }
 
-  const minuteToSeconds = (str) => {
-    return parseInt(str[0] * 60) + parseInt(str[1]);
-  };
-
   const onSubmit = () => {
-		if (record === '') {
+		if (minutes.length < 1 || seconds.length < 1) {
 			return;
 		}
-    const found = vdot.find((v) => {
-      const v_str = v.five.split(':');
-      const r_str = record.split(':');
+		const found = vdot.find((v) => {
+			const v_str = v.five.split(':');
 
-      const v_calc = minuteToSeconds(v_str);
-      const r_calc = minuteToSeconds(r_str);
+			const v_calc = parseInt(v_str[0] * 60) + parseInt(v_str[1]);
+			const r_calc = (+minutes * 60) + +seconds;
 
-      return r_calc < v_calc
-    });
-    setResult(found);
-    setIsResult(true);
+			return r_calc < v_calc;
+		});
+		setResult(found);
+		setIsResult(true);
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      {isResult
-        ?
-          <View>
-            <Text style={[styles.title, styles.level]}>Level {result.level}.</Text>
-            <Text style={styles.title}>당신은 {result.name}입니다.</Text>
-            <View style={styles.result}>
-              <Text style={styles.text}>
-                5K 기록은 {record}입니다.
-              </Text>
-              <Text style={styles.text}>
-                10K 예상 기록은 {result.ten}{(result.level !== '1' && result.level !== '11') && <>입니다.</>}
-              </Text>
-              <Text style={styles.text}>
-                Half 예상 기록은 {result.half}{(result.level !== '1' && result.level !== '11') && <>입니다.</>}
-              </Text>
-              <Text style={styles.text}>
-                Full 예상 기록은 {result.full}{(result.level !== '1' && result.level !== '11') && <>입니다.</>}
-              </Text>
-            </View>
-            <CustomButton title='다시하기' onPress={onRestart} />
-          </View>
-        :
-          <View>
-            <Text style={styles.title}>5K 기록을 입력해 주세요.</Text>
-            <Text style={styles.descript}>예&#41; 23:30</Text>
-            <TextInput
-              value={record}
-              style={styles.input}
-              onChangeText={setRecord}
-              placeholder="mm:ss"
-              placeholderTextColor='#aaa'
-							onSubmitEditing={onSubmit}
-            />
-            <CustomButton title='확인' onPress={onSubmit} />
-          </View>
-      }
+			<View style={styles.contentWrap}>
+				{isResult
+					?
+						<View>
+							<Text style={[styles.title, styles.level]}>Level {result.level}.</Text>
+							<Text style={styles.title}>당신은 {result.name}입니다.</Text>
+							<View style={styles.result}>
+								<Text style={styles.text}>
+									5K 기록은 {minutes + ':' + seconds}입니다.
+								</Text>
+								<Text style={styles.text}>
+									10K 예상 기록은 {result.ten}{(result.level !== '1' && result.level !== '11') && <>입니다.</>}
+								</Text>
+								<Text style={styles.text}>
+									Half 예상 기록은 {result.half}{(result.level !== '1' && result.level !== '11') && <>입니다.</>}
+								</Text>
+								<Text style={styles.text}>
+									Full 예상 기록은 {result.full}{(result.level !== '1' && result.level !== '11') && <>입니다.</>}
+								</Text>
+							</View>
+							<CustomButton title='다시하기' onPress={onRestart} />
+						</View>
+					:
+						<View>
+							<Text style={styles.title}>5K 기록을 입력해 주세요.</Text>
+							<View style={styles.wrap}>
+								<TextInput
+									value={minutes}
+									style={styles.input}
+									onChangeText={setMinutes}
+									placeholder="분"
+									placeholderTextColor='#aaa'
+									keyboardType='number-pad'
+									onSubmitEditing={onSubmit}
+								/>
+								<TextInput
+									value={seconds}
+									style={styles.input}
+									onChangeText={setSeconds}
+									placeholder="초"
+									placeholderTextColor='#aaa'
+									keyboardType='number-pad'
+									onSubmitEditing={onSubmit}
+								/>
+							</View>
+							<CustomButton title='확인' onPress={onSubmit} />
+						</View>
+				}
+			</View>
     </SafeAreaView>
   )
 }
@@ -604,10 +614,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    paddingVertical: 15,
-    paddingHorizontal: 60,
     backgroundColor: '#fff',
   },
+	contentWrap: {
+		paddingVertical: 15,
+		paddingHorizontal: 60,
+	},
   title: {
     marginBottom: 10,
     fontFamily: 'Pretendard-Bold',
@@ -619,31 +631,36 @@ const styles = StyleSheet.create({
     fontSize: 28,
   },
   result: {
-    marginTop: 10,
+		marginTop: 10,
     marginBottom: 35,
   },
   text: {
-    marginTop: 3,
+    marginTop: 7,
     fontFamily: 'Pretendard-Regular',
     fontSize: 15,
     color: '#222',
     textAlign: 'center',
   },
-  descript: {
-    marginBottom: 30,
+	wrap: {
+		marginTop: 20,
+		marginBottom: 35,
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+  input: {
+    width: 70,
+    marginHorizontal: 5,
+    paddingVertical: 7,
+    paddingHorizontal: 7,
     fontFamily: 'Pretendard-Regular',
     fontSize: 16,
     color: '#454545',
     textAlign: 'center',
-  },
-  input: {
-    marginBottom: 36,
-    fontFamily: 'Pretendard-Regular',
-    fontSize: 20,
-    color: '#222',
-    textAlign: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: '#bdbdbd',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 5,
   }
 });
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, Pressable, Platform} from 'react-native';
 
-function Popup({navigation, requestPermissions}) {
+function Popup({navigation, requestBackgroundPermission}) {
   return (
     <View style={styles.permission}>
       <View style={styles.permissionWrap}>
@@ -20,7 +20,7 @@ function Popup({navigation, requestPermissions}) {
           <Pressable style={styles.permissionBtnCancel} onPress={() => navigation.navigate('HomeStack')}>
             <Text style={styles.permissionBtnTextCancel}>취소</Text>
           </Pressable>
-          <Pressable style={styles.permissionBtn} onPress={requestPermissions}>
+          <Pressable style={styles.permissionBtn} onPress={requestBackgroundPermission}>
             <Text style={styles.permissionBtnText}>확인</Text>
           </Pressable>
         </View>

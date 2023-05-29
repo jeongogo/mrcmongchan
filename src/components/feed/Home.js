@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList,StyleSheet, View } from 'react-native';
+import { FlatList,StyleSheet, View, Text } from 'react-native';
 import Feed from "./Feed";
 
 function Home({data, onMore}) {
@@ -16,7 +16,7 @@ function Home({data, onMore}) {
 
   return (
     <>
-      {data.pages.length > 0
+      {list.length > 0
         ?
           <FlatList
             data={list}

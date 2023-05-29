@@ -50,39 +50,41 @@ const Pace = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <CustomWrap>
-          <Text style={styles.title}>10K</Text>
-          <View style={styles.wrap}>
-            <TextInput style={styles.input} value={tenHour} onChangeText={setTenHour} keyboardType="numeric" placeholder="시간" />
-            <TextInput style={styles.input} value={tenMinute} onChangeText={setTenMinute} keyboardType="numeric" placeholder="분" />
-            <TextInput style={styles.input} value={tenSecond} onChangeText={setTenSecond} keyboardType="numeric" placeholder="초" />
-          </View>
-          <View style={styles.wrap}>
-            <Text style={styles.paceText}>{paceTen}</Text>
-          </View>
-        </CustomWrap>
-        <CustomWrap>
-          <Text style={styles.title}>Half</Text>
-          <View style={styles.wrap}>
-            <TextInput style={styles.input} value={halfHour} onChangeText={setHalfHour} keyboardType="numeric" placeholder="시간" />
-            <TextInput style={styles.input} value={halfMinute} onChangeText={setHalfMinute} keyboardType="numeric" placeholder="분" />
-            <TextInput style={styles.input} value={halfSecond} onChangeText={setHalfSecond} keyboardType="numeric" placeholder="초" />
-          </View>
-          <View style={styles.wrap}>
-            <Text style={styles.paceText}>{paceHalf}</Text>
-          </View>
-        </CustomWrap>
-        <CustomWrap>
-          <Text style={styles.title}>Full</Text>
-          <View style={styles.wrap}>
-            <TextInput style={styles.input} value={fullHour} onChangeText={setFullHour} keyboardType="numeric" placeholder="시간" />
-            <TextInput style={styles.input} value={fullMinute} onChangeText={setFullMinute} keyboardType="numeric" placeholder="분" />
-            <TextInput style={styles.input} value={fullSecond} onChangeText={setFullSecond} keyboardType="numeric" placeholder="초" />
-          </View>
-          <View style={styles.wrap}>
-            <Text style={styles.paceText}>{paceFull}</Text>
-          </View>
-        </CustomWrap>
+        <View style={styles.contentWrap}>
+          <CustomWrap>
+            <Text style={styles.title}>10K</Text>
+            <View style={styles.wrap}>
+              <TextInput style={styles.input} value={tenHour} onChangeText={setTenHour} keyboardType="numeric" placeholder="시간" />
+              <TextInput style={styles.input} value={tenMinute} onChangeText={setTenMinute} keyboardType="numeric" placeholder="분" />
+              <TextInput style={styles.input} value={tenSecond} onChangeText={setTenSecond} keyboardType="numeric" placeholder="초" />
+            </View>
+            <View style={styles.wrap}>
+              <Text style={styles.paceText}>{paceTen}</Text>
+            </View>
+          </CustomWrap>
+          <CustomWrap>
+            <Text style={styles.title}>Half</Text>
+            <View style={styles.wrap}>
+              <TextInput style={styles.input} value={halfHour} onChangeText={setHalfHour} keyboardType="numeric" placeholder="시간" />
+              <TextInput style={styles.input} value={halfMinute} onChangeText={setHalfMinute} keyboardType="numeric" placeholder="분" />
+              <TextInput style={styles.input} value={halfSecond} onChangeText={setHalfSecond} keyboardType="numeric" placeholder="초" />
+            </View>
+            <View style={styles.wrap}>
+              <Text style={styles.paceText}>{paceHalf}</Text>
+            </View>
+          </CustomWrap>
+          <CustomWrap>
+            <Text style={styles.title}>Full</Text>
+            <View style={styles.wrap}>
+              <TextInput style={styles.input} value={fullHour} onChangeText={setFullHour} keyboardType="numeric" placeholder="시간" />
+              <TextInput style={styles.input} value={fullMinute} onChangeText={setFullMinute} keyboardType="numeric" placeholder="분" />
+              <TextInput style={styles.input} value={fullSecond} onChangeText={setFullSecond} keyboardType="numeric" placeholder="초" />
+            </View>
+            <View style={styles.wrap}>
+              <Text style={styles.paceText}>{paceFull}</Text>
+            </View>
+          </CustomWrap>
+        </View>
       </ScrollView>
     </SafeAreaView>
   )
@@ -91,9 +93,11 @@ const Pace = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#f3f3f3',
+  },
+  contentWrap: {
     paddingVertical: 15,
     paddingHorizontal: 10,
-    backgroundColor: '#f3f3f3',
   },
   title: {
     marginTop: 10,

@@ -8,6 +8,7 @@ import CustomButton from "../common/CustomButton";
 function Challenge({
   routeId,
   challenge,
+  isExpired,
   handleAttend,
   handleUpdateAttend,
   handleLeave,
@@ -120,7 +121,7 @@ function Challenge({
           ))}
         </View>
         <View style={styles.btnWrap}>
-          {user.challenge === '' &&
+          {(user.challenge === '' && !isExpired) &&
             <CustomButton title='참가하기' onPress={handleAttend} />
           }
           {user.challenge === routeId &&
@@ -247,7 +248,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     paddingVertical: 15,
-    marginHorizontal: 10,
+    marginHorizontal: 5,
   },
   submit: {
     flexGrow: 1,

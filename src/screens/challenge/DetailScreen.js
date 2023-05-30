@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 import firestore from '@react-native-firebase/firestore';
 import useStore from "../../store/store";
@@ -13,6 +13,7 @@ function DetailScreen({route, navigation}) {
   const user = useStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
   const docRef = firestore().collection('Challenges').doc(routeId);
+  const [isExpired, setIsExpired] = useState(false);
 
   /** 챌린지 가져오기 */
   const getChallenge = async () => {
@@ -86,6 +87,18 @@ function DetailScreen({route, navigation}) {
     navigation.navigate('ChallengeHome');
   }
 
+  useEffect(() => {
+    if (challengeQuery.data) {
+      const endTime = new Date(challengeQuery.data.endDate.toDate()).getTime();
+      const nowTime = new Date().getTime();
+      if (nowTime > endTime) {
+        updateUser(user.uid, {challenge: ''});
+        setUser({...user, challenge: ''})
+        setIsExpired(true);
+      }
+    }
+  }, [challengeQuery.data]);
+
   if (!challengeQuery.data) {
     return <Loader />
   }
@@ -94,6 +107,7 @@ function DetailScreen({route, navigation}) {
     <Detail
       routeId={routeId}
       challenge={challengeQuery.data}
+      isExpired={isExpired}
       handleAttend={handleAttend}
       handleUpdateAttend={handleUpdateAttend}
       handleLeave={handleLeave}

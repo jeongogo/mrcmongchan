@@ -51,7 +51,6 @@ function Home({ navigation }) {
   const [path, setPath] = useState([]);                              // 경로 그리기
   const [areaName, setAreaName] = useState('');                      // 현재 위치 지역 이름
   const [weather, setWeather] = useState('');                        // 현재 위치 날씨
-  const recordRef = useRef();
   
   /** 지도 초기값 세팅 */
   const initGeo = () => {
@@ -102,8 +101,7 @@ function Home({ navigation }) {
         );
         await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-        );
-        
+        );        
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
           initGeo();
         } else {
@@ -112,9 +110,7 @@ function Home({ navigation }) {
       }
       if (Platform.OS === 'ios') {
         Geolocation.requestAuthorization('always');
-
-        messaging().requestPermission();
-        
+        messaging().requestPermission();        
         initGeo();
       }
     } catch (e) {
@@ -125,22 +121,7 @@ function Home({ navigation }) {
   /** 백그라운드 서비스 권한 */
   const requestBackgroundPermission = () => {
     BackgroundGeolocation.ready({
-      // locationAuthorizationRequest: Platform.OS === 'android' ? 'Always' : 'WhenInUse',
       locationAuthorizationRequest: 'WhenInUse',
-      // backgroundPermissionRationale: {
-      //   title: "위치 권한 사용 설정 안내",
-      //   message: "러닝 추적을 위해 위치 서비스에서 '항상 허용'을 사용하도록 설정해야 합니다.",
-      //   positiveAction: "'항상 허용' 설정"
-      // },
-      // locationAuthorizationAlert: {
-      //   titleWhenNotEnabled: "위치 권한 사용 설정 안내",
-      //   titleWhenOff: "위치 권한 사용 설정 안내",
-      //   instructions: "러닝 추적을 위해 위치 서비스에서 '항상 허용'을 사용하도록 설정해야 합니다.",
-      //   cancelButton: "취소",
-      //   settingsButton: "'항상 허용' 설정"
-      // },
-      // disableMotionActivityUpdates: (Platform.OS === 'android') ? false : true,
-      // disableLocationAuthorizationAlert: (Platform.OS === 'android') ? false : true,
       notification: {
         title: "모두의 러닝 코치",
         text: "앱이 실행중입니다."
@@ -159,80 +140,11 @@ function Home({ navigation }) {
   }
 
   /** 시간 계산 */
-  const recordTime = () => {
+  const onStartRecordTime = () => {
     timeRef.current = setInterval(() => {
       backgroundStartTimeRef.current = new Date().getTime();
       setTotalTime(prev => prev + 500);
     }, 500);
-  }
-
-  /** 위치 추적 + 기록 */
-  const recordDistance =  () => {
-    return;
-    recordRef.current = setInterval(() => {
-      BackgroundGeolocation.getCurrentPosition({
-        timeout: 30,
-        maximumAge: 5000,
-        desiredAccuracy: 10,
-        samples: 3,
-      })
-      .then((location) => {
-          const {latitude, longitude} = location.coords;
-          setCurrentAltitude(location.coords.altitude);
-          if (distanceRef.current != null) {
-            const currentDistance = haversine(distanceRef.current, location.coords, {unit: 'meter'});
-            setDistance(prev => prev + currentDistance);
-            setPath(prev => [...prev, { latitude, longitude }]);
-          }
-          distanceRef.current = { latitude, longitude };
-
-          if (appState.current !== 'active') {
-            let before = backgroundStartTimeRef.current;
-            before = Math.round(before/1000);
-            let now = new Date().getTime();
-            now = Math.round(now/1000);
-            setTotalTime(prev => prev + ((now * 1000) - (before * 1000)));
-            backgroundStartTimeRef.current = new Date().getTime();
-          }
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-    }, 2000);
-    return;
-
-    try {
-      backgroundRef.current = BackgroundGeolocation.watchPosition((location) => {
-        const {latitude, longitude} = location.coords;
-        console.log(latitude, longitude);
-        setCurrentAltitude(location.coords.altitude);
-        if (distanceRef.current != null) {
-          const currentDistance = haversine(distanceRef.current, location.coords, {unit: 'meter'});
-          setDistance(prev => prev + currentDistance);
-          setPath(prev => [...prev, { latitude, longitude }]);
-        }
-        distanceRef.current = { latitude, longitude };
-
-        if (appState.current !== 'active') {
-          let before = backgroundStartTimeRef.current;
-          before = Math.round(before/1000);
-          let now = new Date().getTime();
-          now = Math.round(now/1000);
-          setTotalTime(prev => prev + ((now * 1000) - (before * 1000)));
-          backgroundStartTimeRef.current = new Date().getTime();
-        }
-      }, (e) => {
-        console.log(e);
-      }, {
-        interval: 2000,
-        desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-        persist: true,
-        extras: {foo: "bar"},
-        timeout: 60000
-      });
-    } catch (e) {
-      console.log(e);
-    }
   }
 
   useEffect(() => {
@@ -293,8 +205,7 @@ function Home({ navigation }) {
   const onStart = () => {
     setIsStarted(true);
     setIsRecoding(true);
-    recordTime();
-    // recordDistance();
+    onStartRecordTime();
     BackgroundGeolocation.start()
     .then(() => BackgroundGeolocation.changePace(true))
     .catch((e) => console.log(e));
@@ -304,12 +215,10 @@ function Home({ navigation }) {
   const onPause = () => {
     setIsRecoding(false);
     clearInterval(timeRef.current);
-    clearInterval(recordRef.current);
     backgroundStartTimeRef.current = null;
     timeRef.current = null;
     distanceRef.current = null;
     backgroundRef.current = null;
-    // BackgroundGeolocation.stopWatchPosition();
     BackgroundGeolocation.stop()
     .then(() => BackgroundGeolocation.changePace(false))
     .catch((e) => console.log(e));
@@ -325,14 +234,12 @@ function Home({ navigation }) {
     setIsStarted(false);
     setIsRecoding(false);
     clearInterval(timeRef.current);
-    clearInterval(recordRef.current);
     backgroundStartTimeRef.current = null;
     paceRef.current = 1;
     timeRef.current = null;
     distanceRef.current = null;
     altitudeRef.current = 1;
     backgroundRef.current = null;
-    // BackgroundGeolocation.stopWatchPosition();
     BackgroundGeolocation.stop()
     .then(() => BackgroundGeolocation.changePace(false))
     .catch((e) => console.log(e));
@@ -406,7 +313,7 @@ function Home({ navigation }) {
         name: user.name,
         totalTime: (totalTime/1000).toFixed(0),
         distance: (distance/1000).toFixed(2),
-        pace: minutes + ':' + seconds,
+        pace: (totalTime/1000) > 60 ? minutes + ':' + seconds : '00:00',
         paceDetail,
         calorie: calorie.toFixed(0),
         date: new Date(),
@@ -471,13 +378,9 @@ function Home({ navigation }) {
       }
     });
 
-    const onGeofence = BackgroundGeolocation.onGeofence((event) => {
-      console.log("[onGeofence] ", event);
-    });
-
     return () => {
       onLocation.remove();
-      onGeofence.remove();
+      BackgroundGeolocation.stop();
     }
   }, [isRecoding]);
 
@@ -496,10 +399,6 @@ function Home({ navigation }) {
       requestBackgroundPermission();
     } else {
       requestPermissions();
-    }
-
-    return () => {
-      BackgroundGeolocation.stop();
     }
   }, []);
 

@@ -118,10 +118,23 @@ function Home({ navigation }) {
     }
   }
 
-  /** 백그라운드 서비스 권한 */
+  /** 백그라운드 서비스 */
   const requestBackgroundPermission = () => {
     BackgroundGeolocation.ready({
+      // locationAuthorizationRequest: Platform.OS === 'android' ? 'Always' : 'WhenInUse',
       locationAuthorizationRequest: 'WhenInUse',
+      // backgroundPermissionRationale: {
+      //   title: "위치 권한 사용 설정 안내",
+      //   message: "러닝 추적을 위해 위치 서비스에서 '항상 허용'을 사용하도록 설정해야 합니다.",
+      //   positiveAction: "'항상 허용' 설정"
+      // },
+      // locationAuthorizationAlert: {
+      //   titleWhenNotEnabled: "위치 권한 사용 설정 안내",
+      //   titleWhenOff: "위치 권한 사용 설정 안내",
+      //   instructions: "러닝 추적을 위해 위치 서비스에서 '항상 허용'을 사용하도록 설정해야 합니다.",
+      //   cancelButton: "취소",
+      //   settingsButton: "'항상 허용' 설정"
+      // },
       notification: {
         title: "모두의 러닝 코치",
         text: "앱이 실행중입니다."
@@ -138,6 +151,72 @@ function Home({ navigation }) {
       console.log("BackgroundGeolocation is configured and ready: ", state.enabled);
     });
   }
+
+  /** 측정하기 - for Android */
+  const onRecording = () => {
+    try {
+      backgroundRef.current = BackgroundGeolocation.watchPosition((location) => {
+        const {latitude, longitude} = location.coords;
+        setCurrentAltitude(location.coords.altitude);
+        
+        if (distanceRef.current != null) {
+          const currentDistance = haversine(distanceRef.current, location.coords, {unit: 'meter'});
+          setDistance(prev => prev + currentDistance);
+          setPath(prev => [...prev, { latitude, longitude }]);
+        }
+        distanceRef.current = { latitude, longitude };
+
+        if (appState.current !== 'active') {
+          let before = backgroundStartTimeRef.current;
+          before = Math.round(before/1000);
+          let now = new Date().getTime();
+          now = Math.round(now/1000);
+          setTotalTime(prev => prev + ((now * 1000) - (before * 1000)));
+          backgroundStartTimeRef.current = new Date().getTime();
+        }
+      }, (e) => {
+        console.log(e);
+      }, {
+        interval: 2000,
+        desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
+        persist: true,
+        extras: {foo: "bar"},
+        timeout: 60000
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  /** 측정하기 - for IOS */
+  useEffect(() => {
+    const onLocation = BackgroundGeolocation.onLocation((location) => {
+      if (Platform.OS === 'ios' && isRecoding) {
+        const {latitude, longitude} = location.coords;
+        setCurrentAltitude(location.coords.altitude);
+
+        if (distanceRef.current != null) {
+          const currentDistance = haversine(distanceRef.current, location.coords, {unit: 'meter'});
+          setDistance(prev => prev + currentDistance);
+          setPath(prev => [...prev, { latitude, longitude }]);
+        }
+        distanceRef.current = { latitude, longitude };
+
+        if (appState.current !== 'active') {
+          let before = backgroundStartTimeRef.current;
+          before = Math.round(before/1000);
+          let now = new Date().getTime();
+          now = Math.round(now/1000);
+          setTotalTime(prev => prev + ((now * 1000) - (before * 1000)));
+          backgroundStartTimeRef.current = new Date().getTime();
+        }
+      }
+    });
+
+    return () => {
+      onLocation.remove();
+    }
+  }, [isRecoding]);
 
   /** 시간 계산 */
   const onStartRecordTime = () => {
@@ -206,9 +285,14 @@ function Home({ navigation }) {
     setIsStarted(true);
     setIsRecoding(true);
     onStartRecordTime();
-    BackgroundGeolocation.start()
-    .then(() => BackgroundGeolocation.changePace(true))
-    .catch((e) => console.log(e));
+    if (Platform.OS === 'android') {
+      BackgroundGeolocation.start();
+      onRecording();
+    } else {
+      BackgroundGeolocation.start()
+      .then(() => BackgroundGeolocation.changePace(true))
+      .catch((e) => console.log(e));
+    }
   }
 
   /** 일시 정지 */
@@ -219,9 +303,14 @@ function Home({ navigation }) {
     timeRef.current = null;
     distanceRef.current = null;
     backgroundRef.current = null;
-    BackgroundGeolocation.stop()
-    .then(() => BackgroundGeolocation.changePace(false))
-    .catch((e) => console.log(e));
+    if (Platform.OS === 'android') {
+      BackgroundGeolocation.stop();
+      BackgroundGeolocation.stopWatchPosition();
+    } else {
+      BackgroundGeolocation.stop()
+      .then(() => BackgroundGeolocation.changePace(false))
+      .catch((e) => console.log(e));
+    }
   }
 
   /** 측정 초기화 */
@@ -240,9 +329,14 @@ function Home({ navigation }) {
     distanceRef.current = null;
     altitudeRef.current = 1;
     backgroundRef.current = null;
-    BackgroundGeolocation.stop()
-    .then(() => BackgroundGeolocation.changePace(false))
-    .catch((e) => console.log(e));
+    if (Platform.OS === 'android') {
+      BackgroundGeolocation.stop();
+      BackgroundGeolocation.stopWatchPosition();
+    } else {
+      BackgroundGeolocation.stop()
+      .then(() => BackgroundGeolocation.changePace(false))
+      .catch((e) => console.log(e));
+    }
   }
 
   /** 완료 Alert */
@@ -354,54 +448,24 @@ function Home({ navigation }) {
     }
   };
 
-  useEffect(() => {
-    const onLocation = BackgroundGeolocation.onLocation((location) => {
-      if (isRecoding) {
-        const {latitude, longitude} = location.coords;
-        setCurrentAltitude(location.coords.altitude);
-
-        if (distanceRef.current != null) {
-          const currentDistance = haversine(distanceRef.current, location.coords, {unit: 'meter'});
-          setDistance(prev => prev + currentDistance);
-          setPath(prev => [...prev, { latitude, longitude }]);
-        }
-        distanceRef.current = { latitude, longitude };
-
-        if (appState.current !== 'active') {
-          let before = backgroundStartTimeRef.current;
-          before = Math.round(before/1000);
-          let now = new Date().getTime();
-          now = Math.round(now/1000);
-          setTotalTime(prev => prev + ((now * 1000) - (before * 1000)));
-          backgroundStartTimeRef.current = new Date().getTime();
-        }
-      }
-    });
-
-    return () => {
-      onLocation.remove();
-      BackgroundGeolocation.stop();
-    }
-  }, [isRecoding]);
-
+  /** 권한 받기 */
   useEffect(() => {
     if (permission) {
       initGeo();
-    }
-  }, [permission]);
-
-  useEffect(() => {
-    onClear();
-    setRecord('');
-    setCaptureURL('');
-    
-    if (permission) {
       requestBackgroundPermission();
     } else {
       requestPermissions();
     }
+  }, [permission]);
+
+  /** 초기화 */
+  useEffect(() => {
+    onClear();
+    setRecord('');
+    setCaptureURL('');
   }, []);
 
+  /** 앱 상태 + 뒤로가기 핸들러 */
   useEffect(() => {
     let subscription = '';
     subscription = AppState.addEventListener('change', nextAppState => {

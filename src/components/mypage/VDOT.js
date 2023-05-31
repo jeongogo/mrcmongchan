@@ -528,8 +528,8 @@ const vdot = [
 ]
 
 const VDOT = () => {
-	const [minutes, setMinutes] = useState();
-	const [seconds, setSeconds] = useState();
+	const [minutes, setMinutes] = useState('');
+	const [seconds, setSeconds] = useState('');
   const [result, setResult] = useState('');
   const [isResult, setIsResult] = useState(false);
 
@@ -540,7 +540,7 @@ const VDOT = () => {
   }
 
   const onSubmit = () => {
-		if (minutes.length < 1 || seconds.length < 1) {
+		if (minutes === '' || seconds === '') {
 			return;
 		}
 		const found = vdot.find((v) => {

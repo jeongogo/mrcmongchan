@@ -15,7 +15,7 @@ function HomeScreen() {
   const getChallenges = async () => {
     let currentDay = new Date();
     currentDay.setDate(currentDay.getDate() - 4);
-    const snapshot = await firestore().collection('Challenges').where('endDate', '>', currentDay).get();
+    const snapshot = await firestore().collection('Challenges').where('endDate', '>', currentDay).orderBy('endDate').get();
     let data = [];
     snapshot.forEach(doc => {
       const item = {

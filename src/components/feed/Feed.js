@@ -92,13 +92,13 @@ const styles = StyleSheet.create({
   title: {
     marginBottom: 1,
     fontFamily: 'Pretendard-Medium',
-    fontSize: 18,
+    fontSize: 16,
     color: '#222',
   },
   date: {
     marginLeft: 10,
     fontFamily: 'Pretendard-Regular',
-    fontSize: 13,
+    fontSize: 14,
     color: '#999',
   },
   text: {

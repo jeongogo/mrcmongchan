@@ -187,7 +187,7 @@ function Detail() {
                   ],
                 }
               }
-              width={width-45}
+              width={width-35}
               height={220}
               chartConfig={chartConfig}
               withDots={false}
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 20,
+    paddingVertical: 15,
     paddingHorizontal: 15,
   },
   imageWrap: {
@@ -241,7 +241,6 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   infoWrap: {
-    paddingVertical: 10,
     display: 'flex',
     flexDirection: 'row',
     alignContent: 'center',
@@ -256,11 +255,11 @@ const styles = StyleSheet.create({
   },
   contentWrap: {
     paddingVertical: 25,
-    paddingHorizontal: 30,
+    paddingHorizontal: 25,
   },
   altitudeWrap: {
-    paddingLeft: 20,
-    paddingVertical: 30,
+    paddingLeft: 15,
+    paddingVertical: 25,
   },
   title: {
     fontFamily: 'Pretendard-Bold',
@@ -284,8 +283,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: 'Pretendard-Medium',
-    fontSize: 26,
-    fontWeight: 500,
+    fontSize: 28,
     color: '#222',
   },
   label: {
@@ -298,7 +296,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: 7,
   },
   paceLabel: {
     marginRight: 10,

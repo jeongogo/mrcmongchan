@@ -48,10 +48,9 @@ function Home({
             <AutoHeightImage width={width} source={require('../../assets/images/x_kit.jpg')} />
           </Pressable>
           <CustomWrap>
-            <Text style={styles.title}>리포트</Text>
             <View style={styles.levelWrap}>
               <View style={styles.levelTitleWrap}>
-                <Text style={styles.label}>레벨 {user.level}</Text>
+                <Text style={[styles.title, styles.noMargin]}>레벨 {user.level}</Text>
                 <Text style={styles.levelExp}>{exCurrent}%</Text>
               </View>
               <View style={styles.exWrap}>
@@ -110,16 +109,16 @@ function Home({
               <Text style={styles.text}>{user.record.ten === 0 ? '00:00' : getTime(user.record.ten)}</Text>
             </View>
             <View style={styles.wrap}>
-              <Text style={styles.label}>Half</Text>
+              <Text style={styles.label}>하프</Text>
               <Text style={styles.text}>{user.record.half === 0 ? '00:00' : getTime(user.record.half)}</Text>
             </View>
             <View style={styles.wrap}>
-              <Text style={styles.label}>Full</Text>
+              <Text style={styles.label}>풀코스</Text>
               <Text style={styles.text}>{user.record.full === 0 ? '00:00' : getTime(user.record.full)}</Text>
             </View>
           </CustomWrap>
           <CustomWrap>
-            <Text style={styles.title}>대회정보</Text>
+            <Text style={[styles.title, styles.noMargin]}>대회정보</Text>
             {competition.map((item) => (
               <Pressable key={item.url} style={styles.competitionWrap} onPress={() => openURL(item.url)}>
                 <View>
@@ -209,8 +208,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   levelWrap: {
-    marginTop: 10,
-    marginBottom: 25,
+    marginBottom: 20,
   },
   levelTitleWrap: {
     display: 'flex',
@@ -224,7 +222,7 @@ const styles = StyleSheet.create({
     color: '#666',
   },
   exWrap: {
-    marginTop: 5,
+    marginTop: 7,
     position: 'relative',
     width: '100%',
     height: 10,
@@ -249,17 +247,21 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   wrap: {
-    paddingVertical: 5,
+    paddingVertical: 4,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'space-between',
+    justifyContent: 'space-between',
   },
   title: {
-    marginVertical: 7,
+    marginTop: 5,
+    marginBottom: 7,
     fontFamily: 'Pretendard-Bold',
-    fontSize: 20,
+    fontSize: 18,
     color: '#222',
+  },
+  noMargin: {
+    marginBottom: 0,
   },
   label: {
     minWidth: 35,

@@ -1,53 +1,45 @@
 import React from 'react';
-import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
-import { Text } from "react-native";
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeStack from './home/HomeStack';
 import FeedStack from "./feed/FeedStack";
 import RecordStack from './record/RecordStack';
 import ChallengeStack from "./challenge/ChallengeStack";
 import MypageStack from "./mypage/MypageStack";
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const Tab = createMaterialBottomTabNavigator();
-
-const MIcon = (name, color) => {
-  return <Icon name={name} color={color} size={24} />;
-};
+const Tab = createBottomTabNavigator();
 
 const MainTab = ({navigation}) => {
   return (
     <Tab.Navigator
-      initialRouteName="Home"
-      inactiveColor="#999"
-      activeColor="#000"
-      barStyle={{
-        borderTopWidth: 1,
-        borderTopColor: '#ededed',
-        backgroundColor: '#fff',
+      screenOptions={{
+        headerShown: false,
+        tabBarShowLabel: false,
+        tabBarActiveTintColor: '#000',
+        tabBarStyle: {
+          height: 52,
+        }
       }}
     >
       <Tab.Screen
         name="HomeStack"
         component={HomeStack}
         options={{
-          tabBarLabel: <Text style={{fontFamily: 'Pretendard-Regular',}}>홈</Text>,
-          tabBarIcon: ({color}) => MIcon('home', color),
+          tabBarIcon: ({color}) => <Icon name='home-filled' color={color} size={26} />,
         }} 
         />
       <Tab.Screen
         name="FeedStack"
         component={FeedStack}
         options={{
-          tabBarLabel: <Text style={{fontFamily: 'Pretendard-Regular',}}>기록</Text>,
-          tabBarIcon: ({color}) => MIcon('format-list-bulleted', color),
+          tabBarIcon: ({color}) => <Icon name='view-list' color={color} size={26} />,
         }}
       />
       <Tab.Screen
         name="RecordStack"
         component={RecordStack}
         options={{
-          tabBarLabel: <Text style={{fontFamily: 'Pretendard-Regular',}}>달리기</Text>,
-          tabBarIcon: ({color}) => MIcon('run', color),
+          tabBarIcon: ({color}) => <Icon name='directions-run' color={color} size={26} />,
         }}
         listeners={() => ({
           tabPress: e => {
@@ -60,16 +52,14 @@ const MainTab = ({navigation}) => {
         name="ChallengeStack"
         component={ChallengeStack}
         options={{
-          tabBarLabel: <Text style={{fontFamily: 'Pretendard-Regular',}}>챌린지</Text>,
-          tabBarIcon: ({color}) => MIcon('flag', color),
+          tabBarIcon: ({color}) => <Icon name='outlined-flag' color={color} size={26} />,
         }}
       />
       <Tab.Screen
         name="MypageStack"
         component={MypageStack}
         options={{
-          tabBarLabel: <Text style={{fontFamily: 'Pretendard-Regular',}}>마이페이지</Text>,
-          tabBarIcon: ({color}) => MIcon('account', color),
+          tabBarIcon: ({color}) => <Icon name='person' color={color} size={26} />,
         }}
       />
     </Tab.Navigator>

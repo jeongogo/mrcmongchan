@@ -1,8 +1,9 @@
 import React from 'react';
 import { useNavigation } from "@react-navigation/native";
-import {Pressable, SafeAreaView, ScrollView, Text, StyleSheet, View} from 'react-native';
+import { SafeAreaView, ScrollView, Text, StyleSheet, View} from 'react-native';
 import useStore from "../../store/store";
 import Challenge from './Challenge';
+import CustomButton from "../common/CustomButton";
 
 function Home({challenges}) {
   const navigation = useNavigation();
@@ -11,16 +12,16 @@ function Home({challenges}) {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.full}>
+        {user?.isAdmin &&
+          <View style={{marginBottom: 15}}>
+            <CustomButton title='챌린지 만들기' onPress={() => navigation.navigate('ChallengeWrite')} />
+          </View>
+        }
         {(challenges.length > 0) && 
           challenges.map((challenge) => (
             <Challenge key={challenge.id} challenge={challenge} navigation={navigation} />
-            ))}
+        ))}
       </ScrollView>
-      {user?.isAdmin &&
-        <Pressable style={styles.create} onPress={() => navigation.navigate('ChallengeWrite')}>
-          <Text style={styles.createText}>챌린지 만들기</Text>
-        </Pressable>
-      }
     </SafeAreaView>
   )
 };
@@ -34,18 +35,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#f3f3f3',
   },
   create: {
-    position: 'absolute',
-    left: 0,
-    bottom: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     width: '100%',
-    paddingVertical: 17,
+    height: 48,
     backgroundColor: '#E53A40',
     zIndex: 2,
   },
   createText: {
     fontFamily: 'Pretendard-Medium',
     fontSize: 15,
-    fontWeight: 500,
     textAlign: 'center',
     color: '#fff',
   },

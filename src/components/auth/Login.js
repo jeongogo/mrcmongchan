@@ -68,7 +68,7 @@ function Login({isSignUp, handleLogin}) {
         returnKeyType='next'
         onSubmitEditing={() => passwordRef.current.focus()}
         placeholder='이메일'
-        placeholderTextColor='black'
+        placeholderTextColor='#222222'
       />
       <TextInput
         style={styles.input}
@@ -85,7 +85,7 @@ function Login({isSignUp, handleLogin}) {
           }
         }}
         placeholder='비밀번호'
-        placeholderTextColor='black'
+        placeholderTextColor='#222222'
       />
       {isSignUp && (
         <>
@@ -98,12 +98,14 @@ function Login({isSignUp, handleLogin}) {
             returnKeyType='done'
             onSubmitEditing={onSubmit}
             placeholder='비밀번호 확인'
-            placeholderTextColor='black'
+            placeholderTextColor='#222222'
           />
           <View style={styles.policyCheck}>
             <View style={styles.policyWrap}>
               <Checkbox
+                focusable={true}
                 status={checkedService ? 'checked' : 'unchecked'}
+                uncheckedColor="#E53A40"
                 color="#E53A40"
                 onPress={() => {
                   setCheckedService(!checkedService);
@@ -117,7 +119,9 @@ function Login({isSignUp, handleLogin}) {
             </View>
             <View style={styles.policyWrap}>
               <Checkbox
+                focusable={true}
                 status={checkedPolicy ? 'checked' : 'unchecked'}
+                uncheckedColor="#E53A40"
                 color="#E53A40"
                 onPress={() => {
                   setCheckedPolicy(!checkedPolicy);

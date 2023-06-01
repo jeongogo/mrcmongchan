@@ -51,7 +51,6 @@ function Home() {
       <ScrollView>
         <View style={styles.wrap}>
           <Pressable onPress={() => navigation.navigate('Profile')}>
-            <Text style={styles.title}>프로필</Text>
             <View style={styles.profile}>
               <View style={styles.avatar}>
                 <Image

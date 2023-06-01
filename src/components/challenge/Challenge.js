@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'Pretendard-Medium',
-    fontSize: 18,
+    fontSize: 16,
     color: '#222',
   },
   text: {
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   },
   date: {
     fontFamily: 'Pretendard-Regular',
-    fontSize: 15,
+    fontSize: 14,
     color: '#666',
   },
   margin: {

@@ -8,9 +8,9 @@ const vdot = [
 		"level": "11",
 		"name": "신",
 		"five": "12:37.3",
-		"ten": "알 수 없습니다. 얼른 올림픽에 참가하세요.",
-		"half": "알 수 없습니다. 얼른 올림픽에 참가하세요.",
-		"full": "알 수 없습니다. 얼른 올림픽에 참가하세요."
+		"ten": "거짓",
+		"half": "거짓",
+		"full": "거짓"
 	},
 	{
 		"vdot": "85",
@@ -521,9 +521,9 @@ const vdot = [
 		"level": "1",
 		"name": "달팽이",
 		"five": "60:00",
-		"ten": "알 수 없습니다.",
-		"half": "알 수 없습니다.",
-		"full": "알 수 없습니다."
+		"ten": "힘내세요 ",
+		"half": "힘내세요 ",
+		"full": "힘내세요 "
 	}
 ]
 
@@ -568,13 +568,13 @@ const VDOT = () => {
 									5K 기록은 {minutes + ':' + seconds}입니다.
 								</Text>
 								<Text style={styles.text}>
-									10K 예상 기록은 {result.ten}{(result.level !== '1' && result.level !== '11') && <>입니다.</>}
+									10K 예상 기록은 {result.ten}입니다.
 								</Text>
 								<Text style={styles.text}>
-									Half 예상 기록은 {result.half}{(result.level !== '1' && result.level !== '11') && <>입니다.</>}
+									Half 예상 기록은 {result.half}입니다.
 								</Text>
 								<Text style={styles.text}>
-									Full 예상 기록은 {result.full}{(result.level !== '1' && result.level !== '11') && <>입니다.</>}
+									Full 예상 기록은 {result.full}입니다.
 								</Text>
 							</View>
 							<CustomButton title='다시하기' onPress={onRestart} />

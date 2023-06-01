@@ -107,7 +107,7 @@ function Detail() {
             }
           </Text>
           <Text style={styles.area}>{feedDetail.areaName}</Text>
-          {weather && <Icon name={weather} color='#666' size={20} />}
+          {weather && <Icon name={weather} color={weather === 'weather-sunny' ? '#fcbe32' : '#666'} size={20} />}
         </View>
         <View style={styles.imageWrap}>
           {feedDetail.photoURL
@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
   },
   area: {
     marginLeft: 'auto',
-    marginRight: 10,
+    marginRight: 5,
     fontFamily: 'Pretendard-Regular',
     fontSize: 15,
     color: '#666',

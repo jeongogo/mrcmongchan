@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 15,
+    marginBottom: 10,
     borderRadius: 10,
     overflow: "hidden",
   },

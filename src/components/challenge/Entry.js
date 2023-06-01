@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
     width: 30,
     height: 30,
+    backgroundColor: '#eee',
     borderRadius: 15,
     overflow: 'hidden',
   },

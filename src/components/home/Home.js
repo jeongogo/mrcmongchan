@@ -67,7 +67,7 @@ function Home({
               <Text style={styles.text}>{distanceMonth}km / {calorieMonth.toLocaleString('ko-KR')}k㎈</Text>
             </View>
             <View style={styles.wrap}>
-              <Text style={styles.label}>총 거리</Text>
+              <Text style={styles.label}>누적 거리</Text>
               <Text style={styles.text}>{user.distance.toFixed(2)}km</Text>
             </View>
           </CustomWrap>
@@ -102,19 +102,19 @@ function Home({
             <Text style={styles.title}>최고 기록</Text>
             <View style={styles.wrap}>
               <Text style={styles.label}>5K</Text>
-              <Text style={styles.text}>{user.record.five === 0 ? '00:00' : getTime(user.record.five)}</Text>
+              <Text style={styles.text}>{user.record.five === 0 ? '--:--' : getTime(user.record.five)}</Text>
             </View>
             <View style={styles.wrap}>
               <Text style={styles.label}>10K</Text>
-              <Text style={styles.text}>{user.record.ten === 0 ? '00:00' : getTime(user.record.ten)}</Text>
+              <Text style={styles.text}>{user.record.ten === 0 ? '--:--' : getTime(user.record.ten)}</Text>
             </View>
             <View style={styles.wrap}>
               <Text style={styles.label}>하프</Text>
-              <Text style={styles.text}>{user.record.half === 0 ? '00:00' : getTime(user.record.half)}</Text>
+              <Text style={styles.text}>{user.record.half === 0 ? '--:--' : getTime(user.record.half)}</Text>
             </View>
             <View style={styles.wrap}>
               <Text style={styles.label}>풀코스</Text>
-              <Text style={styles.text}>{user.record.full === 0 ? '00:00' : getTime(user.record.full)}</Text>
+              <Text style={styles.text}>{user.record.full === 0 ? '--:--' : getTime(user.record.full)}</Text>
             </View>
           </CustomWrap>
           <CustomWrap>
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f3f3f3',
   },
   contentWrap: {
-    paddingTop: 15,
+    paddingTop: 10,
     paddingHorizontal: 10,
   },
   distance: {
@@ -297,7 +297,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
   },
-
 });
 
 export default Home

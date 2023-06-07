@@ -1,6 +1,6 @@
 import React from 'react';
 import ViewShot from "react-native-view-shot";
-import MapView, {Polyline} from 'react-native-maps';
+import MapView, { Polyline } from 'react-native-maps';
 
 function Map({initLocation, captureRef, path}) {
   return (
@@ -14,11 +14,10 @@ function Map({initLocation, captureRef, path}) {
           longitudeDelta: 0.0421,
         }}
         showsUserLocation={true}
-        followsUserLocation={true}
-        zoomEnabled={false}
-        minZoomLevel={13}
-        maxZoomLevel={13}
-        rotateEnabled={false}
+        followsUserLocation={false}
+        zoomEnabled={true}
+        // maxZoomLevel={13}
+        rotateEnabled={true}
         scrollEnabled={true}
       >
         {(path.length > 1) &&

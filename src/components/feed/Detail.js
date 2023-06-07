@@ -177,17 +177,17 @@ function Detail() {
                       color: () => '#30A9DE',
                     },
                     {
-                      data: [feedDetail.altitude[feedDetail.altitude.length-1] - 20],
+                      data: [feedDetail.altitude[feedDetail.altitude.length-1] - 50],
                       withDots: false,
                     },
                     {
-                      data: [feedDetail.altitude[feedDetail.altitude.length-1] + 20],
+                      data: [feedDetail.altitude[feedDetail.altitude.length-1] + 50],
                       withDots: false,
                     },
                   ],
                 }
               }
-              width={width-35}
+              width={width-25}
               height={220}
               chartConfig={chartConfig}
               withDots={false}
@@ -255,10 +255,10 @@ const styles = StyleSheet.create({
   },
   contentWrap: {
     paddingVertical: 25,
-    paddingHorizontal: 25,
+    paddingHorizontal: 20,
   },
   altitudeWrap: {
-    paddingLeft: 15,
+    paddingLeft: 10,
     paddingVertical: 25,
   },
   title: {
@@ -296,10 +296,10 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 7,
+    paddingVertical: 5,
   },
   paceLabel: {
-    marginRight: 10,
+    width: 20,
     fontFamily: 'Pretendard-Regular',
     fontSize: 14,
     color: '#222',
@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
   paceBar: {
     position: 'relative',
     flexGrow: 1,
-    height: 10,
+    height: 16,
     marginRight: 20,
   },
   paceBarCurrent: {
@@ -316,7 +316,6 @@ const styles = StyleSheet.create({
     left: 0,
     height: '100%',
     backgroundColor: '#ff7473',
-    borderRadius: 5,
     zIndex: 2,
   },
   paceText: {

@@ -8,8 +8,7 @@ import Loader from "../../components/common/Loader";
 function HomeScreen() {
   const user = useStore((state) => state.user);
 
-  const feedQuery = useInfiniteQuery(
-    ["Records"],
+  const feedQuery = useInfiniteQuery(["feed"],
     async ({queryKey, pageParam}) => {
       return pageParam
         ?

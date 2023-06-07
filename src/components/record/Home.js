@@ -306,10 +306,6 @@ function Home({ navigation }) {
     if (Platform.OS === 'android') {
       BackgroundGeolocation.stop();
       BackgroundGeolocation.stopWatchPosition();
-    } else {
-      BackgroundGeolocation.stop()
-      .then(() => BackgroundGeolocation.changePace(false))
-      .catch((e) => console.log(e));
     }
   }
 

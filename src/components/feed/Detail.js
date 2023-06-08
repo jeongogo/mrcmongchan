@@ -125,39 +125,16 @@ function Detail() {
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <View style={styles.titleWrap}>
-          <Text style={styles.title}>
+          <View style={styles.areaWrap}>
+            <Text style={styles.area}>{feedDetail.areaName}</Text>
+            {weather && <Icon name={weather} color={weather === 'weather-sunny' ? '#fcbe32' : '#999'} size={18} />}
+          </View>
+          <Text style={styles.subject}>
             {feedDetail.title
               ? feedDetail.title
               : format(new Date(feedDetail.date.toDate()), 'M.dd HH:mm')
             }
           </Text>
-          <Text style={styles.area}>{feedDetail.areaName}</Text>
-          {weather && <Icon name={weather} color={weather === 'weather-sunny' ? '#fcbe32' : '#666'} size={20} />}
-        </View>
-        <View style={styles.imageWrap}>
-          {feedDetail.photoURL
-            ?
-              <Image
-                style={styles.image}
-                source={{uri: feedDetail.photoURL}}
-                width={width - 30}
-                onLoadStart={() => setIsImageLoading(true)}
-                onLoadEnd={() => setIsImageLoading(false)}
-              />
-            :
-              <Image
-                style={styles.image}
-                source={{uri: feedDetail.captureURL}}
-                width={width - 30}
-                onLoadStart={() => setIsImageLoading(true)}
-                onLoadEnd={() => setIsImageLoading(false)}
-              />
-          }
-          {isImageLoading && (
-            <View style={styles.loaderWrap}>
-              <ActivityIndicator size='large' color="#E53A40" />
-            </View>
-          )}
         </View>
         <View style={styles.infoWrap}>
           <View style={styles.wrap}>
@@ -173,22 +150,47 @@ function Detail() {
             <Text style={styles.label}>페이스</Text>
           </View>
         </View>
-        <View style={styles.hr}></View>
+        <View style={styles.imageWrap}>
+          {feedDetail.photoURL
+            ?
+              <Image
+                style={styles.image}
+                source={{uri: feedDetail.photoURL}}
+                width={width}
+                onLoadStart={() => setIsImageLoading(true)}
+                onLoadEnd={() => setIsImageLoading(false)}
+              />
+            :
+              <Image
+                style={styles.image}
+                source={{uri: feedDetail.captureURL}}
+                width={width}
+                onLoadStart={() => setIsImageLoading(true)}
+                onLoadEnd={() => setIsImageLoading(false)}
+              />
+          }
+          {isImageLoading && (
+            <View style={styles.loaderWrap}>
+              <ActivityIndicator size='large' color="#E53A40" />
+            </View>
+          )}
+        </View>
         <View style={styles.contentWrap}>
           <Text style={[styles.title, styles.margin]}>페이스</Text>
-          {paceDetail.length > 0 &&
-            paceDetail.map((item, index) => (
-              <View style={styles.paceWrap} key={index}>
-                <Text style={styles.paceLabel}>{index+1}</Text>
-                <View style={styles.paceBar}>
-                  <View style={[styles.paceBarCurrent, {width: item.percent + '%'}]}></View>
+          <View style={styles.paceContentWrap}>
+            {paceDetail.length > 0 &&
+              paceDetail.map((item, index) => (
+                <View style={styles.paceWrap} key={index}>
+                  <Text style={styles.paceLabel}>{index+1}</Text>
+                  <View style={styles.paceBar}>
+                    <View style={[styles.paceBarCurrent, {width: item.percent + '%'}]}></View>
+                  </View>
+                  <Text style={styles.paceText}>{item.pace}</Text>
                 </View>
-                <Text style={styles.paceText}>{item.pace}</Text>
-              </View>
-            ))
-          }
+              ))
+            }
+          </View>
         </View>
-        <View style={styles.hr}></View>
         <View style={styles.altitudeWrap}>
           <Text style={[styles.title, styles.margin, styles.altitudeTitle]}>고도</Text>
           {feedDetail.altitude.length > 0 &&
@@ -231,28 +233,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  hr: {
-    borderTopWidth: 1,
-    borderTopColor: '#ededed',
-    borderBottomWidth: 10,
-    borderBottomColor: '#f3f3f3',
-  },
   titleWrap: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     paddingVertical: 15,
-    paddingHorizontal: 15,
+    paddingHorizontal: 20,
   },
   imageWrap: {
     display: 'flex',
     justifyContent: 'center',
     alignContent: 'center',
-    paddingHorizontal: 15,
   },
   image: {
-    aspectRatio: 1,
+    aspectRatio: 1.5,
   },
   loaderWrap: {
     position: 'absolute',
@@ -267,30 +258,37 @@ const styles = StyleSheet.create({
   },
   infoWrap: {
     display: 'flex',
+    flexWrap: 'wrap',
     flexDirection: 'row',
     alignContent: 'center',
-    justifyContent: 'center',
     overflow: 'hidden',
+    paddingBottom: 25,
   },
   wrap: {
+    width: '32%',
     display: 'flex',
     alignItems: 'center',
-    paddingVertical: 20,
     paddingHorizontal: 15,
   },
   contentWrap: {
-    paddingVertical: 25,
+    paddingVertical: 30,
     paddingHorizontal: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ededed',
   },
   altitudeWrap: {
     paddingLeft: 10,
     paddingVertical: 25,
   },
+  subject: {
+    fontFamily: 'Pretendard-Medium',
+    fontSize: 20,
+    color: '#222',
+  },
   title: {
     fontFamily: 'Pretendard-Bold',
     fontSize: 18,
-    fontWeight: 700,
-    color: '#454545',
+    color: '#222',
   },
   altitudeTitle: {
     paddingLeft: 10,
@@ -299,12 +297,17 @@ const styles = StyleSheet.create({
   margin: {
     marginBottom: 10,
   },
+  areaWrap: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignContent: 'center',
+    marginBottom: 2,
+  },
   area: {
-    marginLeft: 'auto',
     marginRight: 5,
     fontFamily: 'Pretendard-Regular',
-    fontSize: 15,
-    color: '#666',
+    fontSize: 14,
+    color: '#999',
   },
   text: {
     fontFamily: 'Pretendard-Medium',
@@ -316,6 +319,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Pretendard-Regular',
     fontSize: 14,
     color: '#222',
+  },
+  paceContentWrap: {
+    paddingLeft: 10,
   },
   paceWrap: {
     display: 'flex',
@@ -346,7 +352,7 @@ const styles = StyleSheet.create({
   paceText: {
     fontFamily: 'Pretendard-Regular',
     fontSize: 14,
-    color: '#222',
+    color: '#454545',
   },
 });
 

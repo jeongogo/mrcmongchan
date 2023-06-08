@@ -5,6 +5,7 @@ import FeedStack from "./feed/FeedStack";
 import RecordStack from './record/RecordStack';
 import ChallengeStack from "./challenge/ChallengeStack";
 import MypageStack from "./mypage/MypageStack";
+import { Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const Tab = createBottomTabNavigator();
@@ -17,7 +18,7 @@ const MainTab = ({navigation}) => {
         tabBarShowLabel: false,
         tabBarActiveTintColor: '#000',
         tabBarStyle: {
-          height: 52,
+          height: Platform.OS === 'android' ? 52 : 78,
         }
       }}
     >

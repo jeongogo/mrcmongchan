@@ -354,10 +354,6 @@ function Home({ navigation }) {
   /** 완료 */
   const handleComplete = async () => {
     try {
-      if (distance - ((paceRef.current - 1) * 1000) > 490) {
-        setPaceDetail(prev => [...prev, totalTime/1000]);
-      }
-
       const uri = await captureRef.current.capture();
       setCaptureURL(uri);
 
@@ -404,7 +400,7 @@ function Home({ navigation }) {
         totalTime: (totalTime/1000).toFixed(0),
         distance: (distance/1000).toFixed(2),
         pace: (totalTime/1000) > 60 ? minutes + ':' + seconds : '00:00',
-        paceDetail,
+        paceDetail: (distance - ((paceRef.current - 1) * 1000)) > 100 ? [...paceDetail, totalTime/1000] : paceDetail,
         calorie: calorie.toFixed(0),
         date: new Date(),
         areaName,

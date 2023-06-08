@@ -34,7 +34,8 @@ function Detail() {
   const [altitude, setAltitude] = useState([]);
   const [weather, setWeather] = useState('');
 
-  useEffect(() => {
+  /** 총 시간 */
+  const onSetTotalTime = () => {
     let recordHours = Math.floor(feedDetail.totalTime/60/60);
     let recordMinutes = Math.floor(feedDetail.totalTime/60) - (recordHours * 60);
     let recordSeconds = (feedDetail.totalTime) - (Math.floor(feedDetail.totalTime/60) * 60);
@@ -42,36 +43,51 @@ function Detail() {
     recordMinutes = recordMinutes < 10 ? '0' + recordMinutes : recordMinutes;
     recordSeconds = recordSeconds < 10 ? '0' + recordSeconds : recordSeconds;
     setTime(recordHours + recordMinutes + ':' + recordSeconds);
+  }
 
-    if (feedDetail.paceDetail.length > 0) {
-      const filterData = feedDetail.paceDetail.map((item, index) => {
-        if (index === 0) {
-          return item;
-        }
-        return item - feedDetail.paceDetail[index-1];
-      });
-      const max = Math.max.apply(Math, filterData);
-      const processData = filterData.map((item) => {
-        const m = (Math.floor(item / 60)).toFixed(0);
-        const s = (item - m * 60).toFixed(0);  
-        const minutes = m < 1 ? '00' : m < 10 ? '0' + m : m;
-        const seconds = s < 1 ? '00' : s < 10 ? '0' + s : s;
-        let newItem = {
-          seconds: item,
-          pace: minutes + ':' + seconds,
-          percent: (item/max) * 100,
-        }
-        return newItem;
-      });
-      setPaceDetail(processData);
-    }
+  /** 고도 */
+  const onSetAltitude = () => {
     const altitudeCount = Math.ceil((feedDetail.altitude.length)/10) - 1;
     let currentCount = [];
     for (let i=0; i <= altitudeCount; i++) {
       currentCount.push(i);
     }
     setAltitude(currentCount);
+  }
 
+  /** 페이스 상세 */
+  const onSetPaceDetail = () => {
+    let filterData = feedDetail.paceDetail.map((item, index) => {
+      if (index === 0) {
+        return item;
+      }
+      return item - feedDetail.paceDetail[index-1];
+    });
+
+    const max = Math.max.apply(Math, filterData);
+    const processData = filterData.map((item, index) => {
+      let time = 0;
+      if (index === filterData.length - 1 && (feedDetail.distance - Math.floor(feedDetail.distance)).toFixed(2) >= 0.1) {
+        time = (1000/(feedDetail.distance - Math.floor(feedDetail.distance)).toFixed(2)) * (item/1000);
+      } else {
+        time = item;
+      }
+      const m = (Math.floor(time / 60)).toFixed(0);
+      const s = (time - m * 60).toFixed(0);
+      const minutes = m < 1 ? '00' : m < 10 ? '0' + m : m;
+      const seconds = s < 1 ? '00' : s < 10 ? '0' + s : s;
+      let newItem = {
+        seconds: time,
+        pace: minutes + ':' + seconds,
+        percent: (item/max) * 100,
+      }
+      return newItem;
+    });
+    setPaceDetail(processData);
+  }
+
+  /** 날씨 */
+  const onSetWeather = () => {
     switch (feedDetail.weather) {
       case 'Clouds':
         setWeather('weather-partly-cloudy');
@@ -94,6 +110,15 @@ function Detail() {
       default:
         setWeather('weather-fog');
     }
+  }
+
+  useEffect(() => {
+    onSetTotalTime();
+    if (feedDetail.paceDetail.length > 0) {
+      onSetPaceDetail();
+    }    
+    onSetAltitude();
+    onSetWeather();
   }, []);
 
   return (

@@ -112,7 +112,7 @@ function Login({isSignUp, handleLogin}) {
                 }}
               />
               <Text style={styles.policyText}>(필수) </Text>
-              <Pressable onPress={() => Linking.openURL('http://mongchan.com/service')}>
+              <Pressable onPress={() => Linking.openURL('https://mymrc-382104.web.app/policy/service')}>
                 <Text style={[styles.policyText, styles.underline]}>서비스 이용약관</Text>
               </Pressable>
               <Text style={styles.policyText}>에 동의합니다.</Text>
@@ -128,7 +128,7 @@ function Login({isSignUp, handleLogin}) {
                 }}
               />
               <Text style={styles.policyText}>(필수) </Text>
-              <Pressable onPress={() => Linking.openURL('http://mongchan.com/policy')}>
+              <Pressable onPress={() => Linking.openURL('https://mymrc-382104.web.app/policy/privacy')}>
                 <Text style={[styles.policyText, styles.underline]}>개인정보처리방침</Text>
               </Pressable>
               <Text style={styles.policyText}>에 동의합니다.</Text>

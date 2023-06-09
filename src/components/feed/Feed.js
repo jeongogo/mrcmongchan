@@ -35,19 +35,12 @@ function Feed({ feed }) {
           }
         </View>
         <View style={styles.contentWrap}>
+          {feed._data.title &&
+            <Text style={styles.title}>{feed._data.title}</Text>        
+          }
           <View style={styles.wrap}>
-            {feed._data.title
-              ?
-                <>
-                  <Text style={styles.title}>{feed._data.title}</Text>
-                  <Text style={styles.date}>{format(new Date(feed._data.date.toDate()), 'MM.dd HH:mm')}</Text>
-                </>
-              :
-                <Text style={styles.title}>{format(new Date(feed._data.date.toDate()), 'MM.dd HH:mm')}</Text>
-            }          
-          </View>
-          <View style={styles.wrap}>
-            <Text style={styles.text}>{feed._data.areaName}</Text>
+            <Text style={styles.date}>{format(new Date(feed._data.date.toDate()), 'MM.dd HH:mm')}</Text>
+            <Text style={styles.areaText}>{feed._data.areaName}</Text>
           </View>
           <View style={styles.wrap}>
             <View style={styles.recordWrap}>
@@ -104,12 +97,18 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
   },
   title: {
+    marginRight: 7,
     fontFamily: 'Pretendard-Medium',
-    fontSize: 18,
+    fontSize: 17,
     color: '#222',
   },
   date: {
-    marginLeft: 10,
+    marginRight: 7,
+    fontFamily: 'Pretendard-Regular',
+    fontSize: 15,
+    color: '#222',
+  },
+  areaText: {
     fontFamily: 'Pretendard-Regular',
     fontSize: 14,
     color: '#999',

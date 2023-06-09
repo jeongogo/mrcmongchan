@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'Pretendard-Medium',
-    fontSize: 18,
+    fontSize: 17,
     color: '#222',
   },
   text: {

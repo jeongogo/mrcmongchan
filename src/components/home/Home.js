@@ -60,11 +60,11 @@ function Home({
             </View>
             <View style={styles.wrap}>
               <Text style={styles.label}>이번 주</Text>
-              <Text style={styles.text}>{distanceWeek}km / {calorieWeek.toLocaleString('ko-KR')}k㎈</Text>
+              <Text style={styles.text}>{distanceWeek}km | {calorieWeek.toLocaleString('ko-KR')}k㎈</Text>
             </View>
             <View style={styles.wrap}>
               <Text style={styles.label}>이번 달</Text>
-              <Text style={styles.text}>{distanceMonth}km / {calorieMonth.toLocaleString('ko-KR')}k㎈</Text>
+              <Text style={styles.text}>{distanceMonth}km | {calorieMonth.toLocaleString('ko-KR')}k㎈</Text>
             </View>
             <View style={styles.wrap}>
               <Text style={styles.label}>누적 거리</Text>
@@ -129,9 +129,7 @@ function Home({
               </Pressable>
             ))}
           </CustomWrap>
-          <View>
-            <Text></Text>
-          </View>
+          <View style={styles.hr}></View>
         </ScrollView>
       </SafeAreaView>
     </SafeAreaProvider>
@@ -297,6 +295,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
   },
+  hr: {
+    height: 10,
+  }
 });
 
 export default Home

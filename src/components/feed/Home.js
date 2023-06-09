@@ -41,9 +41,7 @@ const renderItem = ({item}) => (
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 15,
-    paddingHorizontal: 10,
-    backgroundColor: '#f3f3f3',
+    backgroundColor: '#fff',
   },
   empty: {
     flex: 1,

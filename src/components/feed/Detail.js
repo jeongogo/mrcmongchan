@@ -27,6 +27,7 @@ const chartConfig = {
 
 function Detail() {
   const width = useWindowDimensions().width;
+  const user = useStore((state) => state.user);
   const feedDetail = useStore((state) => state.feedDetail);
   const [isImageLoading, setIsImageLoading] = useState(false);
   const [time, setTime] = useState('');
@@ -79,7 +80,7 @@ function Detail() {
       let newItem = {
         seconds: time,
         pace: minutes + ':' + seconds,
-        percent: (item/max) * 100,
+        percent: (time/max) * 100,
       }
       return newItem;
     });
@@ -124,30 +125,37 @@ function Detail() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <View style={styles.titleWrap}>
-          <View style={styles.areaWrap}>
-            <Text style={styles.area}>{feedDetail.areaName}</Text>
+        <View style={styles.profile}>
+          <View style={styles.avatar}>
+            <Image
+              style={styles.circle}
+              source={user.photoURL ? {uri: user.photoURL} : require('../../assets/images/user.png')}
+            />
+          </View>
+          <View>
+            <Text style={styles.date}>{format(new Date(feedDetail.date.toDate()), 'yy.MM.dd HH:mm')}</Text>
+            <Text style={styles.name}>{user.name}</Text>
+          </View>
+          <View style={styles.area}>
+            <Text style={styles.areaText}>{feedDetail.areaName}</Text>
             {weather && <Icon name={weather} color={weather === 'weather-sunny' ? '#fcbe32' : '#999'} size={18} />}
           </View>
-          <Text style={styles.subject}>
-            {feedDetail.title
-              ? feedDetail.title
-              : format(new Date(feedDetail.date.toDate()), 'M.dd HH:mm')
-            }
-          </Text>
         </View>
-        <View style={styles.infoWrap}>
-          <View style={styles.wrap}>
-            <Text style={styles.text}>{feedDetail.distance}</Text>
-            <Text style={styles.label}>거리</Text>
+        <View style={styles.recordDistance}>
+          <Text style={styles.recordDistanceText}>{feedDetail.distance}<Text style={styles.recordDistanceKm}>km</Text></Text>
+        </View>
+        <View style={styles.recordWrap}>
+          <View style={[styles.recordItem, styles.borderRight]}>
+            <Text style={styles.recordText}>{time}</Text>
+            <Text style={styles.recordLabel}>시간</Text>
           </View>
-          <View style={styles.wrap}>
-            <Text style={styles.text}>{time}</Text>
-            <Text style={styles.label}>시간</Text>
+          <View style={[styles.recordItem, styles.borderRight]}>
+            <Text style={styles.recordText}>{feedDetail.pace}</Text>
+            <Text style={styles.recordLabel}>페이스</Text>
           </View>
-          <View style={styles.wrap}>
-            <Text style={styles.text}>{feedDetail.pace}</Text>
-            <Text style={styles.label}>페이스</Text>
+          <View style={styles.recordItem}>
+            <Text style={styles.recordText}>{feedDetail.calorie}</Text>
+            <Text style={styles.recordLabel}>칼로리</Text>
           </View>
         </View>
         <View style={styles.imageWrap}>
@@ -175,24 +183,22 @@ function Detail() {
             </View>
           )}
         </View>
-        <View style={styles.contentWrap}>
-          <Text style={[styles.title, styles.margin]}>페이스</Text>
-          <View style={styles.paceContentWrap}>
-            {paceDetail.length > 0 &&
-              paceDetail.map((item, index) => (
-                <View style={styles.paceWrap} key={index}>
-                  <Text style={styles.paceLabel}>{index+1}</Text>
-                  <View style={styles.paceBar}>
-                    <View style={[styles.paceBarCurrent, {width: item.percent + '%'}]}></View>
-                  </View>
-                  <Text style={styles.paceText}>{item.pace}</Text>
+        <View style={[styles.sectionWrap, styles.sectionPace]}>
+          <Text style={styles.sectionTitle}>페이스</Text>
+          {paceDetail.length > 0 &&
+            paceDetail.map((item, index) => (
+              <View style={styles.paceItem} key={index}>
+                <Text style={styles.paceLabel}>{index+1}</Text>
+                <View style={styles.paceBar}>
+                  <View style={[styles.paceBarCurrent, {width: item.percent + '%'}]}></View>
                 </View>
-              ))
-            }
-          </View>
+                <Text style={styles.paceText}>{item.pace}</Text>
+              </View>
+            ))
+          }
         </View>
-        <View style={styles.altitudeWrap}>
-          <Text style={[styles.title, styles.margin, styles.altitudeTitle]}>고도</Text>
+        <View style={[styles.sectionWrap, styles.sectionAltitude]}>
+          <Text style={styles.sectionTitle}>고도</Text>
           {feedDetail.altitude.length > 0 &&
             <LineChart
               data={
@@ -214,7 +220,7 @@ function Detail() {
                   ],
                 }
               }
-              width={width-25}
+              width={width-35}
               height={220}
               chartConfig={chartConfig}
               withDots={false}
@@ -233,9 +239,98 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  titleWrap: {
-    paddingVertical: 15,
+  profile: {
+    marginTop: 5,
     paddingHorizontal: 20,
+    paddingVertical: 20,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ededed',
+  },
+  avatar: {
+    marginRight: 10,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#eee',
+    overflow: 'hidden',
+  },
+  circle: {
+    width: 40,
+    height: 40,
+  },
+  name: {
+    fontFamily: 'Pretendard-Medium',
+    fontSize: 15,
+    color: '#222',
+  },
+  date: {
+    fontFamily: 'Pretendard-Regular',
+    fontSize: 13,
+    color: '#454545',
+  },
+  area: {
+    marginLeft: 'auto',
+    display: 'flex',
+    flexDirection: 'row',
+    alignContent: 'center',
+  },
+  areaText: {
+    marginRight: 5,
+    fontFamily: 'Pretendard-Regular',
+    fontSize: 13,
+    color: '#999',
+  },
+  subject: {
+    fontFamily: 'Pretendard-Medium',
+    fontSize: 18,
+    color: '#222',
+  },
+  recordDistance: {
+    paddingTop: 20,
+    borderTopWidth: 7,
+    borderTopColor: '#f3f3f3',
+  },
+  recordDistanceText: {
+    fontFamily: 'Pretendard-Bold',
+    fontSize: 56,
+    color: '#222',
+    textAlign: 'center',
+  },
+  recordDistanceKm: {
+    fontFamily: 'Pretendard-Medium',
+    fontSize: 24,
+  },
+  recordWrap: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'space-around',
+    marginTop: 15,
+    marginBottom: 25,
+  },
+  recordItem: {
+    flexGrow: 1,
+  },
+  borderRight: {
+    borderRightWidth: 1,
+    borderRightColor: '#ededed',
+  },
+  recordText: {
+    fontFamily: 'Pretendard-Medium',
+    fontSize: 22,
+    color: '#222',
+    textAlign: 'center',
+  },
+  recordLabel: {
+    fontFamily: 'Pretendard-Regular',
+    fontSize: 14,
+    color: '#666',
+    textAlign: 'center',
   },
   imageWrap: {
     display: 'flex',
@@ -243,7 +338,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
   },
   image: {
-    aspectRatio: 1.5,
+    aspectRatio: 1.2,
   },
   loaderWrap: {
     position: 'absolute',
@@ -256,74 +351,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     zIndex: 2,
   },
-  infoWrap: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    alignContent: 'center',
-    overflow: 'hidden',
-    paddingBottom: 25,
-  },
-  wrap: {
-    width: '32%',
-    display: 'flex',
-    alignItems: 'center',
-    paddingHorizontal: 15,
-  },
-  contentWrap: {
+  sectionWrap: {
     paddingVertical: 30,
     paddingHorizontal: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ededed',
   },
-  altitudeWrap: {
-    paddingLeft: 10,
-    paddingVertical: 25,
+  sectionPace: {
+    paddingBottom: 0,
   },
-  subject: {
-    fontFamily: 'Pretendard-Medium',
-    fontSize: 20,
-    color: '#222',
+  sectionAltitude: {
+    paddingBottom: 20,
   },
-  title: {
+  sectionTitle: {
+    marginBottom: 10,
     fontFamily: 'Pretendard-Bold',
     fontSize: 18,
     color: '#222',
   },
-  altitudeTitle: {
-    paddingLeft: 10,
-    marginBottom: 20,
-  },
-  margin: {
-    marginBottom: 10,
-  },
-  areaWrap: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignContent: 'center',
-    marginBottom: 2,
-  },
-  area: {
-    marginRight: 5,
-    fontFamily: 'Pretendard-Regular',
-    fontSize: 14,
-    color: '#999',
-  },
-  text: {
-    fontFamily: 'Pretendard-Medium',
-    fontSize: 28,
-    color: '#222',
-  },
-  label: {
-    marginTop: 3,
-    fontFamily: 'Pretendard-Regular',
-    fontSize: 14,
-    color: '#222',
-  },
-  paceContentWrap: {
-    paddingLeft: 10,
-  },
-  paceWrap: {
+  paceItem: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
@@ -340,6 +384,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     height: 16,
     marginRight: 20,
+    backgroundColor: '#ededed',
   },
   paceBarCurrent: {
     position: 'absolute',

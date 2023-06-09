@@ -18,7 +18,7 @@ const MainTab = ({navigation}) => {
         tabBarShowLabel: false,
         tabBarActiveTintColor: '#000',
         tabBarStyle: {
-          height: Platform.OS === 'android' ? 52 : 78,
+          height: Platform.OS === 'android' ? 50 : 78,
         }
       }}
     >

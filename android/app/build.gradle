@@ -100,7 +100,7 @@ android {
         applicationId "com.mrcmongchan"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 35
+        versionCode 36
         versionName "1.11"
         multiDexEnabled true
     }

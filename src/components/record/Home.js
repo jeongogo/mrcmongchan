@@ -285,14 +285,17 @@ function Home({ navigation }) {
     setIsStarted(true);
     setIsRecoding(true);
     onStartRecordTime();
-    if (Platform.OS === 'android') {
-      BackgroundGeolocation.start();
-      onRecording();
-    } else {
-      BackgroundGeolocation.start()
+    // if (Platform.OS === 'android') {
+    //   BackgroundGeolocation.start();
+    //   onRecording();
+    // } else {
+    //   BackgroundGeolocation.start()
+    //   .then(() => BackgroundGeolocation.changePace(true))
+    //   .catch((e) => console.log(e));
+    // }
+    BackgroundGeolocation.start()
       .then(() => BackgroundGeolocation.changePace(true))
       .catch((e) => console.log(e));
-    }
   }
 
   /** 일시 정지 */
@@ -303,10 +306,10 @@ function Home({ navigation }) {
     timeRef.current = null;
     distanceRef.current = null;
     backgroundRef.current = null;
-    if (Platform.OS === 'android') {
-      BackgroundGeolocation.stop();
-      BackgroundGeolocation.stopWatchPosition();
-    }
+    // if (Platform.OS === 'android') {
+    //   BackgroundGeolocation.stop();
+    //   BackgroundGeolocation.stopWatchPosition();
+    // }
   }
 
   /** 측정 초기화 */
@@ -325,14 +328,17 @@ function Home({ navigation }) {
     distanceRef.current = null;
     altitudeRef.current = 1;
     backgroundRef.current = null;
-    if (Platform.OS === 'android') {
-      BackgroundGeolocation.stop();
-      BackgroundGeolocation.stopWatchPosition();
-    } else {
-      BackgroundGeolocation.stop()
+    // if (Platform.OS === 'android') {
+    //   BackgroundGeolocation.stop();
+    //   BackgroundGeolocation.stopWatchPosition();
+    // } else {
+    //   BackgroundGeolocation.stop()
+    //   .then(() => BackgroundGeolocation.changePace(false))
+    //   .catch((e) => console.log(e));
+    // }
+    BackgroundGeolocation.stop()
       .then(() => BackgroundGeolocation.changePace(false))
       .catch((e) => console.log(e));
-    }
   }
 
   /** 완료 Alert */

@@ -23,9 +23,9 @@ function Record({isRecoding, distance, totalTime, pace, onStart, onPause, onComp
   }
 
   useEffect(() => {
-    let hours = Math.floor(totalTime / 1000 / 60 / 60)
-    let mins = Math.floor((totalTime / 1000 / 60) % 60)
-    let seconds = Math.floor(totalTime / 1000 % 60)
+    let hours = Math.floor(totalTime / 60 / 60)
+    let mins = Math.floor((totalTime / 60) % 60)
+    let seconds = Math.floor(totalTime % 60)
     let displayHours = hours < 1 ? '' : hours + ':';
     let displayMins = mins < 10 ? `0${mins}` : mins
     let displaySecs = seconds < 10 ? `0${seconds}` : seconds

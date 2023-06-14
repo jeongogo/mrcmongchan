@@ -14,6 +14,8 @@ import {
 } from 'react-native';
 import BackgroundGeolocation from "react-native-background-geolocation";
 import Geolocation from 'react-native-geolocation-service';
+import BackgroundTimer from 'react-native-background-timer';
+import { differenceInSeconds } from "date-fns";
 import haversine from 'haversine';
 import useStore from "../../store/store";
 import Map from "./Map";
@@ -152,12 +154,12 @@ function Home({ navigation }) {
         }
         distanceRef.current = { latitude, longitude };
 
-        if (appState.current !== 'active') {
-          let before = backgroundStartTimeRef.current;
-          let now = new Date().getTime();
-          setTotalTime(prev => prev + (now - before));
-          backgroundStartTimeRef.current = new Date().getTime();
-        }
+        // if (appState.current !== 'active') {
+        //   let before = backgroundStartTimeRef.current;
+        //   let now = new Date().getTime();
+        //   setTotalTime(prev => prev + (now - before));
+        //   backgroundStartTimeRef.current = new Date().getTime();
+        // }
       }
     });
 
@@ -167,13 +169,13 @@ function Home({ navigation }) {
   }, [isRecoding]);
 
   /** 시간 계산 */
-  const onStartRecordTime = () => {
-    backgroundStartTimeRef.current = new Date().getTime();
-    timeRef.current = setInterval(() => {
-      setTotalTime(prev => prev + 500);
-      backgroundStartTimeRef.current = new Date().getTime();
-    }, 500);
-  }
+  // const onStartRecordTime = () => {
+    // backgroundStartTimeRef.current = new Date().getTime();
+    // timeRef.current = setInterval(() => {
+    //   setTotalTime(prev => prev + 500);
+    //   backgroundStartTimeRef.current = new Date().getTime();
+    // }, 500);
+  // }
 
   useEffect(() => {
     // 실시간 거리/시간 누적
@@ -208,7 +210,7 @@ function Home({ navigation }) {
         Vibration.vibrate();
       }
       paceRef.current++;
-      setPaceDetail(prev => [...prev, totalTime/1000]);
+      setPaceDetail(prev => [...prev, totalTime]);
     }
 
     // 100m마다 고도 기록
@@ -222,7 +224,18 @@ function Home({ navigation }) {
   const onStart = () => {
     setIsStarted(true);
     setIsRecoding(true);
-    onStartRecordTime();
+    // onStartRecordTime();
+    if (!isStarted) {
+      backgroundStartTimeRef.current = new Date();
+    } else {
+      const t = new Date();
+      t.setSeconds(t.getSeconds() - totalTime);
+      backgroundStartTimeRef.current = t;
+    }
+    BackgroundTimer.runBackgroundTimer(() => { 
+      const time = differenceInSeconds(new Date(), Date.parse(backgroundStartTimeRef.current))
+      setTotalTime(time);
+    }, 1000);
     BackgroundGeolocation.start()
       .then(() => BackgroundGeolocation.changePace(true))
       .catch((e) => console.log(e));
@@ -231,9 +244,10 @@ function Home({ navigation }) {
   /** 일시 정지 */
   const onPause = () => {
     setIsRecoding(false);
-    clearInterval(timeRef.current);
-    backgroundStartTimeRef.current = null;
-    timeRef.current = null;
+    BackgroundTimer.stopBackgroundTimer();
+    // clearInterval(timeRef.current);
+    // backgroundStartTimeRef.current = null;
+    // timeRef.current = null;
     distanceRef.current = null;
     backgroundRef.current = null;
   }
@@ -247,10 +261,11 @@ function Home({ navigation }) {
     setRealtimeDistance([]);
     setIsStarted(false);
     setIsRecoding(false);
-    clearInterval(timeRef.current);
+    BackgroundTimer.stopBackgroundTimer();
+    // clearInterval(timeRef.current);
     backgroundStartTimeRef.current = null;
     paceRef.current = 1;
-    timeRef.current = null;
+    // timeRef.current = null;
     distanceRef.current = null;
     altitudeRef.current = 1;
     backgroundRef.current = null;
@@ -279,7 +294,7 @@ function Home({ navigation }) {
       const uri = await captureRef.current.capture();
       setCaptureURL(uri);
 
-      const intensity = distance / (totalTime/1000/60);
+      const intensity = distance / (totalTime/60);
 
       let MET = '';
       if (intensity < 134) {
@@ -308,9 +323,9 @@ function Home({ navigation }) {
         MET = 18;
       }
 
-      const calorie = MET * (3.5 * user.weight * ((totalTime/1000) / 60)) * 5 / 1000;
+      const calorie = MET * (3.5 * user.weight * ((totalTime) / 60)) * 5 / 1000;
 
-      const time = (1000/distance) * (totalTime/1000);
+      const time = (1000/distance) * (totalTime);
       const m = (Math.floor(time / 60)).toFixed(0);
       const s = (time - m * 60).toFixed(0);
       const minutes = m < 10 ? '0' + m : m;
@@ -319,10 +334,10 @@ function Home({ navigation }) {
       const recordData = {
         uid: user.uid,
         name: user.name,
-        totalTime: (totalTime/1000).toFixed(0),
+        totalTime: (totalTime).toFixed(0),
         distance: (distance/1000).toFixed(2),
-        pace: (totalTime/1000) > 60 ? minutes + ':' + seconds : '00:00',
-        paceDetail: (distance - ((paceRef.current - 1) * 1000)) > 100 ? [...paceDetail, totalTime/1000] : paceDetail,
+        pace: (totalTime) > 60 ? minutes + ':' + seconds : '00:00',
+        paceDetail: (distance - ((paceRef.current - 1) * 1000)) > 100 ? [...paceDetail, totalTime] : paceDetail,
         calorie: calorie.toFixed(0),
         date: new Date(),
         areaName,
@@ -387,11 +402,12 @@ function Home({ navigation }) {
     let subscription = '';
     subscription = AppState.addEventListener('change', nextAppState => {
       if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
-        if (isRecoding) {
-          let before = backgroundStartTimeRef.current;
-          let now = new Date().getTime();
-          setTotalTime(prev => prev + (now - before));
-        }
+        // if (isRecoding) {
+        //   let before = backgroundStartTimeRef.current;
+        //   let now = new Date().getTime();
+        //   setTotalTime(prev => prev + (now - before));
+        // }
+        console.log('App Foreround');
       } else {
         console.log('App Backround');
       }

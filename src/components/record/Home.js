@@ -35,14 +35,13 @@ function Home({ navigation }) {
   const [isStarted, setIsStarted] = useState(false);                 // 시작 여부
   const [isRecoding, setIsRecoding] = useState(false);               // 기록중 여부
   const distanceRef = useRef(null);                                  // 거리용 Ref
-  const backgroundStartTimeRef = useRef(null);                                 // 시작 시간용 Ref
+  const backgroundStartTimeRef = useRef(null);                       // 시작 시간용 Ref
   const timeRef = useRef(null);                                      // 시간용 Ref
   const backgroundRef = useRef(null);                                // Background Ref
   const altitudeRef = useRef(1);                                     // 고도 Ref
   const [currentAltitude, setCurrentAltitude] = useState('');        // 실시간 고도
   const [altitude, setAltitude] = useState([]);                      // 기록 고도
   const [totalTime, setTotalTime] = useState(0);                     // 누적 시간
-  const [time, setTime] = useState(0);                               // 렌더링용 시간
   const [distance, setDistance] = useState(0);                       // 누적 거리
   const [realtimeDistance, setRealtimeDistance] = useState([]);      // 페이스 계산용 거리
   const [pace, setPace] = useState('00:00');                         // 페이스
@@ -155,10 +154,8 @@ function Home({ navigation }) {
 
         if (appState.current !== 'active') {
           let before = backgroundStartTimeRef.current;
-          before = Math.round(before/1000);
           let now = new Date().getTime();
-          now = Math.round(now/1000);
-          setTotalTime(prev => prev + ((now * 1000) - (before * 1000)));
+          setTotalTime(prev => prev + (now - before));
           backgroundStartTimeRef.current = new Date().getTime();
         }
       }
@@ -171,9 +168,10 @@ function Home({ navigation }) {
 
   /** 시간 계산 */
   const onStartRecordTime = () => {
+    backgroundStartTimeRef.current = new Date().getTime();
     timeRef.current = setInterval(() => {
-      backgroundStartTimeRef.current = new Date().getTime();
       setTotalTime(prev => prev + 500);
+      backgroundStartTimeRef.current = new Date().getTime();
     }, 500);
   }
 
@@ -219,17 +217,6 @@ function Home({ navigation }) {
       setAltitude(prev => [...prev, currentAltitude]);
     }
   }, [distance]);
-
-  /** 누적 분:초 */
-  useEffect(() => {
-    let recordHours = Math.floor(totalTime/1000/60/60);
-    let recordMinutes = Math.floor(totalTime/1000/60) - (recordHours * 60);
-    let recordSeconds = Math.floor((totalTime/1000) - (Math.floor(totalTime/1000/60) * 60));
-    recordHours = recordHours < 1 ? '' : recordHours + ':';
-    recordMinutes = recordMinutes < 10 ? '0' + recordMinutes : recordMinutes;
-    recordSeconds = recordSeconds < 10 ? '0' + recordSeconds : recordSeconds;
-    setTime(recordHours + recordMinutes + ':' + recordSeconds);
-  }, [totalTime]);
 
   /** 시작하기 */
   const onStart = () => {
@@ -400,7 +387,11 @@ function Home({ navigation }) {
     let subscription = '';
     subscription = AppState.addEventListener('change', nextAppState => {
       if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
-        console.log('App Foreground');
+        if (isRecoding) {
+          let before = backgroundStartTimeRef.current;
+          let now = new Date().getTime();
+          setTotalTime(prev => prev + (now - before));
+        }
       } else {
         console.log('App Backround');
       }
@@ -434,7 +425,7 @@ function Home({ navigation }) {
           <Record
             isRecoding={isRecoding}
             distance={distance}
-            time={time}
+            totalTime={totalTime}
             pace={pace}
             onPause={onPause}
             onStart={onStart}

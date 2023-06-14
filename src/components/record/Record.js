@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {View, Text, Pressable, StyleSheet} from 'react-native';
 import { updateUser } from "../../lib/user";
 import useStore from "../../store/store";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-function Record({isRecoding, distance, time, pace, onStart, onPause, onComplete}) {
+function Record({isRecoding, distance, totalTime, pace, onStart, onPause, onComplete}) {
   const user = useStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
   const [color, setColor] = useState(user.recordColor);
   const [visibleColors, setVisibleColors] = useState(false);
+  const [time, setTime] = useState(0);
 
   const onSelectColor = async (selectColor) => {
     try {
@@ -20,6 +21,16 @@ function Record({isRecoding, distance, time, pace, onStart, onPause, onComplete}
       console.log(e);
     }
   }
+
+  useEffect(() => {
+    let hours = Math.floor(totalTime / 1000 / 60 / 60)
+    let mins = Math.floor((totalTime / 1000 / 60) % 60)
+    let seconds = Math.floor(totalTime / 1000 % 60)
+    let displayHours = hours < 1 ? '' : hours + ':';
+    let displayMins = mins < 10 ? `0${mins}` : mins
+    let displaySecs = seconds < 10 ? `0${seconds}` : seconds
+    setTime(displayHours + displayMins + ':' + displaySecs);
+  }, [totalTime]);
   
   return (
     <View style={[styles.record_wrap, {backgroundColor: '#' + color}]}>

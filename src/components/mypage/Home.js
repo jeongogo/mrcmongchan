@@ -4,7 +4,7 @@ import auth from "@react-native-firebase/auth";
 import firestore from '@react-native-firebase/firestore';
 import { signOut } from '../../lib/auth';
 import useStore from "../../store/store";
-import {StyleSheet, SafeAreaView, ScrollView, Image, View, Text, Pressable, Alert, TextInput, Vibration} from 'react-native';
+import { StyleSheet, SafeAreaView, ScrollView, Image, View, Text, Pressable, Alert, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 function Home() {
@@ -65,11 +65,11 @@ function Home() {
         </View>
         <View style={styles.hr}></View>
         <View style={styles.menuWrap}>
-          {/* <Pressable style={styles.menu} onPress={() => navigation.navigate('Garmin')}>
-            <Icon name='account-reactivate' color='#222' size={18} />
+          <Pressable style={styles.menu} onPress={() => null}>
+            <Image style={{width: 18, height: 18}} source={require('../../assets/images/icon_garmin.png')} />
             <Text style={styles.menuText}>Garmin 연동하기</Text>
             <Icon name='chevron-right' color='#222' size={24} />
-          </Pressable> */}
+          </Pressable>
           <Pressable style={styles.menu} onPress={() => navigation.navigate('WeightManage')}>
             <Icon name='chart-timeline-variant' color='#222' size={18} />
             <Text style={styles.menuText}>체중 관리</Text>
@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 18,
+    paddingVertical: 17,
     paddingHorizontal: 20,
     borderBottomWidth: 1,
     borderBottomColor: '#ededed',

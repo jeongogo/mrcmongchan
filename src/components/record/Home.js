@@ -152,14 +152,8 @@ function Home({ navigation }) {
           setDistance(prev => prev + currentDistance);
           setPath(prev => [...prev, { latitude, longitude }]);
         }
-        distanceRef.current = { latitude, longitude };
 
-        // if (appState.current !== 'active') {
-        //   let before = backgroundStartTimeRef.current;
-        //   let now = new Date().getTime();
-        //   setTotalTime(prev => prev + (now - before));
-        //   backgroundStartTimeRef.current = new Date().getTime();
-        // }
+        distanceRef.current = { latitude, longitude };
       }
     });
 
@@ -167,15 +161,6 @@ function Home({ navigation }) {
       onLocation.remove();
     }
   }, [isRecoding]);
-
-  /** 시간 계산 */
-  // const onStartRecordTime = () => {
-    // backgroundStartTimeRef.current = new Date().getTime();
-    // timeRef.current = setInterval(() => {
-    //   setTotalTime(prev => prev + 500);
-    //   backgroundStartTimeRef.current = new Date().getTime();
-    // }, 500);
-  // }
 
   useEffect(() => {
     // 실시간 거리/시간 누적
@@ -196,7 +181,7 @@ function Home({ navigation }) {
     if (realtimeDistance.length >= 3) {
       const sumDistance = realtimeDistance[realtimeDistance.length - 1].distance - realtimeDistance[0].distance;
       const calcTime = realtimeDistance[realtimeDistance.length - 1].time - realtimeDistance[0].time;
-      const time = (1000/sumDistance) * (calcTime/1000);
+      const time = (1000/sumDistance) * calcTime;
       const m = (Math.floor(time / 60)).toFixed(0);
       const s = (time - m * 60).toFixed(0);
       const minutes = m < 10 ? '0' + m : m;
@@ -245,9 +230,6 @@ function Home({ navigation }) {
   const onPause = () => {
     setIsRecoding(false);
     BackgroundTimer.stopBackgroundTimer();
-    // clearInterval(timeRef.current);
-    // backgroundStartTimeRef.current = null;
-    // timeRef.current = null;
     distanceRef.current = null;
     backgroundRef.current = null;
   }
@@ -262,10 +244,8 @@ function Home({ navigation }) {
     setIsStarted(false);
     setIsRecoding(false);
     BackgroundTimer.stopBackgroundTimer();
-    // clearInterval(timeRef.current);
     backgroundStartTimeRef.current = null;
     paceRef.current = 1;
-    // timeRef.current = null;
     distanceRef.current = null;
     altitudeRef.current = 1;
     backgroundRef.current = null;
@@ -323,20 +303,21 @@ function Home({ navigation }) {
         MET = 18;
       }
 
-      const calorie = MET * (3.5 * user.weight * ((totalTime) / 60)) * 5 / 1000;
+      const calorie = MET * (3.5 * user.weight * (totalTime / 60)) * 5 / 1000;
 
-      const time = (1000/distance) * (totalTime);
-      const m = (Math.floor(time / 60)).toFixed(0);
-      const s = (time - m * 60).toFixed(0);
-      const minutes = m < 10 ? '0' + m : m;
-      const seconds = s < 10 ? '0' + s : s;
+      // const time = (1000/distance) * totalTime;
+      // const m = (Math.floor(time / 60)).toFixed(0);
+      // const s = (time - m * 60).toFixed(0);
+      // const minutes = m < 10 ? '0' + m : m;
+      // const seconds = s < 10 ? '0' + s : s;
       
       const recordData = {
         uid: user.uid,
         name: user.name,
-        totalTime: (totalTime).toFixed(0),
+        totalTime,
         distance: (distance/1000).toFixed(2),
-        pace: (totalTime) > 60 ? minutes + ':' + seconds : '00:00',
+        // pace: totalTime > 60 ? minutes + ':' + seconds : '00:00',
+        pace,
         paceDetail: (distance - ((paceRef.current - 1) * 1000)) > 100 ? [...paceDetail, totalTime] : paceDetail,
         calorie: calorie.toFixed(0),
         date: new Date(),
@@ -402,11 +383,6 @@ function Home({ navigation }) {
     let subscription = '';
     subscription = AppState.addEventListener('change', nextAppState => {
       if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
-        // if (isRecoding) {
-        //   let before = backgroundStartTimeRef.current;
-        //   let now = new Date().getTime();
-        //   setTotalTime(prev => prev + (now - before));
-        // }
         console.log('App Foreround');
       } else {
         console.log('App Backround');

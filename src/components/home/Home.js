@@ -12,7 +12,6 @@ function Home({
   calorieWeek,
   distanceMonth,
   calorieMonth,
-  competition
 }) {
   const [exCurrent, setExCurrent] = useState(0);
   const [disCurrent, setDisCurrent] = useState(0);
@@ -94,7 +93,7 @@ function Home({
             <View style={styles.totalLabelWrap}>
               {disCurrent >= 100
                 ? <Text style={[styles.label, styles.city]}>축하합니다! 부산에 도착했습니다. 😃</Text>
-                : <Text style={[styles.label, styles.city]}>{320 - user.distance}km 남았습니다.</Text>
+                : <Text style={[styles.label, styles.city]}>{(320 - user.distance).toFixed(2)}km 남았습니다.</Text>
               }              
             </View>
           </CustomWrap>
@@ -117,7 +116,7 @@ function Home({
               <Text style={styles.text}>{user.record.full === 0 ? '--:--' : getTime(user.record.full)}</Text>
             </View>
           </CustomWrap>
-          <CustomWrap>
+          {/* <CustomWrap>
             <Text style={[styles.title, styles.noMargin]}>대회정보</Text>
             {competition.map((item) => (
               <Pressable key={item.url} style={styles.competitionWrap} onPress={() => openURL(item.url)}>
@@ -128,7 +127,7 @@ function Home({
                 <Text style={[styles.text, styles.date]}>{format(new Date(item.date.toDate()), 'yy.M.dd')}</Text>
               </Pressable>
             ))}
-          </CustomWrap>
+          </CustomWrap> */}
           <View style={styles.hr}></View>
         </ScrollView>
       </SafeAreaView>

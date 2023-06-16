@@ -64,22 +64,22 @@ function HomeScreen() {
   }
 
   /** 대회정보 가져오기 */
-  const getCompetition = async () => {
-    const snapshot = await firestore().collection('Competitions').orderBy('date').get();
-    let data = [];
-    snapshot.forEach(doc => {
-      const item = {
-        ...doc.data(),
-      };
-      data.push(item);
-    });
-    return data;
-  }
+  // const getCompetition = async () => {
+  //   const snapshot = await firestore().collection('Competitions').orderBy('date').get();
+  //   let data = [];
+  //   snapshot.forEach(doc => {
+  //     const item = {
+  //       ...doc.data(),
+  //     };
+  //     data.push(item);
+  //   });
+  //   return data;
+  // }
 
   const recordQuery = useQuery('myrecord', getMyRecord);
-  const competitionQuery = useQuery('competition', getCompetition);
+  // const competitionQuery = useQuery('competition', getCompetition);
 
-  if (!competitionQuery.data || !recordQuery.data) {
+  if (!recordQuery.data) {
     return <Loader />
   }
 
@@ -89,7 +89,6 @@ function HomeScreen() {
       calorieWeek={recordQuery.data.calorieWeek}
       distanceMonth={recordQuery.data.distanceMonth}
       calorieMonth={recordQuery.data.calorieMonth}
-      competition={competitionQuery.data}
     />
   );
 };

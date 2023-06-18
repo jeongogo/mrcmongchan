@@ -14,6 +14,7 @@ import WeightScreen from "./mypage/WeightScreen";
 import PaceScreen from "./mypage/PaceScreen";
 import SettingScreen from "./mypage/SettingScreen";
 import VDOTScreen from "./mypage/VDOTScreen";
+import GarminScreen from "./mypage/GarminScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -88,6 +89,13 @@ function RootStack() {
               component={VDOTScreen}
               options={{
                 title: '예상 기록 테스트'
+              }}
+            />
+            <Stack.Screen
+              name='Garmin'
+              component={GarminScreen}
+              options={{
+                title: 'Garmin Login'
               }}
             />
             <Stack.Screen

@@ -15,6 +15,10 @@ let state = (set) => ({
   record: '',
   setRecord: (data) => set(() => ({ record: data })),
 
+  /** Feed */
+  feeds: '',
+  setFeeds: (data) => set(() => ({ feeds: data })),
+
   /** 세팅 */
   setting: {
     recordVaibration: true,

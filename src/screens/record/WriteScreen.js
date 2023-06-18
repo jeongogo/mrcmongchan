@@ -15,9 +15,11 @@ function WriteScreen({navigation}) {
   const user = useStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
   const captureURL = useStore((state) => state.captureURL);
+  const feeds = useStore((state) => state.feeds);
+  const setFeeds = useStore((state) => state.setFeeds);
 
   /** 저장하기 */
-  const handleSubmit = async () => {
+  const handleSubmit = async (title) => {
     setIsLoading(true);
     try {
       // 캡쳐 이미지
@@ -44,10 +46,12 @@ function WriteScreen({navigation}) {
 
       const recordData = {
         ...record,
+        title,
         photoURL,
         captureURL: url,
       }
       await firestore().collection('Records').add(recordData);
+      setFeeds([recordData, ...feeds]);
       
       // 업데이트용
       let challengeData = {};
@@ -149,11 +153,6 @@ function WriteScreen({navigation}) {
         
       await updateUser(user.uid, {...challengeData, ...levelupData, ...bestRecordData});
       setUser({...user, ...challengeData, ...levelupData, ...bestRecordData});
-
-      queryClient.invalidateQueries('myrecord');
-      queryClient.invalidateQueries('feed');
-
-      navigation.navigate('FeedStack');
     } catch (e) {
       Alert.alert("", e.message, [
         {
@@ -166,13 +165,23 @@ function WriteScreen({navigation}) {
     }
   }
 
+  const submitMutaion = useMutation(handleSubmit, {
+    onError: (error) => {
+      console.log(error);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries('myrecord');
+      navigation.navigate('FeedStack');
+    },
+  });
+
   return (
     <Write
       navigation={navigation}
       isLoading={isLoading}
       response={response}
       setResponse={setResponse}
-      handleSubmit={handleSubmit}
+      submitMutaion={submitMutaion}
     />
   );
 }

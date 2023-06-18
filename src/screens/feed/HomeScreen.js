@@ -1,56 +1,48 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import firestore from '@react-native-firebase/firestore';
-import { useInfiniteQuery } from 'react-query';
 import useStore from "../../store/store";
 import Home from "../../components/feed/Home";
 import Loader from "../../components/common/Loader";
 
 function HomeScreen() {
   const user = useStore((state) => state.user);
+  const feeds = useStore((state) => state.feeds);
+  const setFeeds = useStore((state) => state.setFeeds);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const feedQuery = useInfiniteQuery(["feed"],
-    async ({queryKey, pageParam}) => {
-      return pageParam
-        ?
-          await firestore()
-          .collection("Records")
-          .where('uid', '==', user.uid)
-          .orderBy("date", "desc")
-          .startAfter(pageParam)
-          .limit(10)
-          .get()
-          .then((querySnapshot) => querySnapshot)
-        :
-          await firestore()
-          .collection("Records")
-          .where('uid', '==', user.uid)
-          .orderBy("date", "desc") 
-          .limit(10)
-          .get()
-          .then((querySnapshot) => querySnapshot)
-    }, 
-    {
-      getNextPageParam: (querySnapshot) => {
-        if (querySnapshot.size < 10) return null;
-        else return querySnapshot.docs[querySnapshot.docs.length - 1];
-      },
-    }
-  );
-
-  const onMore = () => {
-    if (feedQuery.hasNextPage) {
-      feedQuery.fetchNextPage();
-    } else {
-      console.log("no next page");
+  const getFeeds = async () => {
+    setIsLoading(true);
+    try {
+      const snapshot = await firestore().collection("Records").where('uid', '==', user.uid).orderBy("date", "desc").get()
+      const data = snapshot.docs.map(item => (
+        {
+          ...item.data(),
+          date: new Date(item.data().date.toDate()),
+          id: item.id
+        }
+      ));
+      setFeeds(data);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setIsLoading(false);
     }
   }
 
-  if (!feedQuery.data) {
-    return <Loader />
-  }
+  useEffect(() => {
+    if (!feeds) {
+      getFeeds();
+    }
+  }, []);
 
   return (
-    <Home data={feedQuery.data} onMore={onMore} />
+    <>
+      {
+        isLoading
+        ? <Loader />
+        : <Home />
+      }
+    </>
   );
 }
 

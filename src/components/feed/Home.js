@@ -1,36 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import useStore from "../../store/store";
 import { FlatList,StyleSheet, View, Text } from 'react-native';
 import Feed from "./Feed";
 
-function Home({data, onMore}) {
-  const [list, setList] = useState([]);
-
-  useEffect(() => {
-    let filterData = [];
-    data.pages.map((i) => {
-      filterData.push(i._docs);
-      return i._docs
-    });
-    setList(filterData[0]);
-  }, []);
+function Home() {
+  const feeds = useStore((state) => state.feeds);
 
   return (
-    <>
-      {list.length > 0
+    <SafeAreaProvider style={styles.container}>
+      <SafeAreaView style={styles.contentWrap}>
+      {feeds
         ?
           <FlatList
-            data={list}
+            data={feeds}
             renderItem={renderItem}
             keyExtractor={(feed) => feed.id}
-            style={styles.container}
-            onEndReached={onMore}
+            style={styles.list}
           />
         :
           <View style={styles.empty}>
             <Text style={styles.emptyText}>아직 활동 기록이 없습니다.</Text>
           </View>
       }
-    </>
+      </SafeAreaView>
+    </SafeAreaProvider>
   )
 }
 
@@ -41,7 +35,13 @@ const renderItem = ({item}) => (
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#f6f6f6',
+  },
+  contentWrap: {
+  },
+  list: {
+    paddingVertical: 10,
+    paddingHorizontal: 10,
   },
   empty: {
     flex: 1,

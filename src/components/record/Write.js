@@ -16,7 +16,7 @@ import {
 import Loader from "../../components/common/Loader";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-function Write({navigation, isLoading, response, setResponse, handleSubmit}) {
+function Write({navigation, isLoading, response, setResponse, submitMutaion}) {
   const [time, setTime] = useState('');
   const [title, setTitle] = useState('');
   const record = useStore((state) => state.record);
@@ -73,7 +73,7 @@ function Write({navigation, isLoading, response, setResponse, handleSubmit}) {
   };
 
   const onSubmit = () => {
-    handleSubmit(title);
+    submitMutaion.mutate(title);
   }
 
   useEffect(() => {
@@ -155,6 +155,7 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
+    height: 32,
     paddingHorizontal: 10,
     fontFamily: 'Pretendard-Regular',
     fontSize: 15,

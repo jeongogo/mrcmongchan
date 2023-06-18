@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import firestore from '@react-native-firebase/firestore';
 import useStore from "../../store/store";
@@ -47,7 +47,8 @@ function HomeScreen() {
           startWeek = today.getDate() - 6;
           break;
       }
-      if (startWeek >= obj.date.toDate().getDate() <= (startWeek + 6)) {
+      const date = obj.date.toDate().getDate();
+      if (date >= startWeek && date <= (startWeek + 6)) {
         distanceWeek += parseFloat(obj.distance);
         calorieWeek += parseFloat(obj.calorie);
       }

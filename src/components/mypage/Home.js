@@ -65,7 +65,7 @@ function Home() {
         </View>
         <View style={styles.hr}></View>
         <View style={styles.menuWrap}>
-          <Pressable style={styles.menu} onPress={() => null}>
+          <Pressable style={styles.menu} onPress={() => navigation.navigate('Garmin')}>
             <Image style={{width: 18, height: 18}} source={require('../../assets/images/icon_garmin.png')} />
             <Text style={styles.menuText}>Garmin 연동하기</Text>
             <Icon name='chevron-right' color='#222' size={24} />

@@ -1,12 +1,9 @@
 import React from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import useStore from "../../store/store";
 import { FlatList,StyleSheet, View, Text } from 'react-native';
 import Feed from "./Feed";
 
-function Home() {
-  const feeds = useStore((state) => state.feeds);
-
+function Home({ feeds }) {
   return (
     <SafeAreaProvider style={styles.container}>
       <SafeAreaView style={styles.contentWrap}>

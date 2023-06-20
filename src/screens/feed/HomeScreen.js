@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useQuery } from 'react-query';
 import firestore from '@react-native-firebase/firestore';
 import useStore from "../../store/store";
 import Home from "../../components/feed/Home";
@@ -6,44 +7,26 @@ import Loader from "../../components/common/Loader";
 
 function HomeScreen() {
   const user = useStore((state) => state.user);
-  const feeds = useStore((state) => state.feeds);
-  const setFeeds = useStore((state) => state.setFeeds);
-  const [isLoading, setIsLoading] = useState(false);
 
   const getFeeds = async () => {
-    setIsLoading(true);
-    try {
-      const snapshot = await firestore().collection("Records").where('uid', '==', user.uid).orderBy("date", "desc").get()
-      const data = snapshot.docs.map(item => (
-        {
-          ...item.data(),
-          date: new Date(item.data().date.toDate()),
-          id: item.id
-        }
-      ));
-      setFeeds(data);
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setIsLoading(false);
-    }
+    const snapshot = await firestore().collection("Records").where('uid', '==', user.uid).orderBy("date", "desc").get()
+    const data = snapshot.docs.map(item => (
+      {
+        ...item.data(),
+        date: item.data().date.toDate(),
+        id: item.id
+      }
+    ));
+    return data;
   }
 
-  useEffect(() => {
-    if (!feeds) {
-      getFeeds();
-    }
-  }, []);
+  const feedsQuery = useQuery('feeds', getFeeds);
 
-  return (
-    <>
-      {
-        isLoading
-        ? <Loader />
-        : <Home />
-      }
-    </>
-  );
+  if (!feedsQuery.data) {
+    return <Loader />
+  }
+
+  return <Home feeds={feedsQuery.data} />;
 }
 
 export default HomeScreen;

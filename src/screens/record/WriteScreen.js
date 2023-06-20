@@ -171,6 +171,7 @@ function WriteScreen({navigation}) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries('myrecord');
+      queryClient.invalidateQueries('feeds');
       navigation.navigate('FeedStack');
     },
   });

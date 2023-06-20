@@ -14,11 +14,7 @@ let state = (set) => ({
   /** 기록 측정 */
   record: '',
   setRecord: (data) => set(() => ({ record: data })),
-
-  /** Feed */
-  feeds: '',
-  setFeeds: (data) => set(() => ({ feeds: data })),
-
+  
   /** 세팅 */
   setting: {
     recordVaibration: true,

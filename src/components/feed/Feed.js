@@ -40,7 +40,7 @@ function Feed({ feed }) {
             <Text style={styles.distanceText}>{feed.distance}<Text style={styles.distanceKmText}>km</Text></Text>
           </View>
           <View style={styles.wrap}>
-            <Text style={styles.date}>{format(feed.date, 'MM.dd HH:mm')}</Text>
+            <Text style={styles.date}>{format(new Date(feed.date), 'MM.dd HH:mm')}</Text>
             <Text style={styles.areaText}>{feed.areaName}</Text>
           </View>
           <View style={styles.wrap}>

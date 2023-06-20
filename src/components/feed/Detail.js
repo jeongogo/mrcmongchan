@@ -133,7 +133,7 @@ function Detail() {
             />
           </View>
           <View>
-            <Text style={styles.date}>{format(feedDetail.date, 'yy.MM.dd HH:mm')}</Text>
+            <Text style={styles.date}>{format(new Date(feedDetail.date), 'yy.MM.dd HH:mm')}</Text>
             <Text style={styles.name}>{user.name}</Text>
           </View>
           <View style={styles.area}>

@@ -65,11 +65,11 @@ function Home() {
         </View>
         <View style={styles.hr}></View>
         <View style={styles.menuWrap}>
-          <Pressable style={styles.menu} onPress={() => navigation.navigate('Garmin')}>
+          {/* <Pressable style={styles.menu} onPress={() => navigation.navigate('Garmin')}>
             <Image style={{width: 18, height: 18}} source={require('../../assets/images/icon_garmin.png')} />
             <Text style={styles.menuText}>Garmin 연동하기</Text>
             <Icon name='chevron-right' color='#222' size={24} />
-          </Pressable>
+          </Pressable> */}
           <Pressable style={styles.menu} onPress={() => navigation.navigate('WeightManage')}>
             <Icon name='chart-timeline-variant' color='#222' size={18} />
             <Text style={styles.menuText}>체중 관리</Text>

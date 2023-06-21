@@ -220,7 +220,7 @@ function Detail() {
                   ],
                 }
               }
-              width={width-35}
+              width={width-40}
               height={220}
               chartConfig={chartConfig}
               withDots={false}

@@ -67,15 +67,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   imageWrap: {
-    width: 60,
-    height: 60,
+    width: 66,
+    height: 66,
     backgroundColor: '#eee',
     borderRadius: 10,
     overflow: 'hidden',
   },
   image: {
-    width: 60,
-    height: 60,
+    width: 66,
+    height: 66,
   },
   contentWrap: {
     marginLeft: 15,
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 4,
+    marginTop: 1,
   },
   title: {
     marginRight: 7,
@@ -98,22 +98,22 @@ const styles = StyleSheet.create({
   },
   distanceText: {
     fontFamily: 'Pretendard-Medium',
-    fontSize: 20,
+    fontSize: 18,
     color: '#222',
   },
   distanceKmText: {
     fontFamily: 'Pretendard-Regular',
-    fontSize: 16,
+    fontSize: 15,
   },
   date: {
     marginRight: 10,
     fontFamily: 'Pretendard-Regular',
-    fontSize: 16,
+    fontSize: 15,
     color: '#222',
   },
   areaText: {
     fontFamily: 'Pretendard-Regular',
-    fontSize: 15,
+    fontSize: 14,
     color: '#999',
   },
   recordWrap: {
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   recordText: {
     marginLeft: 2,
     fontFamily: 'Pretendard-Regular',
-    fontSize: 16,
+    fontSize: 15,
     color: '#222',
   },
   bar: {

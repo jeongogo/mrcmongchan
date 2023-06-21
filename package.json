@@ -38,6 +38,7 @@
     "react-native-background-geolocation": "^4.12.0",
     "react-native-background-timer": "^2.4.1",
     "react-native-chart-kit": "^6.12.0",
+    "react-native-code-push": "^8.0.2",
     "react-native-foreground-service-android": "^1.0.18",
     "react-native-geolocation-service": "^5.3.1",
     "react-native-image-picker": "^5.3.1",

@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
-    height: 32,
+    height: 48,
     paddingHorizontal: 10,
     fontFamily: 'Pretendard-Regular',
     fontSize: 15,

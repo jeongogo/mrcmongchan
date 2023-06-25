@@ -15,8 +15,6 @@ function WriteScreen({navigation}) {
   const user = useStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
   const captureURL = useStore((state) => state.captureURL);
-  const feeds = useStore((state) => state.feeds);
-  const setFeeds = useStore((state) => state.setFeeds);
 
   /** 저장하기 */
   const handleSubmit = async (title) => {
@@ -51,7 +49,6 @@ function WriteScreen({navigation}) {
         captureURL: url,
       }
       await firestore().collection('Records').add(recordData);
-      setFeeds([recordData, ...feeds]);
       
       // 업데이트용
       let challengeData = {};

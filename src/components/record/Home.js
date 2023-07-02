@@ -305,19 +305,18 @@ function Home({ navigation }) {
 
       const calorie = MET * (3.5 * user.weight * (totalTime / 60)) * 5 / 1000;
 
-      // const time = (1000/distance) * totalTime;
-      // const m = (Math.floor(time / 60)).toFixed(0);
-      // const s = (time - m * 60).toFixed(0);
-      // const minutes = m < 10 ? '0' + m : m;
-      // const seconds = s < 10 ? '0' + s : s;
+      const time = (1000/distance) * totalTime;
+      const m = (Math.floor(time / 60)).toFixed(0);
+      const s = (time - m * 60).toFixed(0);
+      const minutes = m < 10 ? '0' + m : m;
+      const seconds = s < 10 ? '0' + s : s;
       
       const recordData = {
         uid: user.uid,
         name: user.name,
         totalTime,
         distance: (distance/1000).toFixed(2),
-        // pace: totalTime > 60 ? minutes + ':' + seconds : '00:00',
-        pace,
+        pace: totalTime > 60 ? minutes + ':' + seconds : '00:00',
         paceDetail: (distance - ((paceRef.current - 1) * 1000)) > 100 ? [...paceDetail, totalTime] : paceDetail,
         calorie: calorie.toFixed(0),
         date: new Date(),

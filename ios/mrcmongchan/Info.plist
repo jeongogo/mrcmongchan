@@ -90,7 +90,7 @@
 		<string>armv7</string>
 	</array>
 	<key>CodePushDeploymentKey</key>
-	<string>${CODEPUSH_KEY}</string>
+	<string>Co6RctGpUywb6so3BAbqFCOUS_UlHuTgzBlVz</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
